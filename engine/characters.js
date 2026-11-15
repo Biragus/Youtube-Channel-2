@@ -269,11 +269,11 @@ function drawCharacter(ctx, c, opts = {}) {
 const CAST = {
   heroBefore: {
     name: 'KAI', role: 'Before: broke, tired, stuck',
-    hair: { type: 'tuft' }, top: { type: 'hoodie', color: '#8b919c' }, pants: '#5d6470', shoes: '#d9d4c7',
+    hair: { type: 'tuft' }, eye: '#39ff14', eyeGlow: true, top: { type: 'hoodie', color: '#8b919c' }, pants: '#5d6470', shoes: '#d9d4c7',
   },
   heroAfter: {
     name: 'KAI', role: 'After: built it himself',
-    hair: { type: 'tuft' }, top: { type: 'blazer', color: '#1f2a44', shirt: '#ff7a1a' }, pants: '#1f2a44', shoes: '#ffffff',
+    hair: { type: 'tuft' }, eye: '#39ff14', eyeGlow: true, top: { type: 'blazer', color: '#1f2a44', shirt: '#ff7a1a' }, pants: '#1f2a44', shoes: '#ffffff',
     acc: ['watch'],
   },
   ex: {
