@@ -1,6 +1,6 @@
 # Episode 01 — They Laughed at Your $9 Idea
 
-- **Length:** about 9.5 minutes. 96 shots, average 6 seconds each, none longer than 9.
+- **Length:** just under 9 minutes. 99 shots, average 5.4 seconds each, none longer than 9.
 - **Narration:** one deep, calm male voice speaking to "you". Character lines appear as speech bubbles and are read by the narrator.
 - **Hero:** Kai (black head, neon green eyes, spiky hair). Grey hoodie until chapter 9, navy suit after.
 - **Recurring devices:** a bank-balance counter in the top corner, a sales counter from chapter 7, and day labels ("DAY 12").
