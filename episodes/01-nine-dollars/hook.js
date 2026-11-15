@@ -181,17 +181,36 @@ async function main() {
   }
   ff.stdin.end(); await new Promise((r) => ff.on('close', r));
 
-  // sound: voice, music bed, and synthesised whooshes and hits on the cuts
-  const ms = (s) => Math.max(0, Math.round(s * 1000));
-  const whooshes = [cue[1], cue[2], cue[3], cue[4], cue[5], cue[6]];
-  const hits = [cue[4] + (cue[5] - cue[4]) * 0.42, TITLE_AT + 0.2];
-  const parts = ['[0:a]volume=1.0[v]', `[1:a]atrim=0:${END},volume=0.28,afade=t=in:d=0.6,afade=t=out:st=${END - 0.8}:d=0.8[m]`];
+  // sound: voice, the tense intro track, and a dense layer of quiet effects on every beat
+  const A = path.join(dir, 'audio'); const sfx = (n) => path.join(A, 'sfx', `${n}.mp3`);
+  const snap = cue[4] + (cue[5] - cue[4]) * 0.42;
+  const tail = 'aecho=0.8:0.7:90|180:0.45|0.3'; // gives the short hits a longer tail
+  // [file, start time, volume, extra filter]
+  const layers = [
+    [sfx('laugh'), 0.12, 0.3], [sfx('laugh'), 0.95, 0.24], [sfx('laugh'), 1.8, 0.2],
+    [sfx('whoosh'), cue[1] - 0.12, 0.3], [sfx('whoosh'), cue[2] - 0.12, 0.3], [sfx('whoosh'), cue[3] - 0.12, 0.3],
+    [sfx('whoosh'), cue[4] - 0.12, 0.26], [sfx('heartbeat'), cue[4] + 0.1, 0.9],
+    [sfx('riser'), snap - 0.5, 0.4], [sfx('boom'), snap, 1.0, tail],
+    [sfx('whoosh'), cue[5] - 0.12, 0.26], [sfx('buzz'), cue[5] + 0.05, 0.16], [sfx('counter'), cue[5] + 0.25, 0.3],
+    [sfx('heartbeat'), cue[5] + 1.0, 0.9],
+    [sfx('whoosh'), cue[6] - 0.12, 0.26], [sfx('tick'), cue[6] + 0.1, 0.55], [sfx('tick'), cue[6] + 1.6, 0.6],
+    [sfx('riser'), TITLE_AT - 0.35, 0.45], [sfx('slam'), TITLE_AT + 0.18, 0.55, tail], [sfx('boom'), TITLE_AT + 0.18, 0.9, tail],
+  ].filter(([, at]) => at < END);
+  const ms = (x) => Math.max(0, Math.round(x * 1000));
+  const inputs = ['-i', silent, '-i', path.join(A, `hook-${voice}.mp3`), '-i', path.join(A, 'music-intro-tense.mp3')];
+  const parts = ['[1:a]volume=1.0[v]', `[2:a]atrim=0:${END},volume=0.34,afade=t=in:d=0.3,afade=t=out:st=${END - 0.9}:d=0.9[m]`];
   const mix = ['[v]', '[m]'];
-  whooshes.forEach((at, i) => { parts.push(`anoisesrc=d=0.32:c=pink:a=0.9,bandpass=f=1400:w=1800,afade=t=in:d=0.12,afade=t=out:st=0.14:d=0.18,volume=0.5,adelay=${ms(at - 0.1)}:all=1[w${i}]`); mix.push(`[w${i}]`); });
-  hits.forEach((at, i) => { parts.push(`sine=f=52:d=1.1,afade=t=out:st=0.05:d=1.0,volume=1.6,adelay=${ms(at)}:all=1[h${i}]`); mix.push(`[h${i}]`); });
+  layers.forEach(([file, at, vol, extra], i) => {
+    inputs.push('-i', file);
+    parts.push(`[${i + 3}:a]${extra ? `${extra},` : ''}volume=${vol},adelay=${ms(at)}:all=1[s${i}]`); mix.push(`[s${i}]`);
+  });
+  // soft synthesised pops as each face and each label appears
+  [0.12, 0.5, 0.88, cue[1] + 0.05, cue[2] + 0.05, cue[3] + 0.05, cue[4] + 0.06, cue[5] + 0.12].forEach((at, i) => {
+    parts.push(`sine=f=${520 + i * 40}:d=0.09,afade=t=out:st=0.01:d=0.08,volume=0.22,adelay=${ms(at)}:all=1[p${i}]`); mix.push(`[p${i}]`);
+  });
   parts.push(`${mix.join('')}amix=inputs=${mix.length}:normalize=0:duration=longest,alimiter=limit=0.95[a]`);
-  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', path.join(dir, 'audio', `hook-${voice}.mp3`), '-i', path.join(dir, 'audio', 'music-bed.mp3'), '-i', silent,
-    '-filter_complex', parts.join(';'), '-map', '2:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(END), final]);
+  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', ...inputs, '-filter_complex', parts.join(';'),
+    '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(END), final]);
   fs.unlinkSync(silent);
   console.log('wrote', final, `${END.toFixed(1)}s`);
 }
