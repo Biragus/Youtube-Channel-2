@@ -3,6 +3,11 @@
 // drawCharacter(ctx, spec, opts) draws a front-facing figure standing with its feet at (opts.x, opts.y).
 
 const BLACK = '#111114';
+// Skin and eye colour of the character being drawn; set from the spec (c.skin, c.eye) on each draw call.
+let SKIN = BLACK;
+let EYE = '#ffffff';
+let GLOW = false;
+function usePalette(c) { SKIN = c.skin ?? BLACK; EYE = c.eye ?? '#ffffff'; GLOW = !!c.eyeGlow; }
 const rad = (d) => (d * Math.PI) / 180;
 
 function shade(hex, f) {
@@ -47,10 +52,11 @@ const HEAD_R = 62;
 
 function eye(ctx, x, y, side, kind) {
   const big = kind === 'shock';
+  if (GLOW) { ctx.save(); ctx.shadowColor = EYE; ctx.shadowBlur = 26; ctx.fillStyle = EYE; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.ellipse(x, y + 4, 9, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
   ctx.save();
   ctx.beginPath(); ctx.ellipse(x, y, big ? 19 : 14, big ? 23 : 19, 0, 0, Math.PI * 2); ctx.clip();
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(x - 32, y - 32, 64, 64);
-  ctx.fillStyle = BLACK; ctx.beginPath();
+  ctx.fillStyle = EYE; ctx.fillRect(x - 32, y - 32, 64, 64);
+  ctx.fillStyle = SKIN; ctx.beginPath();
   if (kind === 'happy') ctx.ellipse(x, y + 17, 24, 19, 0, 0, Math.PI * 2);
   else if (kind === 'tired') ctx.rect(x - 32, y - 32, 64, 30);
   else if (kind === 'smug') ctx.rect(x - 32, y - 32, 64, 25);
@@ -80,6 +86,7 @@ function mouth(ctx, x, y, kind, color = '#ffffff') {
 // Draws the head centred on (hx, hy). look is -1..1 (which way the face is turned).
 function drawHead(ctx, c, hx, hy, exprName = 'neutral', look = 0) {
   const e = EXPRESSIONS[exprName] ?? EXPRESSIONS.neutral;
+  usePalette(c);
   const hair = c.hair ?? {};
   const R = HEAD_R;
   ctx.save();
@@ -99,13 +106,13 @@ function drawHead(ctx, c, hx, hy, exprName = 'neutral', look = 0) {
     ctx.strokeStyle = c.accent ?? '#ff7a1a'; ctx.lineWidth = 12; ctx.beginPath(); ctx.arc(hx, hy, R + 6, rad(200), rad(340)); ctx.stroke();
   }
 
-  ctx.fillStyle = BLACK; ctx.beginPath(); ctx.arc(hx, hy, R, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = SKIN; ctx.beginPath(); ctx.arc(hx, hy, R, 0, Math.PI * 2); ctx.fill();
 
   // hair on top of the head
   const cap = (a0, a1, extra = 3) => { ctx.beginPath(); ctx.arc(hx, hy, R + extra, rad(a0), rad(a1)); ctx.closePath(); ctx.fill(); };
-  ctx.fillStyle = hair.color ?? BLACK;
+  ctx.fillStyle = hair.color ?? SKIN;
   if (hair.type === 'tuft') {
-    ctx.fillStyle = BLACK;
+    ctx.fillStyle = SKIN;
     for (const [dx, h, w] of [[-20, 22, 15], [2, 34, 16], [24, 20, 14]]) {
       ctx.beginPath(); ctx.moveTo(hx + dx - w, hy - R + 12); ctx.quadraticCurveTo(hx + dx + 4, hy - R - h - 10, hx + dx + 10, hy - R - h); ctx.quadraticCurveTo(hx + dx + 8, hy - R - 6, hx + dx + w, hy - R + 12); ctx.closePath(); ctx.fill();
     }
@@ -147,7 +154,7 @@ function drawHead(ctx, c, hx, hy, exprName = 'neutral', look = 0) {
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4;
     for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(fx + s * 24, fy, 24, 0, Math.PI * 2); ctx.stroke(); }
   }
-  mouth(ctx, fx, hy + 36, e.mouth, hair.beard ? BLACK : '#ffffff'); // dark mouth reads on a beard
+  mouth(ctx, fx, hy + 36, e.mouth, hair.beard ? BLACK : EYE); // dark mouth reads on a beard
   if (e.tear) { ctx.fillStyle = '#6ec6ff'; ctx.beginPath(); ctx.moveTo(fx - 24, fy + 20); ctx.quadraticCurveTo(fx - 36, fy + 40, fx - 24, fy + 44); ctx.quadraticCurveTo(fx - 12, fy + 40, fx - 24, fy + 20); ctx.fill(); }
   if (e.sweat) { ctx.fillStyle = '#6ec6ff'; ctx.beginPath(); ctx.moveTo(hx + R - 6, hy - 44); ctx.quadraticCurveTo(hx + R - 20, hy - 20, hx + R - 6, hy - 14); ctx.quadraticCurveTo(hx + R + 8, hy - 20, hx + R - 6, hy - 44); ctx.fill(); }
   ctx.restore();
@@ -172,12 +179,12 @@ function drawArm(ctx, c, side, limb) {
   const top = c.top; const a = seg(side * B.shoulderX, B.shoulderY, side, limb, B.upArm, B.foreArm);
   const sx = side * B.shoulderX;
   if (top.sleeves === 'short') {
-    stroke(ctx, [[sx, B.shoulderY], [a.mx, a.my], [a.ex, a.ey]], BLACK, 15);
+    stroke(ctx, [[sx, B.shoulderY], [a.mx, a.my], [a.ex, a.ey]], SKIN, 15);
     stroke(ctx, [[sx, B.shoulderY], [(sx + a.mx) / 2, (B.shoulderY + a.my) / 2]], top.color, 32);
   } else {
     stroke(ctx, [[sx, B.shoulderY], [a.mx, a.my], [a.ex, a.ey]], top.color, 30);
   }
-  ctx.fillStyle = BLACK; ctx.beginPath(); ctx.arc(a.ex, a.ey, 15, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = SKIN; ctx.beginPath(); ctx.arc(a.ex, a.ey, 15, 0, Math.PI * 2); ctx.fill();
   if (c.acc?.includes('watch') && side === -1) {
     const wx = a.mx + (a.ex - a.mx) * 0.8; const wy = a.my + (a.ey - a.my) * 0.8;
     ctx.fillStyle = '#f2c14e'; ctx.beginPath(); ctx.arc(wx, wy, 13, 0, Math.PI * 2); ctx.fill();
@@ -220,6 +227,7 @@ function drawTorso(ctx, c) {
 // opts: x, y (feet), s (scale), pose (name or object), expr, look (-1..1), flip
 function drawCharacter(ctx, c, opts = {}) {
   const p = typeof opts.pose === 'string' ? POSES[opts.pose] : (opts.pose ?? POSES.stand);
+  usePalette(c);
   const s = opts.s ?? 1;
   const hipH = Math.max(
     B.thigh * Math.cos(rad(p.legL[0])) + B.shin * Math.cos(rad(p.legL[0] + p.legL[1])),
@@ -237,14 +245,14 @@ function drawCharacter(ctx, c, opts = {}) {
   const dress = c.top.type === 'dress';
   for (const [side, limb] of [[-1, p.legL], [1, p.legR]]) {
     const l = seg(side * 22, -hipH, side, limb, B.thigh, B.shin);
-    stroke(ctx, [[side * 22, -hipH], [l.mx, l.my], [l.ex, l.ey - 8]], dress ? BLACK : c.pants, dress ? 15 : 30);
+    stroke(ctx, [[side * 22, -hipH], [l.mx, l.my], [l.ex, l.ey - 8]], dress ? SKIN : c.pants, dress ? 15 : 30);
     ctx.fillStyle = c.shoes ?? '#ffffff'; ctx.beginPath(); ctx.ellipse(l.ex + side * 10, l.ey - 4, 27, 14, 0, 0, Math.PI * 2); ctx.fill();
   }
 
   // upper body leans around the hips
   ctx.translate(0, -hipH); ctx.rotate(rad(p.lean ?? 0));
   if (c.top.type === 'hoodie') { ctx.fillStyle = shade(c.top.color, -0.25); ctx.beginPath(); ctx.ellipse(0, -B.torso - 12, 56, 30, 0, 0, Math.PI * 2); ctx.fill(); }
-  stroke(ctx, [[0, -B.torso + 6], [0, -B.torso - 30]], BLACK, 16); // neck
+  stroke(ctx, [[0, -B.torso + 6], [0, -B.torso - 30]], SKIN, 16); // neck
   drawTorso(ctx, c);
   drawArm(ctx, c, -1, p.armL);
   const hand = drawArm(ctx, c, 1, p.armR);
