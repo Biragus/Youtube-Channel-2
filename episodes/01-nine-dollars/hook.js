@@ -196,17 +196,18 @@ async function main() {
     [sfx('whoosh'), cue[6] - 0.12, 0.26], [sfx('tick'), cue[6] + 0.1, 0.55], [sfx('tick'), cue[6] + 1.6, 0.6],
     [sfx('riser'), TITLE_AT - 0.35, 0.45], [sfx('slam'), TITLE_AT + 0.18, 0.55, tail], [sfx('boom'), TITLE_AT + 0.18, 0.9, tail],
   ].filter(([, at]) => at < END);
+  const SFX_GAIN = 0.5; // one knob for how loud all effects sit under the voice
   const ms = (x) => Math.max(0, Math.round(x * 1000));
   const inputs = ['-i', silent, '-i', path.join(A, `hook-${voice}.mp3`), '-i', path.join(A, 'music-intro-tense.mp3')];
   const parts = ['[1:a]volume=1.0[v]', `[2:a]atrim=0:${END},volume=0.34,afade=t=in:d=0.3,afade=t=out:st=${END - 0.9}:d=0.9[m]`];
   const mix = ['[v]', '[m]'];
   layers.forEach(([file, at, vol, extra], i) => {
     inputs.push('-i', file);
-    parts.push(`[${i + 3}:a]${extra ? `${extra},` : ''}volume=${vol},adelay=${ms(at)}:all=1[s${i}]`); mix.push(`[s${i}]`);
+    parts.push(`[${i + 3}:a]${extra ? `${extra},` : ''}volume=${(vol * SFX_GAIN).toFixed(3)},adelay=${ms(at)}:all=1[s${i}]`); mix.push(`[s${i}]`);
   });
   // soft synthesised pops as each face and each label appears
   [0.12, 0.5, 0.88, cue[1] + 0.05, cue[2] + 0.05, cue[3] + 0.05, cue[4] + 0.06, cue[5] + 0.12].forEach((at, i) => {
-    parts.push(`sine=f=${520 + i * 40}:d=0.09,afade=t=out:st=0.01:d=0.08,volume=0.22,adelay=${ms(at)}:all=1[p${i}]`); mix.push(`[p${i}]`);
+    parts.push(`sine=f=${520 + i * 40}:d=0.09,afade=t=out:st=0.01:d=0.08,volume=${(0.22 * SFX_GAIN).toFixed(3)},adelay=${ms(at)}:all=1[p${i}]`); mix.push(`[p${i}]`);
   });
   parts.push(`${mix.join('')}amix=inputs=${mix.length}:normalize=0:duration=longest,alimiter=limit=0.95[a]`);
   execFileSync('ffmpeg', ['-loglevel', 'error', '-y', ...inputs, '-filter_complex', parts.join(';'),
