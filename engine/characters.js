@@ -304,6 +304,11 @@ const CAST = {
     hair: { type: 'curly', color: '#2b2b33' }, top: { type: 'hoodie', color: '#1c7ed6' }, pants: '#343a40', shoes: '#ffffff',
     acc: ['headphones'], accent: '#ffd43b',
   },
+  nora: {
+    name: 'NORA', role: 'The tired recruiter who tells the truth.',
+    hair: { type: 'short', color: '#3a2a4a' }, top: { type: 'blazer', color: '#0c8599', shirt: '#ffffff' }, pants: '#22303a', shoes: '#1b1b1f',
+    acc: ['badge', 'earrings'],
+  },
   mentor: {
     name: 'THE MENTOR', role: 'The creator in the video that starts it all.',
     hair: { type: 'bald', beard: '#6a6a78' }, top: { type: 'turtleneck', color: '#16181d' }, pants: '#2b2f3a', shoes: '#ffffff',

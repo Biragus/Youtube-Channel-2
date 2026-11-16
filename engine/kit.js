@@ -94,7 +94,7 @@ function thought(x, y, r, k, fn) { // thought cloud centred on (x, y) with conte
 }
 
 // ---- characters ---------------------------------------------------------------
-const NAMES = { kai: 'heroBefore', kai2: 'heroAfter', maya: 'ex', dex: 'friend', graves: 'boss', mom: 'mom', ray: 'uncle', sam: 'believer', mentor: 'mentor' };
+const NAMES = { kai: 'heroBefore', kai2: 'heroAfter', maya: 'ex', dex: 'friend', graves: 'boss', mom: 'mom', ray: 'uncle', sam: 'believer', mentor: 'mentor', nora: 'nora' };
 const DRIVER_COLORS = ['#c0392b', '#2e86c1', '#d68910', '#1e8449', '#7d3c98', '#5d6d7e', '#b7950b', '#a04000'];
 function driverSpec(i) { return { hair: { type: 'short', color: '#2b2b33' }, top: { type: 'tee', color: DRIVER_COLORS[i % 8], sleeves: i % 2 ? 'short' : undefined }, pants: '#3b4252', shoes: '#e5e5e5', acc: i % 3 === 0 ? ['cap'] : [], accent: DRIVER_COLORS[(i + 3) % 8] }; }
 // who('kai', { x, y, s, pose, expr, flip, prop, look, still }) — feet at (x, y); characters breathe unless still
