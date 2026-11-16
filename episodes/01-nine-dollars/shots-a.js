@@ -210,7 +210,7 @@ module.exports = {
     bg('#1b2033', '#07080d'); const pressed = prog(f.t, f.d * 0.24, f.d * 0.3); const gone = ease(prog(f.t, f.d * 0.3, f.d * 0.45));
     phone(700, 560, 1.2, 1, () => { card(0, 0, 400, 720, '#12141c', 0); T('SAVED VIDEOS', 200, 70, 30, '#9aa3b5', { weight: 800 }); for (let i = 0; i < 4; i++) alpha(1 - gone, () => card(30, 120 + i * 120, 340, 100, ['#1c7ed6', '#e8590c', '#2f9e44', '#9c36b5'][i], 12)); card(40, 610, 320, 80, pressed > 0 ? '#8a1c1c' : '#e03131', 20); T('REMOVE ALL', 200, 652, 34, '#ffffff'); });
     finger(lerp(1100, 800, ease(prog(f.t, 0, f.d * 0.24))), 990, 1.4);
-    at(1380, 520, pop(f.t, f.d * 0.55), () => { E('⏰', 0, -40, 300); T('5:00 AM', 0, 190, 80, '#ffffff', { mono: true }); });
+    at(1380, 520, pop(f.t, f.d * 0.55), () => { K.alarm(0, -60, 1.25, f.t); T('5:00 AM', 0, 210, 80, '#ffffff', { mono: true }); });
   }) },
 
   // ===== 5. The big problem =================================================
@@ -279,7 +279,7 @@ module.exports = {
     for (let i = 0; i < 5; i++) E('📚', 480 + (i > 1 ? 780 : 0) + (i % 2) * 150, 760 - Math.floor(i / 2) * 6, 150); E('💻', 960, 770, 170);
     tag('FREE WIFI + HEATER', pop(f.t, f.d * 0.2), '#ffd43b'); E('♨️', 1750, 760, 130);
   }) },
-  '6d': { sfx: [['pen', 0.3, 1.2]], draw: (f) => drift(f, 1.0, 1.1, () => {
+  '6d': { draw: (f) => drift(f, 1.0, 1.1, () => {
     bg('#3b2a1a', '#1c130b'); at(960, 540, 1, () => { card(-620, -400, 1240, 800, '#fff8dc', 12, '#b7950b', 6); for (let i = 0; i < 9; i++) line([[-560, -300 + i * 80], [560, -300 + i * 80]], '#d9cfa8', 3); line([[-470, -400], [-470, 400]], '#e8a0a0', 4);
       const a = 'RULE 1:'; const b = 'SELL WHAT HURTS'; T(a, 0, -200, 100, '#1c7ed6'); const n = Math.floor(prog(f.t, f.d * 0.45, f.d * 0.8) * b.length); T(b.slice(0, n), 0, 0, 120, INK); if (n >= b.length) { line([[-470, 80], [470, 80]], RED, 12); line([[-470, 108], [470, 108]], RED, 12); }
       alpha(0.5, () => T('not what you like', 0, 220, 56, '#8a7a5c', { weight: 700 })); if (f.k > 0.3) line([[-250, 222], [250, 222]], '#8a7a5c', 6); }, -0.02);

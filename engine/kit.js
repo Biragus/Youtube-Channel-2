@@ -160,6 +160,37 @@ function star(x, y, r, fill = GOLD) { ctx.fillStyle = fill; ctx.beginPath(); for
 function tick(x, y, s, ok = true) { at(x, y, s, () => { circle(0, 0, 34, ok ? '#2fb344' : '#e03131'); if (ok) line([[-14, 2], [-4, 13], [16, -11]], '#ffffff', 9); else { line([[-12, -12], [12, 12]], '#ffffff', 9); line([[12, -12], [-12, 12]], '#ffffff', 9); } }); }
 function button(str, x, y, w, color, k = 1, pressed = 0) { at(x, y + pressed * 8, k, () => { card(-w / 2, -60 + 12 * (1 - pressed), w, 120, 'rgba(0,0,0,0.3)', 34); card(-w / 2, -60, w, 120, color, 34); T(str, 0, 2, 58, '#ffffff', { spacing: 4 }); }); }
 function finger(x, y, s = 1) { at(x, y, s, () => { ctx.lineCap = 'round'; line([[0, 0], [70, 190]], '#111114', 44); circle(0, 0, 22, '#111114'); }); }
+// Crisp code-drawn props (emoji go soft when scaled up this large)
+function alarm(x, y, s = 1, t = 0) { // ringing alarm clock centred on (x, y)
+  at(x, y, s, () => {
+    line([[-70, 96], [-104, 150]], INK, 18); line([[70, 96], [104, 150]], INK, 18);
+    for (const sd of [-1, 1]) { ctx.save(); ctx.translate(sd * 84, -98); ctx.rotate(sd * 0.62); ctx.fillStyle = '#ffd43b'; ctx.strokeStyle = INK; ctx.lineWidth = 8; ctx.beginPath(); ctx.arc(0, 0, 52, Math.PI, 0); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); }
+    line([[0, -120], [0, -150]], INK, 12); circle(0, -156, 14, INK);
+    circle(0, 0, 124, INK); circle(0, 0, 110, '#e03131'); circle(0, 0, 88, '#ffffff');
+    for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2; line([[Math.sin(a) * 70, -Math.cos(a) * 70], [Math.sin(a) * 80, -Math.cos(a) * 80]], INK, i % 3 ? 4 : 8); }
+    line([[0, 0], [0, -62]], INK, 9); line([[0, 0], [20, 35]], INK, 11); // five o'clock circle(0, 0, 9, '#e03131');
+    for (const sd of [-1, 1]) for (let i = 0; i < 2; i++) { ctx.strokeStyle = '#ffd43b'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(sd * 84, -98, 78 + i * 26, sd > 0 ? -1.3 : Math.PI + 0.5, sd > 0 ? -0.5 : Math.PI + 1.3); ctx.stroke(); }
+  }, Math.sin(t * 38) * 0.07);
+}
+function house(x, y, s = 1) { // front view, standing on y
+  at(x, y, s, () => {
+    card(120, -470, 56, 130, '#a85a3c', 4, INK, 7);
+    card(-230, -300, 460, 300, '#fff3d6', 6, INK, 8);
+    ctx.fillStyle = '#e8590c'; ctx.strokeStyle = INK; ctx.lineWidth = 8; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(-280, -290); ctx.lineTo(0, -480); ctx.lineTo(280, -290); ctx.closePath(); ctx.fill(); ctx.stroke();
+    card(-50, -170, 100, 170, '#8a4a2a', 8, INK, 7); circle(26, -84, 9, GOLD);
+    for (const wx of [-170, 90]) { card(wx, -220, 90, 90, '#a8dcf5', 6, INK, 7); line([[wx + 45, -220], [wx + 45, -130]], INK, 5); line([[wx, -175], [wx + 90, -175]], INK, 5); }
+    circle(0, -370, 30, '#a8dcf5'); ctx.strokeStyle = INK; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(0, -370, 30, 0, Math.PI * 2); ctx.stroke();
+    for (const bx of [-290, -200, 210, 300]) circle(bx, -34, 46, '#4c9a52');
+  });
+}
+function chair(x, y, s = 1, color = '#b9773f') { // wooden chair standing on y
+  at(x, y, s, () => {
+    for (const lx of [-66, 56]) card(lx, -110, 18, 110, color, 5, INK, 6);
+    card(-70, -310, 20, 210, color, 5, INK, 6); card(52, -310, 20, 210, color, 5, INK, 6);
+    card(-70, -300, 142, 34, color, 8, INK, 6); card(-70, -236, 142, 30, color, 8, INK, 6);
+    card(-84, -132, 172, 30, color, 8, INK, 6);
+  });
+}
 // floating bits that rise and fade, used for laughter, sparks and steam
 function floaters(t, n, fn, o = {}) { for (let i = 0; i < n; i++) { const start = (o.every ?? 0.25) * i + (o.from ?? 0); const life = prog(t, start, start + (o.life ?? 1)); if (life <= 0 || life >= 1) continue; alpha(1 - life, () => fn(i, life)); } }
 
@@ -224,5 +255,5 @@ const S = {
 module.exports = {
   W, H, GREEN, INK, RED, PAPER, GOLD, CAST, use, setTime, ctx: () => ctx, clamp, lerp, prog, ease, easeOut, pop, rnd, money,
   bg, zoom, drift, at, alpha, tint, shake, grey, T, E, textWidth, card, line, circle, cap, tag, counter, bubble, thought,
-  who, head, withSpec, P, phone, laptop, sheet, van, box, door, windowP, table, floor, star, tick, button, finger, floaters, S,
+  who, head, withSpec, P, phone, laptop, sheet, van, box, door, windowP, table, floor, star, tick, button, finger, floaters, S, alarm, house, chair,
 };

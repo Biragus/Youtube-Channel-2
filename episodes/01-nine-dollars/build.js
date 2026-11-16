@@ -21,7 +21,8 @@ const CHAPTER_GAP = 0.9;              // breath between chapters
 const HOLD = { '2q': 0.5, '3j': 0.6, '5e': 0.7, '5k': 1.0, '7k': 0.8, '8n': 0.9, '8o': 0.5, '9h': 1.0, '10g': 0.6, '10j': 1.6, '11d': 1.2, '11e': 2.6 }; // extra silence after a line
 const FILES = { 8: [['ch8a', 0, 12], ['ch8b', 12, 24]] };
 const MUSIC = [ // [track, first chapter, last chapter, volume]
-  ['music-sad', 2, 5, 0.5], ['music-curious', 6, 7, 0.26], ['music-drive', 8, 8, 0.26], ['music-warm', 9, 11, 0.3],
+  // every track is first levelled to one steady loudness (see buildAudio), so these sit about 11 dB under the voice
+  ['music-sad', 2, 5, 0.22], ['music-curious', 6, 7, 0.21], ['music-drive', 8, 8, 0.24], ['music-warm', 9, 11, 0.24],
 ];
 
 const timeline = []; const voiceClips = []; const chapterSpan = {};
@@ -81,9 +82,11 @@ function decode(file, filter) {
 }
 // How loud each effect sits before the global gain. Laughs and ticks are a third, as agreed on the hook.
 const SFX_GAIN = 0.5;
-const LEVEL = { whoosh: 0.26, boom: 1.0, slam: 0.55, riser: 0.4, heartbeat: 0.9, buzz: 0.16, counter: 0.3, laugh: 0.1, tick: 0.19,
-  cash: 1.1, notif: 0.8, door: 0.5, typing: 0.8, paper: 2.6, error: 0.5, engine: 0.5, poof: 0.7, scratch: 0.25, drip: 2.6, chime: 0.7,
-  glass: 0.7, pen: 1.8, crowd: 1.0, send: 0.8 };
+// Second pass after review: page turns and ticks to a quarter, typing, drips and crowd to a third, pen to a fifth, engine and cash to half.
+const LEVEL = { whoosh: 0.26, boom: 1.0, slam: 0.55, riser: 0.4, heartbeat: 0.9, buzz: 0.16, counter: 0.3, laugh: 0.1, tick: 0.19 / 4,
+  cash: 1.1 / 2, notif: 0.8, door: 0.5, typing: 0.8 / 3, paper: 2.6 / 4, error: 0.5, engine: 0.5 / 2, poof: 0.7, scratch: 0.25, drip: 2.6 / 3, chime: 0.7,
+  glass: 0.7, pen: 1.8 / 5, crowd: 1.0 / 3, send: 0.8 };
+const LOOPY = new Set(['pen', 'typing', 'crowd', 'tick']); // long sounds stop when their shot ends
 const TAIL = { boom: 'aecho=0.8:0.7:90|180:0.45|0.3', slam: 'aecho=0.8:0.7:90|180:0.45|0.3' };
 
 function buildAudio(file, from, to) {
@@ -101,7 +104,7 @@ function buildAudio(file, from, to) {
   for (const c of voiceClips) { voice[c.file] ??= decode(c.file); add(voice[c.file], c.at, 1.0, c.from, c.to, 0.004, 0.004); }
   // music: one track per group of chapters, looped if the track is shorter than the group
   for (const [name, a, b, vol] of MUSIC) {
-    const pcm = decode(path.join(A, `${name}.mp3`)); const start = chapterSpan[a].start - 0.3; const end = chapterSpan[b].end + 0.6; const tl = pcm.length / 2 / SR;
+    const pcm = decode(path.join(A, `${name}.mp3`), 'acompressor=threshold=-30dB:ratio=6:attack=20:release=500,loudnorm=I=-24:LRA=3:TP=-2'); const start = chapterSpan[a].start - 0.3; // flatten swells so the music never climbs over the voice const end = chapterSpan[b].end + 0.6; const tl = pcm.length / 2 / SR;
     for (let t = start, first = true; t < end; t += tl - 2, first = false) add(pcm, t, vol, 0, Math.min(tl, end - t), first ? 1.2 : 2, t + tl >= end ? 2.2 : 2);
   }
   // effects: a soft whoosh on every cut plus whatever each shot asks for
@@ -109,7 +112,7 @@ function buildAudio(file, from, to) {
   timeline.forEach((s, i) => {
     const def = shots[s.id]; const list = (typeof def === 'object' && def.sfx) || [];
     if (i > 0 && !(def && def.quietCut)) add(sfx('whoosh'), s.start - 0.12, LEVEL.whoosh * SFX_GAIN * 0.8);
-    for (const [name, off = 0, mul = 1] of list) { if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
+    for (const [name, off = 0, mul = 1] of list) { if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); if (LOOPY.has(name)) add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul, 0, Math.max(0.3, s.d - off), 0, 0.2); else add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
   });
   // soft limiter so peaks never clip
   for (let i = 0; i < len; i++) { const v = mix[i]; mix[i] = Math.abs(v) > 0.7 ? Math.sign(v) * (0.7 + 0.28 * Math.tanh((Math.abs(v) - 0.7) / 0.28)) : v; }
@@ -121,6 +124,12 @@ function buildAudio(file, from, to) {
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   console.log(`${timeline.length} shots, body ${END.toFixed(1)}s (${(END / 60).toFixed(2)} min)`);
+  if (flag('--list')) { // where every shot and sound lands in the finished video
+    const HOOK = 18.1; const mmss = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, '0')}`;
+    for (const s of timeline) { const def = shots[s.id]; const list = (typeof def === 'object' && def.sfx) || []; console.log(mmss(s.start + HOOK).padEnd(7), s.id.padEnd(4), list.map(([n, o = 0, m = 1]) => `${n}@${mmss(s.start + HOOK + o)}${m !== 1 ? `x${m}` : ''}`).join(' ')); }
+    for (const [n, a2, b2] of MUSIC) console.log('music', n, mmss(chapterSpan[a2].start + HOOK), '-', mmss(chapterSpan[b2].end + HOOK));
+    return;
+  }
   if (flag('--sheets')) { // one still per shot, tiled, for a quick visual check
     const dir = path.join(OUT, 'sheets'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
     const frac = +(opt('--at') ?? 0.6); const cols = 4; const rows = 4; const tw = 480; const th = 270; const only = opt('--ch');
@@ -145,7 +154,7 @@ async function main() {
   // join the hook and the body into the finished episode
   const final = path.join(OUT, 'episode-01.mp4');
   execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', path.join(OUT, 'hook-charliee.mp4'), '-i', body,
-    '-filter_complex', '[0:v]fps=30,format=yuv420p[v0];[1:v]fps=30,format=yuv420p[v1];[0:a]aresample=44100,aformat=channel_layouts=stereo[a0];[1:a]aresample=44100,aformat=channel_layouts=stereo[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]',
+    '-filter_complex', '[0:v]fps=30,format=yuv420p[v0];[1:v]fps=30,format=yuv420p[v1];[0:a]aresample=44100,aformat=channel_layouts=stereo[a0];[1:a]aresample=44100,aformat=channel_layouts=stereo[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a0n];[a0n]loudnorm=I=-15:TP=-1.5:LRA=11,aresample=44100[a]',
     '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', final]);
   console.log('wrote', final, `${duration(final).toFixed(1)}s`);
 }

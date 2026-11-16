@@ -89,7 +89,7 @@ module.exports = {
   }) },
   '8f': { sfx: [['chime', 1.8]], draw: (f) => drift(f, 1.0, 1.07, () => {
     S.depot({ dawn: true }); who('kai', { x: 620, y: 950, s: 1.45, expr: 'tired' }); const x = lerp(2100, 1240, easeOut(prog(f.t, 0.5, 1.5)));
-    who('sam', { x, y: 950, s: 1.45, pose: P.give, flip: true, expr: 'happy' }); E('☕', x - 250, 650, 110); E('☕', x - 130, 690, 90);
+    who('sam', { x, y: 950, s: 1.45, pose: P.give, flip: true, expr: 'happy' }); E('☕', x - 243, 585, 100); // one coffee, held out in his hand
     at(x, 250, pop(f.t, f.d * 0.7), () => { card(-150, -60, 300, 120, '#1c7ed6', 30); T('SAM', 0, 4, 80, '#ffffff', { spacing: 8 }); });
   }) },
   '8g': { sfx: [['error', 0.8, 0.5], ['error', 1.3, 0.5], ['error', 1.8, 0.5], ['error', 2.3, 0.5]], draw: (f) => drift(f, 1.0, 1.05, () => {
@@ -106,7 +106,7 @@ module.exports = {
     bg('#1b2033', '#07080d'); phone(700, 560, 1.25, 1, () => { card(0, 0, 400, 720, '#12141c', 0); card(60, 120, 280, 480, '#f2fbf5', 20); card(60, 120, 280, 70, '#1e8449', 20); card(90, 240, 220, 120, '#2fb344', 20); card(90, 400, 220, 120, '#1c7ed6', 20); circle(48, 60, 14, RED); T('REC  0:30', 150, 62, 30, '#ffffff', { mono: true }); });
     counter('VIEWS', '40', 1380, 520, '#9aa3b5', pop(f.t, f.d * 0.68), { size: 190, s: 1.2 });
   }) },
-  '8j': { sfx: [['send', 0.2, 0.6], ['send', 1.1, 0.6], ['send', 2.0, 0.6], ['send', 2.9, 0.6], ['send', 3.8, 0.6]], draw: (f) => drift(f, 1.03, 1.0, () => {
+  '8j': { sfx: [['send', 0.2, 0.3], ['send', 1.1, 0.3], ['send', 2.0, 0.3], ['send', 2.9, 0.3], ['send', 3.8, 0.3]], draw: (f) => drift(f, 1.03, 1.0, () => {
     bg('#1b2033', '#07080d'); const n = Math.floor(f.k * 21) + 1;
     for (let i = 0; i < Math.min(21, n); i++) at(230 + (i % 7) * 245, 260 + Math.floor(i / 7) * 250, pop(f.t, (i / 21) * f.d), () => { card(-105, -100, 210, 200, ['#1c7ed6', '#e8590c', '#2f9e44', '#9c36b5', '#e03131'][i % 5], 16); E('▶️', 0, -14, 70); T(`DAY ${26 + i}`, 0, 66, 28, '#ffffff'); });
     tag('ONE VIDEO. EVERY DAY.', 1, GREEN);
@@ -149,7 +149,7 @@ module.exports = {
     for (let i = 0; i < 12; i++) { const red = i / 12 < bad; card(180 + (i % 4) * 400, 150 + Math.floor(i / 4) * 250, 360, 210, red ? '#e03131' : '#f2fbf5', 16, '#111114', 6); if (red) T('NO DATA', 360 + (i % 4) * 400, 255 + Math.floor(i / 4) * 250, 54, '#ffffff'); else sheet(200 + (i % 4) * 400, 170 + Math.floor(i / 4) * 250, 320, 170, 5, 3, { seed: i }); }
     counter('ANGRY EMAILS', String(Math.floor(200 * ease(bad))), 960, 920, RED, pop(f.t, f.d * 0.45), { size: 100 });
   }) },
-  '8t': { sfx: [['typing', 1.2, 1.2], ['send', 3.0], ['send', 3.6], ['send', 4.2], ['chime', 6.0]], draw: (f) => drift(f, 1.0, 1.05, () => {
+  '8t': { sfx: [['typing', 1.2, 1.2], ['send', 3.0, 0.33], ['send', 3.6, 0.33], ['send', 4.2, 0.33], ['chime', 6.0]], draw: (f) => drift(f, 1.0, 1.05, () => {
     desk(f, 'determined', () => { card(0, 0, 640, 400, '#eef2f7', 0); T("I'm sorry. Here is your refund.", 320, 120, 34, INK, { weight: 700 }); T('It is fixed. Kai', 320, 190, 34, INK, { weight: 700 }); card(220, 280, 200, 70, '#1c7ed6', 14); T('SEND', 320, 316, 34, '#ffffff'); });
     const back = f.k > 0.7; floaters(f.t, 22, (i, life) => { const x = lerp(1300, 1960, life); const y = 300 + rnd(i) * 300 - life * 120; if (back) tick(W - (x - 1300) - 100, y, 1.2); else E('✉️', x, y, 90); }, { every: 0.22, from: f.d * 0.3, life: 0.9 });
     tag(back ? '200 / 200 REFUNDED' : 'ONE NIGHT', 1, back ? GREEN : '#ffd43b');
@@ -180,8 +180,8 @@ module.exports = {
     head(withSpec('kai'), 430, 600, 1.5, 'smile'); floor(900, '#c49a6c');
     alpha(1 - ease(prog(f.t, f.d * 0.5, f.d * 0.85)), () => counter('BALANCE', '?', 1560, 880, '#9aa3b5', 1, { size: 100 }));
   }) },
-  '9b': { sfx: [['chime', 0.6], ['counter', 1.4]], draw: (f) => drift(f, 1.0, 1.06, () => { cityMap(f, true); tag('18 MONTHS LATER', 1, GREEN); }) },
-  '9c': { sfx: [['poof', 0.5, 1.4]], draw: (f) => drift(f, 1.0, 1.1, () => {
+  '9b': { sfx: [['chime', 0.6], ['counter', 1.4, 0.5]], draw: (f) => drift(f, 1.0, 1.06, () => { cityMap(f, true); tag('18 MONTHS LATER', 1, GREEN); }) },
+  '9c': { sfx: [['poof', 0.5, 0.7]], draw: (f) => drift(f, 1.0, 1.1, () => {
     bg('#fff1d6', '#f0b77a'); const k = prog(f.t, 0.45, 0.95); who(k < 0.5 ? 'kai' : 'kai2', { x: 960, y: 1010, s: 1.9, pose: k < 0.5 ? 'stand' : 'power', expr: k < 0.5 ? 'neutral' : 'smug' });
     if (k > 0 && k < 1) for (let i = 0; i < 16; i++) { const a = i * 0.8; alpha(1 - Math.abs(k - 0.5) * 2 + 0.3, () => circle(960 + Math.cos(a) * (120 + k * 260), 620 + Math.sin(a) * (200 + k * 240), 110 - k * 40, '#ffffff')); }
     if (k >= 1) for (let i = 0; i < 10; i++) star(960 + Math.cos(i * 0.63 + f.t) * 520, 560 + Math.sin(i * 0.63 + f.t) * 400, 18, GOLD);
@@ -195,7 +195,7 @@ module.exports = {
     if (hit >= 1) star(905, 430, 60 * (1 - prog(f.t, 1.4, 2.0)) + 10, '#ffffff');
   }) },
   '9g': { sfx: [['chime', 2.0]], draw: (f) => drift(f, 1.0, 1.07, () => {
-    bg('#bfe3f5', '#8fc7e8', 960, 300); floor(880, '#7fb069'); E('🏠', 620, 560, 620);
+    bg('#bfe3f5', '#8fc7e8', 960, 300); floor(880, '#7fb069'); K.house(620, 880, 1.45);
     at(620, 250, pop(f.t, f.d * 0.55), () => { card(-200, -90, 400, 180, '#2fb344', 20, '#ffffff', 10); T('PAID OFF', 0, 4, 76, '#ffffff'); }, -0.08);
     who('mom', { x: 1280, y: 980, s: 1.3, expr: 'shock' }); who('kai2', { x: 1560, y: 980, s: 1.3, pose: P.give, flip: true, expr: 'smile' });
   }) },
@@ -208,7 +208,7 @@ module.exports = {
   }) },
   '10b': { sfx: [['paper', 0.2]], draw: (f) => drift(f, 1.0, 1.08, () => { bg('#2f9e44', '#14532d'); close('dex', 1150, 'worried', { s: 2.2, hy: 500, flip: true }); at(560, 600, pop(f.t, 0.15), () => { card(-230, -300, 460, 600, '#ffffff', 12); T('C.V.', 0, -200, 90, INK); for (let i = 0; i < 6; i++) card(-170, -90 + i * 56, 340 - (i % 3) * 60, 22, '#c9cfd6', 6); }, -0.1 + Math.sin(f.t * 18) * 0.015); }) },
   '10c': { sfx: [['door', 1.2, 0.5]], draw: (f) => drift(f, 1.0, 1.06, () => {
-    S.dinner(); who('kai2', { x: 760, y: 950, s: 1.35, expr: 'neutral' }); who('ray', { x: 1300, y: 950, s: 1.35, pose: P.give, flip: true, expr: 'fake' }); E('🪑', 1040, 780, 260);
+    S.dinner(); who('kai2', { x: 760, y: 950, s: 1.35, expr: 'neutral' }); who('ray', { x: 1300, y: 950, s: 1.35, pose: P.give, flip: true, expr: 'fake' }); K.chair(1040, 950, 1.25);
     bubble('After you, sir.', 1300, 290, pop(f.t, f.d * 0.55), { size: 60, side: -1 }); E('💵', 1500, 700, 100);
   }) },
   '10d': { sfx: [['notif', 0.3]], draw: (f) => message('MAYA', '', 'I always knew\nyou would\nmake it.', f, '#d6336c') },
@@ -218,7 +218,7 @@ module.exports = {
   })) },
   '10f': { draw: (f) => drift(f, 1.0, 1.07, () => {
     S.office(); card(1260, 180, 560, 680, '#dfe9f5', 8, '#1f2a44', 14); T('KAI & CO.', 1540, 300, 76, '#1f2a44'); T('FOUNDER', 1540, 380, 40, '#6b7280', { spacing: 8, weight: 700 }); circle(1320, 540, 16, GOLD);
-    who('graves', { x: 620, y: 980, s: 1.5, pose: P.hold, expr: 'worried' }); E('📁', 620, 640, 150); E('🪑', 300, 790, 240);
+    who('graves', { x: 620, y: 980, s: 1.5, pose: P.hold, expr: 'worried' }); E('📁', 620, 640, 150); K.chair(300, 980, 1.25);
   }) },
   '10g': { quietCut: true, sfx: [['riser', 1.6], ['boom', 2.1, 0.9]], draw: (f) => { const seen = f.k > 0.5; shake(seen && f.k < 0.7 ? 8 : 0, () => drift(f, 1.0, 1.1, () => {
     bg('#1f2a44', '#070a14'); const dark = withSpec('kai2', { top: { type: 'blazer', color: '#0b0d14', shirt: '#0b0d14' }, pants: '#0b0d14', shoes: '#0b0d14', acc: [], eye: seen ? GREEN : '#111114', eyeGlow: seen });
@@ -248,6 +248,5 @@ module.exports = {
     bg('#22314f', '#0a0d1a'); who('kai2', { x: 620, y: 1010, s: 1.6, pose: 'wave', expr: 'happy' });
     at(1300, 260, pop(f.t, 0.3), () => { card(-380, -90, 760, 180, '#e03131', 40); E('🔔', -290, 0, 90); T('SUBSCRIBE', 50, 4, 80, '#ffffff'); });
     const x = lerp(2200, 1480, easeOut(prog(f.t, f.d * 0.35, f.d * 0.8))); who(withSpec('kai', { hair: { type: 'short', color: '#111114' }, eye: '#4dabf7', eyeGlow: true, top: { type: 'hoodie', color: '#7a6f66' } }), { x, y: 1010, s: 1.3, pose: 'slump', flip: true, expr: 'tired' });
-    cap('NEXT WEEK: SOMEONE ELSE STARTS FROM ZERO', pop(f.t, f.d * 0.5), { size: 48, y: 500, x: 1300 });
   }) },
 };
