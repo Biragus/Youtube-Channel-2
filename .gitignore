@@ -1,1 +1,7 @@
 node_modules/
+# render intermediates
+episodes/*/out/*.silent.mp4
+episodes/*/out/*.wav
+episodes/*/out/*.f32
+episodes/*/out/body.mp4
+episodes/*/out/sheets/
