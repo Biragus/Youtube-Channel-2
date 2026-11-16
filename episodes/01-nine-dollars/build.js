@@ -83,10 +83,10 @@ function decode(file, filter) {
 // How loud each effect sits before the global gain. Laughs and ticks are a third, as agreed on the hook.
 const SFX_GAIN = 0.5;
 // Second pass after review: page turns and ticks to a quarter, typing, drips and crowd to a third, pen to a fifth, engine and cash to half.
-const LEVEL = { whoosh: 0.26, boom: 1.0, slam: 0.55, riser: 0.4, heartbeat: 0.9, buzz: 0.16, counter: 0.3, laugh: 0.1, tick: 0.19 / 4,
-  cash: 1.1 / 2, notif: 0.8, door: 0.5, typing: 0.8 / 3, paper: 2.6 / 4, error: 0.5, engine: 0.5 / 2, poof: 0.7, scratch: 0.25, drip: 2.6 / 3, chime: 0.7,
+const LEVEL = { whoosh: 0.26, boom: 1.0, slam: 0.55, riser: 0.4, heartbeat: 0.9, buzz: 0.16, counter: 0.3 / 4, laugh: 0.1, tick: 0.19 / 4,
+  cash: 1.1 / 2, notif: 0.8, door: 0.5, typing: 0.8 / 3, paper: 2.6 / 16, error: 0.5, engine: 0.5 / 2, poof: 0.7, scratch: 0.25, drip: 2.6 / 3, chime: 0.7,
   glass: 0.7, pen: 1.8 / 5, crowd: 1.0 / 3, send: 0.8 };
-const LOOPY = new Set(['pen', 'typing', 'crowd', 'tick']); // long sounds stop when their shot ends
+const LOOPY = new Set(['pen', 'typing', 'crowd', 'tick', 'counter']); // long sounds stop when their shot ends
 const TAIL = { boom: 'aecho=0.8:0.7:90|180:0.45|0.3', slam: 'aecho=0.8:0.7:90|180:0.45|0.3' };
 
 function buildAudio(file, from, to) {
@@ -148,6 +148,7 @@ async function main() {
   let from = 0; let to = END; let name = 'body';
   if (opt('--ch')) { const c = chapterSpan[+opt('--ch')]; from = Math.max(0, c.start - 0.3); to = c.end; name = `ch${opt('--ch')}`; }
   const silent = path.join(OUT, `${name}.silent.mp4`); const wav = path.join(OUT, `${name}.wav`); const body = path.join(OUT, `${name}.mp4`);
+  if (flag('--reuse-frames') && !fs.existsSync(silent) && fs.existsSync(body)) execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', body, '-an', '-c:v', 'copy', silent]); // take the picture from the last build
   if (!(flag('--reuse-frames') && fs.existsSync(silent))) await renderVideo(silent, from, to); // --reuse-frames: only redo the sound
   buildAudio(wav, from, to);
   execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', silent, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', body]);

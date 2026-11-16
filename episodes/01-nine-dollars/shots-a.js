@@ -110,12 +110,12 @@ module.exports = {
 
   // ===== 3. The video =======================================================
   '3a': { quietCut: true, sfx: [['tick', 0.2, 1.5]], draw: (f) => { bg('#05060a'); const o = ease(prog(f.t, 0.25, 0.6)); zoom(1 + f.k * 0.08, () => at(960, 520, 3.2, () => { const c = K.ctx(); c.fillStyle = GREEN; c.shadowColor = GREEN; c.shadowBlur = 30; for (const s of [-1, 1]) { c.beginPath(); c.ellipse(s * 24, 0, 14, 19 * o + 1, 0, 0, Math.PI * 2); c.fill(); } })); T('2:07 AM', 1620, 120, 60, '#3a4158', { mono: true }); } },
-  '3b': { sfx: [['buzz', 0.2], ['send', 1.6, 0.5], ['send', 2.4, 0.5], ['send', 3.1, 0.5]], draw: (f) => drift(f, 1.05, 1.0, () => {
+  '3b': { sfx: [['buzz', 0.2], ['send', 1.6, 0.1], ['send', 2.4, 0.1], ['send', 3.1, 0.1]], draw: (f) => drift(f, 1.05, 1.0, () => {
     bg('#3a4f7a', '#090b14', 900, 900, 1200); const c = K.ctx(); const g = c.createRadialGradient(900, 1120, 0, 900, 1120, 760); g.addColorStop(0, 'rgba(170,215,255,0.55)'); g.addColorStop(1, 'rgba(170,215,255,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H);
     who('kai', { x: 900, y: 1540, s: 2.7, pose: 'phone', expr: 'tired', prop: 'phone' });
     floaters(f.t, 8, (i, life) => E(['🐱', '💥', '🕺', '🍕', '⚽', '🎮', '🚗', '😂'][i], 1350 + rnd(i) * 260, 760 - life * 520, 110), { every: 0.42, from: 1.2, life: 0.9 });
   }) },
-  '3c': { sfx: [['send', 0.1, 0.6], ['send', 1.4, 0.6], ['send', 2.8, 0.6], ['error', 4.6, 0.3]], draw: (f) => {
+  '3c': { sfx: [['send', 0.1, 0.12], ['send', 1.4, 0.12], ['send', 2.8, 0.12], ['error', 4.6, 0.3]], draw: (f) => {
     bg('#1b2033', '#07080d'); const n = Math.min(2, Math.floor(f.k * 3 / 0.62)); const items = [['🐱', 'cat does a thing', '#f08c00'], ['💥', 'worst crash ever', '#c92a2a'], ['🕺', 'kitchen dance pt. 9', '#5f3dc4']];
     const local = (f.k * 3 / 0.62) % 1;
     phone(960, 560, 1.25, 1, () => { K.ctx().save(); K.ctx().translate(0, f.k < 0.62 && n < 2 ? -720 * ease(prog(local, 0.82, 1)) : 0); feedCard(...items[n]); K.ctx().translate(0, 720); feedCard(...items[Math.min(2, n + 1)]); K.ctx().restore(); });

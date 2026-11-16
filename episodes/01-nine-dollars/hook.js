@@ -185,15 +185,15 @@ async function main() {
   const A = path.join(dir, 'audio'); const sfx = (n) => path.join(A, 'sfx', `${n}.mp3`);
   const snap = cue[4] + (cue[5] - cue[4]) * 0.42;
   const tail = 'aecho=0.8:0.7:90|180:0.45|0.3'; // gives the short hits a longer tail
-  // [file, start time, volume, extra filter]
+  // [file, start time, volume, extra filter, max length in seconds]
   const layers = [
     [sfx('laugh'), 0.12, 0.1], [sfx('laugh'), 0.95, 0.08], [sfx('laugh'), 1.8, 0.067],
     [sfx('whoosh'), cue[1] - 0.12, 0.3], [sfx('whoosh'), cue[2] - 0.12, 0.3], [sfx('whoosh'), cue[3] - 0.12, 0.3],
     [sfx('whoosh'), cue[4] - 0.12, 0.26], [sfx('heartbeat'), cue[4] + 0.1, 0.9],
     [sfx('riser'), snap - 0.5, 0.4], [sfx('boom'), snap, 1.0, tail],
-    [sfx('whoosh'), cue[5] - 0.12, 0.26], [sfx('buzz'), cue[5] + 0.05, 0.16], [sfx('counter'), cue[5] + 0.25, 0.3],
+    [sfx('whoosh'), cue[5] - 0.12, 0.26], [sfx('buzz'), cue[5] + 0.05, 0.16], [sfx('counter'), cue[5] + 0.25, 0.3 / 4, null, 1.0], // quarter volume, cut after a second
     [sfx('heartbeat'), cue[5] + 1.0, 0.9],
-    [sfx('whoosh'), cue[6] - 0.12, 0.26], [sfx('tick'), cue[6] + 0.1, 0.183], [sfx('tick'), cue[6] + 1.6, 0.2],
+    [sfx('whoosh'), cue[6] - 0.12, 0.26], [sfx('tick'), cue[6] + 0.1, 0.183, null, 1.6], // one short burst, gone before the next line
     [sfx('riser'), TITLE_AT - 0.35, 0.45], [sfx('slam'), TITLE_AT + 0.18, 0.55, tail], [sfx('boom'), TITLE_AT + 0.18, 0.9, tail],
   ].filter(([, at]) => at < END);
   const SFX_GAIN = 0.5; // one knob for how loud all effects sit under the voice
@@ -201,9 +201,9 @@ async function main() {
   const inputs = ['-i', silent, '-i', path.join(A, `hook-${voice}.mp3`), '-i', path.join(A, 'music-intro-tense.mp3')];
   const parts = ['[1:a]volume=1.0[v]', `[2:a]atrim=0:${END},volume=0.34,afade=t=in:d=0.3,afade=t=out:st=${END - 0.9}:d=0.9[m]`];
   const mix = ['[v]', '[m]'];
-  layers.forEach(([file, at, vol, extra], i) => {
+  layers.forEach(([file, at, vol, extra, dur], i) => {
     inputs.push('-i', file);
-    parts.push(`[${i + 3}:a]${extra ? `${extra},` : ''}volume=${(vol * SFX_GAIN).toFixed(3)},adelay=${ms(at)}:all=1[s${i}]`); mix.push(`[s${i}]`);
+    parts.push(`[${i + 3}:a]${dur ? `atrim=0:${dur},afade=t=out:st=${(dur - 0.2).toFixed(2)}:d=0.2,` : ''}${extra ? `${extra},` : ''}volume=${(vol * SFX_GAIN).toFixed(3)},adelay=${ms(at)}:all=1[s${i}]`); mix.push(`[s${i}]`);
   });
   // soft synthesised pops as each face and each label appears
   [0.12, 0.5, 0.88, cue[1] + 0.05, cue[2] + 0.05, cue[3] + 0.05, cue[4] + 0.06, cue[5] + 0.12].forEach((at, i) => {
