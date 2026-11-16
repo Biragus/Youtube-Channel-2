@@ -104,7 +104,8 @@ function buildAudio(file, from, to) {
   for (const c of voiceClips) { voice[c.file] ??= decode(c.file); add(voice[c.file], c.at, 1.0, c.from, c.to, 0.004, 0.004); }
   // music: one track per group of chapters, looped if the track is shorter than the group
   for (const [name, a, b, vol] of MUSIC) {
-    const pcm = decode(path.join(A, `${name}.mp3`), 'acompressor=threshold=-30dB:ratio=6:attack=20:release=500,loudnorm=I=-24:LRA=3:TP=-2'); const start = chapterSpan[a].start - 0.3; // flatten swells so the music never climbs over the voice const end = chapterSpan[b].end + 0.6; const tl = pcm.length / 2 / SR;
+    // compress and level each track first, so swells never climb over the voice
+    const pcm = decode(path.join(A, `${name}.mp3`), 'acompressor=threshold=-30dB:ratio=6:attack=20:release=500,loudnorm=I=-24:LRA=3:TP=-2'); const start = chapterSpan[a].start - 0.3; const end = chapterSpan[b].end + 0.6; const tl = pcm.length / 2 / SR;
     for (let t = start, first = true; t < end; t += tl - 2, first = false) add(pcm, t, vol, 0, Math.min(tl, end - t), first ? 1.2 : 2, t + tl >= end ? 2.2 : 2);
   }
   // effects: a soft whoosh on every cut plus whatever each shot asks for
@@ -147,7 +148,8 @@ async function main() {
   let from = 0; let to = END; let name = 'body';
   if (opt('--ch')) { const c = chapterSpan[+opt('--ch')]; from = Math.max(0, c.start - 0.3); to = c.end; name = `ch${opt('--ch')}`; }
   const silent = path.join(OUT, `${name}.silent.mp4`); const wav = path.join(OUT, `${name}.wav`); const body = path.join(OUT, `${name}.mp4`);
-  await renderVideo(silent, from, to); buildAudio(wav, from, to);
+  if (!(flag('--reuse-frames') && fs.existsSync(silent))) await renderVideo(silent, from, to); // --reuse-frames: only redo the sound
+  buildAudio(wav, from, to);
   execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', silent, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', body]);
   fs.unlinkSync(silent); fs.unlinkSync(wav);
   if (name !== 'body') { console.log('wrote', body); return; }
