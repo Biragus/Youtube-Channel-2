@@ -1,6 +1,7 @@
 // Scene toolkit: everything a shot needs to draw a frame in a line or two.
 // The build script calls use(ctx) once and setTime(t) per frame; helpers then draw on that context.
 const { CAST, EXPRESSIONS, drawCharacter, drawHead } = require('./characters');
+const { ICONS, drawIcon } = require('./icons');
 
 const W = 1920; const H = 1080;
 const GREEN = '#39ff14'; const INK = '#16161a'; const RED = '#ff4d4d'; const PAPER = '#f4efe6'; const GOLD = '#f2c14e';
@@ -44,7 +45,10 @@ function T(str, x, y, size, color = '#ffffff', o = {}) {
   if (o.glow) { ctx.shadowColor = o.glow; ctx.shadowBlur = o.blur ?? 40; }
   ctx.fillStyle = color; ctx.fillText(str, x, y); ctx.restore();
 }
-function E(emoji, x, y, size, rot = 0) { ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.font = `${size}px "Noto Color Emoji"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(emoji, 0, 0); ctx.restore(); }
+// Draws an icon centred on (x, y). Known icons are code-drawn so they stay sharp at any size; the rest fall back to emoji.
+function E(emoji, x, y, size, rot = 0) {
+  if (ICONS[emoji]) { if (size <= 0) return; ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(size / 100, size / 100); drawIcon(ctx, emoji); ctx.restore(); return; }
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.font = `${size}px "Noto Color Emoji"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(emoji, 0, 0); ctx.restore(); }
 function textWidth(str, size, mono) { ctx.save(); ctx.font = `900 ${size}px ${mono ? 'JetBrains Mono' : 'Inter'}`; const w = ctx.measureText(str).width; ctx.restore(); return w; }
 function card(x, y, w, h, fill, r = 28, stroke, lw = 8) {
   ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fillStyle = fill; ctx.fill();
