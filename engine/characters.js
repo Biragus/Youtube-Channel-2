@@ -306,7 +306,7 @@ const CAST = {
   },
   mentor: {
     name: 'THE MENTOR', role: 'The creator in the video that starts it all.',
-    hair: { type: 'bald', beard: '#d9d9de' }, top: { type: 'turtleneck', color: '#16181d' }, pants: '#2b2f3a', shoes: '#ffffff',
+    hair: { type: 'bald', beard: '#6a6a78' }, top: { type: 'turtleneck', color: '#16181d' }, pants: '#2b2f3a', shoes: '#ffffff',
     acc: ['watch'],
   },
 };

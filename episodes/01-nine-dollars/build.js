@@ -1,0 +1,152 @@
+// Builds episode 01 after the hook: lays the shots on a timeline from the narration, renders the frames,
+// mixes voice + music + sound effects, and joins the result to the hook.
+//   node episodes/01-nine-dollars/build.js            full render -> out/episode-01.mp4
+//   node episodes/01-nine-dollars/build.js --sheets   one still per shot -> out/sheets/*.png (fast check)
+//   node episodes/01-nine-dollars/build.js --ch 5     render only chapter 5 -> out/ch5.mp4
+const fs = require('fs');
+const path = require('path');
+const { spawn, execFileSync, spawnSync } = require('child_process');
+const { createCanvas } = require('@napi-rs/canvas');
+const K = require('../../engine/kit');
+const { align, duration } = require('../../engine/align');
+const narration = require('./narration');
+const shots = { ...require('./shots-a'), ...require('./shots-b') };
+
+const DIR = __dirname; const A = path.join(DIR, 'audio'); const OUT = path.join(DIR, 'out');
+const W = 1920; const H = 1080; const FPS = 30; const SR = 44100;
+const args = process.argv.slice(2); const flag = (n) => args.includes(n); const opt = (n) => (args.includes(n) ? args[args.indexOf(n) + 1] : null);
+
+// ---- timeline -------------------------------------------------------------------
+const CHAPTER_GAP = 0.9;              // breath between chapters
+const HOLD = { '2q': 0.5, '3j': 0.6, '5e': 0.7, '5k': 1.0, '7k': 0.8, '8n': 0.9, '8o': 0.5, '9h': 1.0, '10g': 0.6, '10j': 1.6, '11d': 1.2, '11e': 2.6 }; // extra silence after a line
+const FILES = { 8: [['ch8a', 0, 12], ['ch8b', 12, 24]] };
+const MUSIC = [ // [track, first chapter, last chapter, volume]
+  ['music-sad', 2, 5, 0.5], ['music-curious', 6, 7, 0.26], ['music-drive', 8, 8, 0.26], ['music-warm', 9, 11, 0.3],
+];
+
+const timeline = []; const voiceClips = []; const chapterSpan = {};
+let cursor = 0.4;
+for (const c of narration) {
+  chapterSpan[c.ch] = { start: cursor };
+  for (const [name, a, b] of FILES[c.ch] || [[`ch${c.ch}`, 0, c.lines.length]]) {
+    const file = path.join(A, 'voice', `${name}.mp3`); const lines = c.lines.slice(a, b); const al = align(file, lines.map((l) => l[1])); const total = duration(file);
+    lines.forEach(([id, text], i) => {
+      const from = i === 0 ? 0 : al[i].start; const to = i < lines.length - 1 ? al[i + 1].start : total;
+      voiceClips.push({ file, from, to, at: cursor });
+      timeline.push({ id, ch: c.ch, text, start: cursor, speech: al[i].end - al[i].start });
+      cursor += (to - from) + (HOLD[id] ?? 0);
+    });
+  }
+  cursor += CHAPTER_GAP; chapterSpan[c.ch].end = cursor;
+}
+const END = cursor + 0.2;
+timeline.forEach((s, i) => { s.end = i < timeline.length - 1 ? timeline[i + 1].start : END; s.d = s.end - s.start; });
+const missing = timeline.filter((s) => !shots[s.id]).map((s) => s.id);
+if (missing.length) console.log('shots without drawings:', missing.join(' '));
+
+// ---- drawing ----------------------------------------------------------------------
+const canvas = createCanvas(W, H); const ctx = canvas.getContext('2d'); K.use(ctx);
+function shotAt(t) { let lo = 0; let hi = timeline.length - 1; while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (timeline[mid].start <= t) lo = mid; else hi = mid - 1; } return timeline[lo]; }
+function drawFrame(t) {
+  const s = shotAt(t); const local = Math.max(0, t - s.start); K.setTime(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0;
+  const def = shots[s.id]; const draw = typeof def === 'function' ? def : def?.draw;
+  ctx.save();
+  try {
+    if (draw) draw({ t: local, d: s.d, k: K.clamp(local / s.d), id: s.id, speech: s.speech });
+    else { K.bg('#30364a', '#12141c'); K.T(s.id, W / 2, 400, 160, '#ffffff'); K.T(s.text.slice(0, 60), W / 2, 600, 44, '#c9cfe6', { weight: 600 }); }
+  } finally { ctx.restore(); }
+  const fin = 1 - K.prog(t, 0, 0.35); const fout = K.prog(t, END - 0.8, END);
+  if (fin > 0 || fout > 0) K.tint('#000000', Math.max(fin, fout));
+}
+
+async function renderVideo(file, from, to) {
+  const ff = spawn('ffmpeg', ['-loglevel', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-r', String(FPS), '-i', '-',
+    '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+  const n = Math.round((to - from) * FPS);
+  for (let i = 0; i < n; i++) {
+    drawFrame(from + i / FPS);
+    if (!ff.stdin.write(canvas.data())) await new Promise((r) => ff.stdin.once('drain', r));
+    if (i % 1500 === 0) console.log(`  frame ${i}/${n}`);
+  }
+  ff.stdin.end(); await new Promise((r) => ff.on('close', r));
+}
+
+// ---- sound ------------------------------------------------------------------------
+// Everything is decoded to 44.1 kHz stereo float and summed in one buffer.
+function decode(file, filter) {
+  const a = ['-loglevel', 'error', '-i', file]; if (filter) a.push('-af', filter);
+  const r = spawnSync('ffmpeg', [...a, '-f', 'f32le', '-ac', '2', '-ar', String(SR), '-'], { maxBuffer: 1 << 30 });
+  return new Float32Array(r.stdout.buffer, r.stdout.byteOffset, r.stdout.byteLength >> 2);
+}
+// How loud each effect sits before the global gain. Laughs and ticks are a third, as agreed on the hook.
+const SFX_GAIN = 0.5;
+const LEVEL = { whoosh: 0.26, boom: 1.0, slam: 0.55, riser: 0.4, heartbeat: 0.9, buzz: 0.16, counter: 0.3, laugh: 0.1, tick: 0.19,
+  cash: 1.1, notif: 0.8, door: 0.5, typing: 0.8, paper: 2.6, error: 0.5, engine: 0.5, poof: 0.7, scratch: 0.25, drip: 2.6, chime: 0.7,
+  glass: 0.7, pen: 1.8, crowd: 1.0, send: 0.8 };
+const TAIL = { boom: 'aecho=0.8:0.7:90|180:0.45|0.3', slam: 'aecho=0.8:0.7:90|180:0.45|0.3' };
+
+function buildAudio(file, from, to) {
+  const len = Math.ceil((to - from) * SR) * 2; const mix = new Float32Array(len);
+  const add = (pcm, atSec, vol, srcFrom = 0, srcTo = Infinity, fadeIn = 0, fadeOut = 0) => {
+    const s0 = Math.floor(srcFrom * SR); const s1 = Math.min(pcm.length / 2, Math.floor(srcTo * SR)); const n = s1 - s0; const dst0 = Math.round((atSec - from) * SR);
+    for (let i = 0; i < n; i++) {
+      const d = dst0 + i; if (d < 0) continue; if (d * 2 + 1 >= len) break;
+      let g = vol; if (fadeIn && i < fadeIn * SR) g *= i / (fadeIn * SR); if (fadeOut && i > n - fadeOut * SR) g *= (n - i) / (fadeOut * SR);
+      mix[d * 2] += pcm[(s0 + i) * 2] * g; mix[d * 2 + 1] += pcm[(s0 + i) * 2 + 1] * g;
+    }
+  };
+  // voice
+  const voice = {};
+  for (const c of voiceClips) { voice[c.file] ??= decode(c.file); add(voice[c.file], c.at, 1.0, c.from, c.to, 0.004, 0.004); }
+  // music: one track per group of chapters, looped if the track is shorter than the group
+  for (const [name, a, b, vol] of MUSIC) {
+    const pcm = decode(path.join(A, `${name}.mp3`)); const start = chapterSpan[a].start - 0.3; const end = chapterSpan[b].end + 0.6; const tl = pcm.length / 2 / SR;
+    for (let t = start, first = true; t < end; t += tl - 2, first = false) add(pcm, t, vol, 0, Math.min(tl, end - t), first ? 1.2 : 2, t + tl >= end ? 2.2 : 2);
+  }
+  // effects: a soft whoosh on every cut plus whatever each shot asks for
+  const fx = {}; const sfx = (n) => (fx[n] ??= decode(path.join(A, 'sfx', `${n}.mp3`), TAIL[n]));
+  timeline.forEach((s, i) => {
+    const def = shots[s.id]; const list = (typeof def === 'object' && def.sfx) || [];
+    if (i > 0 && !(def && def.quietCut)) add(sfx('whoosh'), s.start - 0.12, LEVEL.whoosh * SFX_GAIN * 0.8);
+    for (const [name, off = 0, mul = 1] of list) { if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
+  });
+  // soft limiter so peaks never clip
+  for (let i = 0; i < len; i++) { const v = mix[i]; mix[i] = Math.abs(v) > 0.7 ? Math.sign(v) * (0.7 + 0.28 * Math.tanh((Math.abs(v) - 0.7) / 0.28)) : v; }
+  const raw = `${file}.f32`; fs.writeFileSync(raw, Buffer.from(mix.buffer));
+  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-f', 'f32le', '-ac', '2', '-ar', String(SR), '-i', raw, '-c:a', 'pcm_s16le', file]); fs.unlinkSync(raw);
+}
+
+// ---- entry points -----------------------------------------------------------------
+async function main() {
+  fs.mkdirSync(OUT, { recursive: true });
+  console.log(`${timeline.length} shots, body ${END.toFixed(1)}s (${(END / 60).toFixed(2)} min)`);
+  if (flag('--sheets')) { // one still per shot, tiled, for a quick visual check
+    const dir = path.join(OUT, 'sheets'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
+    const frac = +(opt('--at') ?? 0.6); const cols = 4; const rows = 4; const tw = 480; const th = 270; const only = opt('--ch');
+    const list = timeline.filter((s) => !only || String(s.ch) === only);
+    for (let p = 0; p * cols * rows < list.length; p++) {
+      const sheet = createCanvas(cols * tw, rows * th); const sc = sheet.getContext('2d');
+      list.slice(p * cols * rows, (p + 1) * cols * rows).forEach((s, i) => {
+        drawFrame(s.start + s.d * frac); const x = (i % cols) * tw; const y = Math.floor(i / cols) * th;
+        sc.drawImage(canvas, x, y, tw, th); sc.fillStyle = '#000'; sc.fillRect(x, y, 70, 30); sc.fillStyle = '#fff'; sc.font = '700 22px Inter'; sc.fillText(s.id, x + 6, y + 23);
+      });
+      fs.writeFileSync(path.join(dir, `sheet-${String(p + 1).padStart(2, '0')}.png`), sheet.toBuffer('image/png'));
+    }
+    console.log('wrote sheets to', dir); return;
+  }
+  let from = 0; let to = END; let name = 'body';
+  if (opt('--ch')) { const c = chapterSpan[+opt('--ch')]; from = Math.max(0, c.start - 0.3); to = c.end; name = `ch${opt('--ch')}`; }
+  const silent = path.join(OUT, `${name}.silent.mp4`); const wav = path.join(OUT, `${name}.wav`); const body = path.join(OUT, `${name}.mp4`);
+  await renderVideo(silent, from, to); buildAudio(wav, from, to);
+  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', silent, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', body]);
+  fs.unlinkSync(silent); fs.unlinkSync(wav);
+  if (name !== 'body') { console.log('wrote', body); return; }
+  // join the hook and the body into the finished episode
+  const final = path.join(OUT, 'episode-01.mp4');
+  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', path.join(OUT, 'hook-charliee.mp4'), '-i', body,
+    '-filter_complex', '[0:v]fps=30,format=yuv420p[v0];[1:v]fps=30,format=yuv420p[v1];[0:a]aresample=44100,aformat=channel_layouts=stereo[a0];[1:a]aresample=44100,aformat=channel_layouts=stereo[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]',
+    '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', final]);
+  console.log('wrote', final, `${duration(final).toFixed(1)}s`);
+}
+main();
