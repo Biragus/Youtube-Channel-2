@@ -16,7 +16,7 @@ The stories are fictional and for motivation and entertainment. They are not fin
 
 ## Short tagline (banner and "About" preview)
 
-Animated stories of people who started with nothing.
+Animated motivational stories about making money with digital products. Link in bio to learn how.
 
 ## Name ideas
 

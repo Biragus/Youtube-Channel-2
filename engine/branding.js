@@ -6,7 +6,8 @@ const { createCanvas } = require('@napi-rs/canvas');
 const { CAST, drawCharacter, drawHead } = require('./characters');
 
 const NAME = process.argv[2] ?? 'FROM ZERO';
-const TAGLINE = 'Animated stories of people who started with nothing.';
+const TAGLINE = 'Animated motivational stories about making money with digital products.';
+const CTA = 'LINK IN BIO TO LEARN HOW  →';
 const GREEN = '#39ff14';
 const out = path.join(__dirname, '..', 'branding'); fs.mkdirSync(out, { recursive: true });
 
@@ -43,8 +44,9 @@ function backdrop(c, w, h, cx, cy, r) {
   // fit the name to the space between the two figures
   let size = 190; c.font = `900 ${size}px Inter`; while (c.measureText(NAME).width > 900 && size > 60) { size -= 6; c.font = `900 ${size}px Inter`; }
   text(c, NAME, W / 2, 660, size, '#ffffff', { spacing: 6, glow: GREEN, blur: 40 });
-  text(c, TAGLINE, W / 2, 660 + size * 0.5 + 56, 34, '#c9d6cf', { weight: 600 });
-  text(c, 'NEW STORY EVERY WEEK', W / 2, 660 + size * 0.5 + 130, 34, GREEN, { spacing: 10, weight: 800 });
+  let ts = 34; c.font = `600 ${ts}px Inter`; while (c.measureText(TAGLINE).width > 1040 && ts > 22) { ts -= 1; c.font = `600 ${ts}px Inter`; } // keep it between the two figures
+  text(c, TAGLINE, W / 2, 660 + size * 0.5 + 56, ts, '#c9d6cf', { weight: 600 });
+  text(c, CTA, W / 2, 660 + size * 0.5 + 130, 34, GREEN, { spacing: 8, weight: 800 });
   fs.writeFileSync(path.join(out, 'banner.png'), cv.toBuffer('image/png'));
   // preview with the safe strip marked, for checking only
   c.strokeStyle = 'rgba(255,255,255,0.6)'; c.lineWidth = 4; c.setLineDash([20, 14]); c.strokeRect((W - 1546) / 2, (H - 423) / 2, 1546, 423);
