@@ -8,8 +8,8 @@
 
 ## Title (pick one)
 
-1. **They Laughed at His $9 Idea. It Made $100,000.** (recommended; matches the thumbnail)
-2. They Laughed at His $9 Idea. 18 Months Later, They Asked Him for Help
+1. **They Laughed at His $9 Idea. 18 Months Later, They Asked Him for Help** (recommended; matches the thumbnail)
+2. They Laughed at His $9 Idea. It Made $100,000.
 3. Fired Delivery Driver Turns a $9 Spreadsheet Into a New Life
 4. He Had $43 and Lost His Job. Then He Built This.
 
