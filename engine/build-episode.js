@@ -22,7 +22,7 @@ const W = 1920; const H = 1080; const FPS = 30; const SR = 44100;
 const args = process.argv.slice(3); const flag = (n) => args.includes(n); const opt = (n) => (args.includes(n) ? args[args.indexOf(n) + 1] : null);
 
 // ---- timeline -------------------------------------------------------------------
-const CHAPTER_GAP = 0.9;              // breath between chapters
+const CHAPTER_GAP = 0.9;              // breath between chapters (cfg.gap overrides per chapter)
 const HOLD = cfg.hold ?? {};   // extra silence after a line
 const FILES = cfg.files ?? {}; // chapters whose narration is split over several files
 const MUSIC = cfg.music;       // [track, first chapter, last chapter, volume, 'raw' to skip levelling]
@@ -40,7 +40,7 @@ for (const c of narration) {
       cursor += (to - from) + (HOLD[id] ?? 0);
     });
   }
-  cursor += CHAPTER_GAP; chapterSpan[c.ch].end = cursor;
+  cursor += cfg.gap?.[c.ch] ?? CHAPTER_GAP; chapterSpan[c.ch].end = cursor;
 }
 const END = cursor + 0.2;
 timeline.forEach((s, i) => { s.end = i < timeline.length - 1 ? timeline[i + 1].start : END; s.d = s.end - s.start; });
@@ -88,34 +88,41 @@ const SFX_GAIN = 0.5;
 const LEVEL = { whoosh: 0.26, boom: 1.0, slam: 0.55, riser: 0.4, heartbeat: 0.9, buzz: 0.16, counter: 0.3 / 4, laugh: 0.1, tick: 0.19 / 4,
   cash: 1.1 / 2, notif: 0.8, door: 0.5, typing: 0.8 / 3, paper: 2.6 / 16, error: 0.5, engine: 0.5 / 2, poof: 0.7, scratch: 0.25, drip: 2.6 / 3, chime: 0.7,
   glass: 0.7, pen: 1.8 / 5, crowd: 1.0 / 3, send: 0.8 };
-const LOOPY = new Set(['pen', 'typing', 'crowd', 'tick', 'counter']); // long sounds stop when their shot ends
+const LOOPY = new Set(['pen', 'typing', 'crowd', 'tick', 'counter', 'clock']);
+Object.assign(LEVEL, cfg.extraLevels ?? {});
+const SCALE = cfg.sfxScale ?? {}; // episode-wide multipliers from the owner's review // long sounds stop when their shot ends
 const TAIL = { boom: 'aecho=0.8:0.7:90|180:0.45|0.3', slam: 'aecho=0.8:0.7:90|180:0.45|0.3' };
 
 function buildAudio(file, from, to) {
   const len = Math.ceil((to - from) * SR) * 2; const mix = new Float32Array(len);
-  const add = (pcm, atSec, vol, srcFrom = 0, srcTo = Infinity, fadeIn = 0, fadeOut = 0) => {
+  // env(t) is an optional extra gain over video time, used to dip the music in places
+  const add = (pcm, atSec, vol, srcFrom = 0, srcTo = Infinity, fadeIn = 0, fadeOut = 0, env = null) => {
     const s0 = Math.floor(srcFrom * SR); const s1 = Math.min(pcm.length / 2, Math.floor(srcTo * SR)); const n = s1 - s0; const dst0 = Math.round((atSec - from) * SR);
     for (let i = 0; i < n; i++) {
       const d = dst0 + i; if (d < 0) continue; if (d * 2 + 1 >= len) break;
       let g = vol; if (fadeIn && i < fadeIn * SR) g *= i / (fadeIn * SR); if (fadeOut && i > n - fadeOut * SR) g *= (n - i) / (fadeOut * SR);
+      if (env) g *= env(from + d / SR);
       mix[d * 2] += pcm[(s0 + i) * 2] * g; mix[d * 2 + 1] += pcm[(s0 + i) * 2 + 1] * g;
     }
   };
   // voice
   const voice = {};
   for (const c of voiceClips) { voice[c.file] ??= decode(c.file); add(voice[c.file], c.at, 1.0, c.from, c.to, 0.004, 0.004); }
+  // music dips: [start, end, gain] in video seconds, with half-second ramps
+  const dips = cfg.musicDips ?? [];
+  const musicEnv = dips.length ? (t) => { let g = 1; for (const [a, b, gain] of dips) { const k = Math.min(1, Math.max(0, Math.min(t - a + 0.5, b - t + 0.5) / 0.5)); g *= 1 - (1 - gain) * k; } return g; } : null;
   // music: one track per group of chapters, looped if the track is shorter than the group
   for (const [name, a, b, vol, raw] of MUSIC) {
     // compress and level each track first, so swells never climb over the voice
     const pcm = decode(path.join(ASSETS, `${name}.mp3`), raw ? null : 'acompressor=threshold=-30dB:ratio=6:attack=20:release=500,loudnorm=I=-24:LRA=3:TP=-2'); const start = chapterSpan[a].start - 0.3; const end = chapterSpan[b].end + 0.6; const tl = pcm.length / 2 / SR;
-    for (let t = start, first = true; t < end; t += tl - 2, first = false) add(pcm, t, vol, 0, Math.min(tl, end - t), first ? 1.2 : 2, t + tl >= end ? 2.2 : 2);
+    for (let t = start, first = true; t < end; t += tl - 2, first = false) add(pcm, t, vol, 0, Math.min(tl, end - t), first ? 1.2 : 2, t + tl >= end ? 2.2 : 2, musicEnv);
   }
   // effects: a soft whoosh on every cut plus whatever each shot asks for
-  const fx = {}; const sfx = (n) => (fx[n] ??= decode(path.join(ASSETS, 'sfx', `${n}.mp3`), TAIL[n]));
+  const fx = {}; const sfx = (n) => (fx[n] ??= decode(fs.existsSync(path.join(DIR, 'audio', 'sfx', `${n}.mp3`)) ? path.join(DIR, 'audio', 'sfx', `${n}.mp3`) : path.join(ASSETS, 'sfx', `${n}.mp3`), TAIL[n]));
   timeline.forEach((s, i) => {
     const def = shots[s.id]; const list = (typeof def === 'object' && def.sfx) || [];
-    if (i > 0 && !(def && def.quietCut)) add(sfx('whoosh'), s.start - 0.12, LEVEL.whoosh * SFX_GAIN * 0.8);
-    for (const [name, off = 0, mul = 1] of list) { if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); if (LOOPY.has(name)) add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul, 0, Math.max(0.3, s.d - off), 0, 0.2); else add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
+    if (i > 0 && !(def && def.quietCut)) add(sfx('whoosh'), s.start - 0.12, LEVEL.whoosh * SFX_GAIN * 0.8 * (SCALE.whoosh ?? 1));
+    for (const [name, off = 0, mul = 1] of list) { if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); mul *= SCALE[name] ?? 1; if (LOOPY.has(name)) add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul, 0, Math.max(0.3, s.d - off), 0, 0.2); else add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
   });
   // soft limiter so peaks never clip
   for (let i = 0; i < len; i++) { const v = mix[i]; mix[i] = Math.abs(v) > 0.7 ? Math.sign(v) * (0.7 + 0.28 * Math.tanh((Math.abs(v) - 0.7) / 0.28)) : v; }

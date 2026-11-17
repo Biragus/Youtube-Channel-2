@@ -49,7 +49,7 @@ function T(str, x, y, size, color = '#ffffff', o = {}) {
 function E(emoji, x, y, size, rot = 0) {
   if (ICONS[emoji]) { if (size <= 0) return; ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(size / 100, size / 100); drawIcon(ctx, emoji); ctx.restore(); return; }
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.font = `${size}px "Noto Color Emoji"`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(emoji, 0, 0); ctx.restore(); }
-function textWidth(str, size, mono) { ctx.save(); ctx.font = `900 ${size}px ${mono ? 'JetBrains Mono' : 'Inter'}`; const w = ctx.measureText(str).width; ctx.restore(); return w; }
+function textWidth(str, size, mono, spacing = 0) { ctx.save(); ctx.font = `900 ${size}px ${mono ? 'JetBrains Mono' : 'Inter'}`; const w = ctx.measureText(str).width; ctx.restore(); return w + spacing * str.length; }
 function card(x, y, w, h, fill, r = 28, stroke, lw = 8) {
   ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fillStyle = fill; ctx.fill();
   if (stroke) { ctx.lineWidth = lw; ctx.strokeStyle = stroke; ctx.stroke(); }
@@ -58,18 +58,24 @@ function line(pts, color, width) { ctx.strokeStyle = color; ctx.lineWidth = widt
 function circle(x, y, r, fill) { ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
 
 // big caption in the lower third
+// drawn in screen space so the camera's push-in never crops it
 function cap(str, k = 1, o = {}) {
   if (k <= 0) return;
-  at(o.x ?? W / 2, o.y ?? 950, k, () => T(str, 0, 0, o.size ?? 92, o.color ?? '#ffffff', { stroke: o.stroke ?? '#0b0c12', spacing: 3, glow: o.glow }));
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const maxW = W - 120; const w = textWidth(str, o.size ?? 92, false, 3); const size = w > maxW ? (o.size ?? 92) * maxW / w : (o.size ?? 92);
+  at(o.x ?? W / 2, o.y ?? 950, k, () => T(str, 0, 0, size, o.color ?? '#ffffff', { stroke: o.stroke ?? '#0b0c12', spacing: 3, glow: o.glow }));
+  ctx.restore();
 }
 // small tag in the top-left corner (DAY 12 and similar)
 function tag(str, k = 1, color = '#ffffff', fill = '#0d1018') {
-  if (k <= 0) return; const w = textWidth(str, 54) + 70;
-  at(70 + w / 2, 96, k, () => { card(-w / 2, -48, w, 96, fill, 22, color, 6); T(str, 0, 2, 54, color, { spacing: 4 }); }, -0.03);
+  if (k <= 0) return; const w = textWidth(str, 54, false, 4) + 80;
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); // screen space, clear of the frame edge
+  at(110 + w / 2, 130, k, () => { card(-w / 2, -48, w, 96, fill, 22, color, 6); T(str, 0, 2, 54, color, { spacing: 4 }); }, -0.03);
+  ctx.restore();
 }
 // counter box: a small title over a big number
 function counter(title, value, x, y, color = RED, k = 1, o = {}) {
-  if (k <= 0) return; const size = o.size ?? 110; const w = Math.max(textWidth(value, size, true), textWidth(title, 40) + 40) + 90;
+  if (k <= 0) return; const size = o.size ?? 110; const w = Math.max(textWidth(value, size, true), textWidth(title, 40, false, 8) + 40) + 90;
   at(x, y, k * (o.s ?? 1), () => {
     const h = size + 130; // box grows with the number
     card(-w / 2, -h / 2, w, h, '#0d1018', 34, color, 8);
