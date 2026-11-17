@@ -3,12 +3,12 @@
 ## Files
 
 - Video: `out/episode.mp4`
-- Thumbnails: `out/thumbnail-a.png` (the problem) and `out/thumbnail-b.png` (the fix). Upload both with YouTube's **Test & compare** and let it pick the winner.
+- Thumbnail: `out/thumbnail-a.png`. (`out/thumbnail-b.png` is a spare for YouTube's Test & compare.)
 - Subtitles: `out/captions.srt`. In Studio, go to Subtitles → English → Upload file → With timing.
 
 ## Title (pick one)
 
-1. **He Was Too Broke for a Gym, So He Built This** (recommended; matches both thumbnails)
+1. **He Was Too Broke for a Gym, So He Built This** (recommended; matches the thumbnail)
 2. Too Broke for the Gym, He Built a $9 Plan That Changed Everything
 3. The Gym Laughed at Him. A Year Later, They Paid Him.
 

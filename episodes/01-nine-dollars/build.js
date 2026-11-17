@@ -9,6 +9,7 @@ const { spawn, execFileSync, spawnSync } = require('child_process');
 const { createCanvas } = require('@napi-rs/canvas');
 const K = require('../../engine/kit');
 const { align, duration } = require('../../engine/align');
+const { writeSrt, cuesFor } = require('../../engine/srt');
 const narration = require('./narration');
 const shots = { ...require('./shots-a'), ...require('./shots-b') };
 
@@ -125,6 +126,13 @@ function buildAudio(file, from, to) {
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
   console.log(`${timeline.length} shots, body ${END.toFixed(1)}s (${(END / 60).toFixed(2)} min)`);
+  if (flag('--srt')) { // subtitles for the whole video (hook + body) -> out/captions.srt
+    const HOOK = 18.1; const at = [0, 2.97, 6.18, 10.11, 13.01, 15.75]; // hook sentence starts (hook.js CUES.charliee)
+    const hook = ['They laughed when you said you would sell a spreadsheet.', 'Your boss. Your ex. Your uncle.', 'Eighteen months from now, every one of them will ask you for something.', 'But tonight, you have forty-three dollars.', 'And in nine hours, you are about to lose your job.'];
+    writeSrt(timeline, path.join(OUT, 'captions.srt'), { offset: HOOK, before: hook.flatMap((t, i) => cuesFor(t, at[i] + 0.05, at[i + 1] - at[i] - 0.1)) });
+    for (const c of narration) console.log('chapter', c.ch, `${Math.floor((chapterSpan[c.ch].start + HOOK) / 60)}:${String(Math.floor((chapterSpan[c.ch].start + HOOK) % 60)).padStart(2, '0')}`, c.name);
+    return;
+  }
   if (flag('--list')) { // where every shot and sound lands in the finished video
     const HOOK = 18.1; const mmss = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, '0')}`;
     for (const s of timeline) { const def = shots[s.id]; const list = (typeof def === 'object' && def.sfx) || []; console.log(mmss(s.start + HOOK).padEnd(7), s.id.padEnd(4), list.map(([n, o = 0, m = 1]) => `${n}@${mmss(s.start + HOOK + o)}${m !== 1 ? `x${m}` : ''}`).join(' ')); }

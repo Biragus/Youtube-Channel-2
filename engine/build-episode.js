@@ -11,6 +11,7 @@ const { spawn, execFileSync, spawnSync } = require('child_process');
 const { createCanvas } = require('@napi-rs/canvas');
 const K = require('./kit');
 const { align, duration } = require('./align');
+const { writeSrt } = require('./srt');
 
 const DIR = path.resolve(process.argv[2]);
 const narration = require(path.join(DIR, 'narration'));
@@ -140,20 +141,8 @@ async function main() {
     for (const [n, a2, b2] of MUSIC) console.log('music', n, mmss(chapterSpan[a2].start + HOOK), '-', mmss(chapterSpan[b2].end + HOOK));
     return;
   }
-  if (flag('--srt')) { // subtitles from the narration timing -> out/captions.srt (cues of up to two 42-character lines)
-    const ts = (t) => { const ms = Math.round(t * 1000); const p = (n, w = 2) => String(n).padStart(w, '0'); return `${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)},${p(ms % 1000, 3)}`; };
-    const wrap = (str, max) => { const out = []; let cur = ''; for (const w of str.split(' ')) { if (cur && (cur + ' ' + w).length > max) { out.push(cur); cur = w; } else cur = cur ? `${cur} ${w}` : w; } if (cur) out.push(cur); return out; };
-    const balance = (p) => { if (p.length <= 42) return p; for (let m = Math.ceil(p.length / 2); m <= 42; m++) { const l = wrap(p, m); if (l.length <= 2) return l.join('\n'); } return wrap(p, 42).join('\n'); };
-    const cues = [];
-    for (const s of timeline) {
-      // split long lines at sentence ends first, then by length; time each piece by its share of the characters
-      const pieces = s.text.match(/[^.!?]+[.!?]+["”]?|[^.!?]+$/g).map((x) => x.trim()).flatMap((x) => { const l = wrap(x, 42); const o = []; for (let i = 0; i < l.length; i += 2) o.push(l.slice(i, i + 2).join(' ')); return o; });
-      const merged = []; for (const p of pieces) { const last = merged[merged.length - 1]; if (last && wrap(`${last} ${p}`, 42).length <= 2) merged[merged.length - 1] = `${last} ${p}`; else merged.push(p); }
-      const total = merged.reduce((a, p) => a + p.length, 0); let t = s.start + 0.05; const span = Math.min(s.speech + 0.2, s.d - 0.05);
-      for (const p of merged) { const len = span * p.length / total; cues.push([t, t + len, balance(p)]); t += len; }
-    }
-    const srt = cues.map(([a, b, x], i) => `${i + 1}\n${ts(a)} --> ${ts(b)}\n${x}\n`).join('\n');
-    fs.mkdirSync(OUT, { recursive: true }); fs.writeFileSync(path.join(OUT, 'captions.srt'), srt); console.log('wrote', cues.length, 'cues to', path.join(OUT, 'captions.srt'));
+  if (flag('--srt')) { // subtitles from the narration timing -> out/captions.srt
+    writeSrt(timeline, path.join(OUT, 'captions.srt'));
     for (const c of narration) console.log('chapter', c.ch, `${Math.floor(chapterSpan[c.ch].start / 60)}:${String(Math.floor(chapterSpan[c.ch].start % 60)).padStart(2, '0')}`, c.name);
     return;
   }
