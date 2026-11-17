@@ -13,5 +13,5 @@ render(path.join(__dirname, 'out', 'thumbnail.png'), () => {
     stamp('FIRED', 20, 40, 1.0, -0.22);
   }, -0.06);
   halo(1450, 470); bust('kai', 1450, 470, 3.1, 'worried', { look: -0.4 });
-  big('THE $9', 70, 150, 190, '#ffffff'); big('IDEA', 70, 330, 190, K.GOLD);
+  big('THE $9', 70, 215, 190, '#ffffff'); big('IDEA', 70, 395, 190, K.GOLD);
 });
