@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>From Zero: The Digital Product Playbook</title>
+<style>
+  :root { --green: #39ff14; --ink: #16161a; --deep: #07110b; --forest: #123d1c; --paper: #fbf8f2; --muted: #5d6470; --line: #e3ddd1; --gold: #f2c14e; --red: #e03131; }
+  @page { size: Letter; margin: 0.7in 0.8in 0.8in 0.8in; }
+  @page full { size: Letter; margin: 0; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font-family: Inter, sans-serif; color: var(--ink); font-size: 10.2pt; line-height: 1.46; background: #fff; }
+  h1, h2, h3 { font-weight: 900; line-height: 1.15; letter-spacing: -0.01em; }
+  h2 { font-size: 19pt; margin: 0 0 8pt; }
+  h3 { font-size: 12.5pt; margin: 14pt 0 5pt; }
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 10pt; padding-left: 18pt; }
+  li { margin-bottom: 2.5pt; }
+  strong { font-weight: 800; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* full-bleed pages */
+  .full { page: full; break-before: page; width: 8.5in; height: 11in; position: relative; overflow: hidden; }
+  .cover { background: radial-gradient(circle at 50% 42%, #1d4a2a 0%, #0f1f1a 55%, #050806 100%); color: #fff; }
+  .cover .face { position: absolute; left: 50%; top: 1.55in; width: 4.6in; transform: translateX(-50%); }
+  .cover .kicker { position: absolute; top: 0.75in; width: 100%; text-align: center; font-size: 11pt; letter-spacing: 0.4em; color: var(--green); font-weight: 800; }
+  .cover .title { position: absolute; top: 6.2in; width: 100%; text-align: center; font-size: 64pt; font-weight: 900; letter-spacing: 0.02em; text-shadow: 0 0 28px rgba(57,255,20,0.65); }
+  .cover .sub { position: absolute; top: 7.45in; width: 100%; text-align: center; font-size: 19pt; font-weight: 800; }
+  .cover .sub2 { position: absolute; top: 7.95in; width: 100%; text-align: center; font-size: 12.5pt; color: #c9d6cf; padding: 0 1.2in; }
+  .cover .line { position: absolute; left: 0; bottom: 0; width: 100%; height: 2.4in; }
+  .cover .foot { position: absolute; bottom: 0.55in; width: 100%; text-align: center; font-size: 10pt; letter-spacing: 0.3em; color: #8fbf9a; font-weight: 700; }
+
+  .opener { background: radial-gradient(circle at 70% 40%, #1d4a2a 0%, #0f1f1a 60%, #050806 100%); color: #fff; }
+  .opener .num { position: absolute; left: 0.9in; top: 1.1in; font-size: 150pt; font-weight: 900; color: var(--green); line-height: 1; text-shadow: 0 0 30px rgba(57,255,20,0.45); font-family: 'JetBrains Mono', monospace; }
+  .opener .ctitle { position: absolute; left: 0.9in; top: 3.6in; width: 5.2in; font-size: 36pt; font-weight: 900; line-height: 1.08; }
+  .opener .clead { position: absolute; left: 0.9in; top: 5.55in; width: 4.4in; font-size: 13.5pt; color: #c9d6cf; line-height: 1.5; }
+  .opener img { position: absolute; right: 0.3in; bottom: 0.55in; height: 5.2in; }
+  .opener .label { position: absolute; left: 0.9in; top: 0.7in; font-size: 10pt; letter-spacing: 0.35em; color: #8fbf9a; font-weight: 800; }
+
+  /* flowing pages */
+  .chapter { break-before: page; }
+  .eyebrow { font-size: 9pt; letter-spacing: 0.3em; color: #2b8a3e; font-weight: 800; margin-bottom: 4pt; text-transform: uppercase; }
+  .box { border: 1.5pt solid var(--line); border-radius: 12pt; padding: 10pt 14pt; margin: 9pt 0 10pt; background: var(--paper); break-inside: avoid; }
+  .box > :last-child { margin-bottom: 0; }
+  .box.kai { border-color: #2b8a3e; background: #f0fbf1; position: relative; padding-left: 64pt; min-height: 70pt; }
+  .box.kai img { position: absolute; left: 10pt; top: 10pt; width: 44pt; }
+  .box.kai .who { font-size: 8.5pt; letter-spacing: 0.25em; color: #2b8a3e; font-weight: 800; margin-bottom: 3pt; }
+  .box.dark { background: var(--deep); border-color: var(--deep); color: #fff; }
+  .box.dark .big { font-size: 15pt; font-weight: 800; }
+  .box.dark .big b { color: var(--green); }
+  .box.warn { border-color: #f08c00; background: #fff8ec; }
+  .rule { font-size: 12pt; font-weight: 900; border-left: 6pt solid var(--green); padding: 2pt 0 2pt 11pt; margin: 9pt 0 0; break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 9.6pt; break-inside: avoid; }
+  th { text-align: left; background: var(--deep); color: #fff; padding: 5pt 8pt; font-weight: 800; }
+  td { padding: 4.5pt 8pt; border-bottom: 1pt solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--paper); }
+  .script { font-family: 'JetBrains Mono', monospace; font-size: 9.6pt; background: #10151a; color: #e8f5ec; border-radius: 10pt; padding: 12pt 14pt; margin: 10pt 0 14pt; white-space: pre-wrap; line-height: 1.55; break-inside: avoid; }
+  .check { list-style: none; padding-left: 0; }
+  .check li { padding-left: 22pt; position: relative; }
+  .check li::before { content: ''; position: absolute; left: 0; top: 3pt; width: 11pt; height: 11pt; border: 1.6pt solid var(--ink); border-radius: 3pt; }
+  .steps { counter-reset: s; list-style: none; padding-left: 0; }
+  .steps li { counter-increment: s; padding-left: 30pt; position: relative; margin-bottom: 8pt; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 20pt; height: 20pt; border-radius: 50%; background: var(--deep); color: var(--green); font-weight: 900; font-size: 10pt; text-align: center; line-height: 20pt; }
+  .two { display: flex; gap: 14pt; } .two > * { flex: 1; }
+  .fill { border-bottom: 1pt solid #b9b2a4; height: 22pt; margin-bottom: 4pt; }
+  .ws { break-before: page; }
+  .ws h2 { margin-bottom: 4pt; }
+  .ws .hint { color: var(--muted); font-size: 10pt; margin-bottom: 12pt; }
+  .grid td { height: 26pt; }
+  .small { font-size: 9pt; color: var(--muted); }
+  .center { text-align: center; }
+  .toc { list-style: none; padding: 0; margin: 10pt 0; } .toc li { font-size: 13pt !important; padding: 9pt 0 !important; }
+  .toc li { display: flex; gap: 12pt; padding: 4pt 0; border-bottom: 1pt solid var(--line); font-weight: 700; font-size: 12pt; }
+  .toc .n { font-family: 'JetBrains Mono', monospace; color: #2b8a3e; width: 26pt; }
+  .end { background: radial-gradient(circle at 50% 40%, #1d4a2a 0%, #0f1f1a 60%, #050806 100%); color: #fff; text-align: center; }
+  .end h1 { position: absolute; top: 1.4in; width: 100%; font-size: 40pt; }
+  .end h1 span { color: var(--green); text-shadow: 0 0 24px rgba(57,255,20,0.6); }
+  .end .copy { position: absolute; top: 2.65in; left: 1.2in; right: 1.2in; font-size: 13pt; color: #c9d6cf; line-height: 1.6; }
+  .end img { position: absolute; bottom: 0.9in; height: 4.6in; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<section class="full cover">
+  <div class="kicker">THE DIGITAL PRODUCT PLAYBOOK</div>
+  <img class="face" src="build/art/kai-face.png">
+  <div class="title">FROM ZERO</div>
+  <div class="sub">Make and sell your first digital product</div>
+  <div class="sub2">Turn something you already know into a file that sells while you sleep. Step by step, with worksheets.</div>
+  <svg class="line" viewBox="0 0 850 240" preserveAspectRatio="none"><polyline fill="none" stroke="#39ff14" stroke-opacity="0.35" stroke-width="5" stroke-linejoin="round" points="0,220 60,214 120,222 180,206 240,210 300,190 360,196 420,170 480,172 540,140 600,138 660,100 720,92 780,48 850,20"/></svg>
+  <div class="foot">FROM ZERO · NEW STORY EVERY WEEK</div>
+</section>
+
+<!-- ============================== WELCOME ============================== -->
+<section>
+  <div class="eyebrow">Before you start</div>
+  <h2>Everybody loves the after.<br>This book is about the before.</h2>
+  <p>If you found this through the channel, you already know how the stories go. Somebody is stuck: broke, fired, rejected, laughed at. Then they take something they already know, put it into a simple file, and sell it to the people who need it. Nine dollars at a time, their life changes.</p>
+  <p>Those stories are told as stories. This book is the part they skip: <strong>the exact steps</strong>. How to find an idea that people will actually pay for, how to check it before you waste a month, how to build it in a weekend, how to price it, how to put it up for sale, and how to get your first ten buyers when nobody knows who you are.</p>
+
+  <div class="box dark"><p class="big">By the end of this book you will have <b>one real product, for sale, with a plan for your first ten sales</b>. Not a business plan. Not a dream. A file with a price on it.</p></div>
+
+  <h3>Who this is for</h3>
+  <ul>
+    <li>You have a job, a skill, a hobby or a problem you have solved, and you think "nobody would pay for that". (They might.)</li>
+    <li>You have little or no money to start. Everything in this book can be done with free tools.</li>
+    <li>You have no audience. That is fine. You need ten buyers, not ten thousand followers.</li>
+  </ul>
+
+  <h3>How to use it</h3>
+  <ul>
+    <li>Read one chapter a day. Each one ends with a small action. Do the action before you read on.</li>
+    <li>The worksheets are at the back. Print them or copy them into a notebook.</li>
+    <li>The whole thing is built to take about 30 days, alongside a full-time job.</li>
+  </ul>
+
+</section>
+<section style="break-before: page;">
+  <div class="eyebrow">Contents</div>
+  <h2>What's inside</h2>
+  <ul class="toc">
+    <li><span class="n">01</span>What a digital product really is</li>
+    <li><span class="n">02</span>Find what hurts</li>
+    <li><span class="n">03</span>Choose the format</li>
+    <li><span class="n">04</span>Check it before you build it</li>
+    <li><span class="n">05</span>Build it in a weekend</li>
+    <li><span class="n">06</span>Price it</li>
+    <li><span class="n">07</span>Open your shop</li>
+    <li><span class="n">08</span>Your first ten sales</li>
+    <li><span class="n">09</span>When it goes wrong</li>
+    <li><span class="n">10</span>Product two and three</li>
+    <li><span class="n">11</span>Your 30-day plan + worksheets</li>
+  </ul>
+  <p class="small">An honest note: nobody can promise you money, and this book does not. Most first products sell a handful of copies. What this book gives you is a method that removes the most common mistakes, so your first product has a fair chance and your second one is better.</p>
+</section>
+
+<!-- ============================== 01 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">01</div>
+  <div class="ctitle">What a digital product really is</div>
+  <div class="clead">You make it once. It costs nothing to copy. And it can sell while you sleep.</div>
+  <img src="build/art/kai-think.png">
+</section>
+<section class="chapter">
+  <h2>Make once, sell forever</h2>
+  <p>A digital product is anything a person can buy and download or open on a screen. No stock, no shipping, no warehouse. The work happens once, when you make it. After that, selling copy number one hundred costs you exactly what copy number one cost: nothing.</p>
+  <p>That changes the maths of earning money. At a job, you are paid for hours, and you only have so many. A product is paid for <em>results</em>, and it does not get tired.</p>
+
+  <table>
+    <tr><th>Type</th><th>What it is</th><th>Example</th></tr>
+    <tr><td><strong>Template</strong></td><td>A ready-made file people fill in</td><td>A résumé layout, a wedding budget, a menu design</td></tr>
+    <tr><td><strong>Tracker</strong></td><td>A spreadsheet that does the maths for you</td><td>Mileage and tax tracker for delivery drivers</td></tr>
+    <tr><td><strong>Guide</strong></td><td>Step-by-step instructions to get one result</td><td>"Pass your driving test first time"</td></tr>
+    <tr><td><strong>Checklist</strong></td><td>A short list that stops people forgetting things</td><td>Moving-house checklist, launch checklist</td></tr>
+    <tr><td><strong>Planner</strong></td><td>A structure for time or goals</td><td>Notion study planner for students</td></tr>
+    <tr><td><strong>Kit / bundle</strong></td><td>Several small pieces that solve one problem together</td><td>The Callback Kit: word lists + layout + tracker</td></tr>
+    <tr><td><strong>Mini-course</strong></td><td>A few short videos with a worksheet</td><td>"Fix your posture in 10 days"</td></tr>
+  </table>
+
+  <h3>Three myths that keep people at zero</h3>
+  <p><strong>"I'm not an expert."</strong> You only need to be two steps ahead of the person you are helping, and to remember what it felt like to be where they are.</p>
+  <p><strong>"I need an audience first."</strong> You need ten buyers. Ten. You can find ten people with a problem by talking to them directly, before you have a single follower.</p>
+  <p><strong>"Everything has already been made."</strong> General things have. "A budget spreadsheet" is everywhere; "a budget spreadsheet for night-shift nurses paid every two weeks" is not. Specific beats general.</p>
+
+  <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
+  <p>In <em>The $9 Idea</em>, Kai is a van driver with forty-three dollars. He does not invent anything new. He takes the notebook he had kept for five years, the one where he tracked miles, fuel and tax, and turns it into a simple spreadsheet for other drivers. Nine dollars. That is a digital product.</p></div>
+
+  <div class="rule">Today's action: write down three things you have done so many times that you could do them half asleep.</div>
+</section>
+
+<!-- ============================== 02 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">02</div>
+  <div class="ctitle">Find what hurts</div>
+  <div class="clead">Do not sell what you like. Sell what hurts. People pay to make pain stop, not to collect nice things.</div>
+  <img src="build/art/kai-shrug.png">
+</section>
+<section class="chapter">
+  <h2>Rule one: sell what hurts</h2>
+  <p>Most first products fail for one reason: they are something the maker enjoys, not something a buyer needs. A beautiful poetry ebook is lovely. A one-page guide that gets a nervous person through their first job interview gets bought.</p>
+  <p>Pain is easy to spot once you look for it. It sounds like: <em>"I hate doing this." "I never know how to start." "I keep losing track of." "This takes me forever." "I'm scared of getting it wrong."</em></p>
+
+  <h3>The pain inventory</h3>
+  <p>Look at your life through four lenses. Write at least five lines under each. Use worksheet 1 at the back.</p>
+  <ol>
+    <li><strong>Your work.</strong> What is annoying, slow or confusing in your job, past or present? What did you have to figure out on your own?</li>
+    <li><strong>Problems you have solved.</strong> Debt you paid off, weight you lost, a visa you got, a landlord you dealt with, an exam you passed. Every solved problem is a map for someone still lost.</li>
+    <li><strong>What people ask you.</strong> If friends keep asking you the same question, that question is a product.</li>
+    <li><strong>Groups you belong to.</strong> Drivers, nurses, students, new parents, gamers, gym beginners, people who rent. Groups share pains, and they talk to each other.</li>
+  </ol>
+
+  <h3>Score your ideas</h3>
+  <p>Give each idea a score from 1 to 5 on four questions. Add them up. The highest total wins, not the one you like most.</p>
+  <table>
+    <tr><th>Question</th><th>What a 5 looks like</th></tr>
+    <tr><td><strong>How much does it hurt?</strong></td><td>It costs them money, time or sleep, regularly</td></tr>
+    <tr><td><strong>Can you reach them?</strong></td><td>You know where these people gather, online or in person</td></tr>
+    <tr><td><strong>Will they pay?</strong></td><td>They already spend money around this problem</td></tr>
+    <tr><td><strong>Do you understand it?</strong></td><td>You lived it, or you fixed it for yourself</td></tr>
+  </table>
+
+  <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
+  <p>In <em>Rejected 100 Times</em>, Kai's "pain" is a spreadsheet of one hundred job applications that went nowhere. It felt like proof he was a failure. It was actually research nobody else had. The thing that hurts you most is often the thing you understand best.</p></div>
+
+  <div class="rule">Today's action: fill in worksheet 1 and score your top five ideas.</div>
+</section>
+
+<!-- ============================== 03 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">03</div>
+  <div class="ctitle">Choose the format</div>
+  <div class="clead">Small, specific and quick to use. Your first product should solve one problem in under an hour.</div>
+  <img src="build/art/kai-point.png">
+</section>
+<section class="chapter">
+  <h2>Match the pain to the format</h2>
+  <p>Listen to how people describe the problem. The words tell you what to make.</p>
+  <table>
+    <tr><th>They say…</th><th>Make…</th></tr>
+    <tr><td>"I don't know how to do it."</td><td>A step-by-step guide or checklist</td></tr>
+    <tr><td>"I keep losing track."</td><td>A tracker or spreadsheet</td></tr>
+    <tr><td>"It takes me forever."</td><td>A template or a kit</td></tr>
+    <tr><td>"I never know what to say."</td><td>Scripts or message templates</td></tr>
+    <tr><td>"I start and then give up."</td><td>A planner, a challenge, or a short course</td></tr>
+  </table>
+
+  <h3>Keep it small</h3>
+  <p>Your first product is not your life's work. It is a test. Small products are faster to make, easier to explain in one sentence, cheaper to buy, and easier to finish. A buyer should be able to open it and get a result the same day.</p>
+  <ul>
+    <li><strong>One</strong> type of person</li>
+    <li><strong>One</strong> problem</li>
+    <li><strong>One</strong> clear result</li>
+  </ul>
+
+  <h3>The one-sentence promise</h3>
+  <p>Before you make anything, write this sentence. If you cannot fill it in, the idea is not clear yet.</p>
+  <div class="box dark"><p class="big"><b>[Product]</b> helps <b>[who]</b> <b>[get what result]</b> without <b>[the pain]</b>.</p></div>
+  <p>Examples:</p>
+  <ul>
+    <li><em>The Driver's Ledger</em> helps self-employed delivery drivers track miles, fuel and tax in two taps, without a shoebox of receipts.</li>
+    <li><em>The Callback Kit</em> helps job seekers get interviews by writing résumés the hiring software can read, without rewriting everything from scratch.</li>
+  </ul>
+
+  <div class="rule">Today's action: write your one-sentence promise on worksheet 2. Read it out loud. If it sounds vague, make it more specific.</div>
+</section>
+
+<!-- ============================== 04 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">04</div>
+  <div class="ctitle">Check it before you build it</div>
+  <div class="clead">Ten conversations will save you ten weekends. Ask about their problem, not your idea.</div>
+  <img src="build/art/kai-phone.png">
+</section>
+<section class="chapter">
+  <h2>The ten-conversation test</h2>
+  <p>The biggest waste in this whole process is building something for a month and then finding out nobody wanted it in that form. You fix that by talking to ten real people from your group <em>before</em> you build.</p>
+
+  <h3>Where to find them</h3>
+  <ul>
+    <li>People you already know, online groups (Facebook, Reddit, Discord, forums: read the rules, never spam), and places your group already gathers.</li>
+  </ul>
+
+  <h3>What to say</h3>
+  <p>Do not pitch. Nobody tells the truth about an idea when you are asking them to like it. Ask about their life instead.</p>
+  <div class="script">Hey! Quick question, I'm working on something for [group].
+How do you currently handle [the problem]?
+What's the most annoying part of it?
+Have you ever paid for anything to make it easier? What was it?
+If something fixed [the most annoying part], what would it look like?</div>
+
+  <h3>Green flags and red flags</h3>
+  <div class="two">
+    <div class="box"><p><strong>Green: keep going</strong></p><ul><li>They talk for a long time without being pushed</li><li>They describe a workaround they hate</li><li>They have already paid for something similar</li><li>They ask "when can I get it?"</li></ul></div>
+    <div class="box warn"><p><strong>Red: change something</strong></p><ul><li>"Yeah, that's a cool idea" and nothing else</li><li>They have never tried to solve it</li><li>They cannot remember the last time it happened</li><li>Everyone wants something different</li></ul></div>
+  </div>
+
+  <p><strong>Write down their exact words</strong> (worksheet 3). "I just want it on my phone, two taps, max" becomes your product, your sales page and your videos.</p>
+
+  <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
+  <p>Kai's first spreadsheet sold nothing. Then he stood outside the depot in the cold and asked drivers what was wrong with it. "Too complicated. I need it on my phone. Two taps." He rebuilt it. That version sold.</p></div>
+
+  <div class="rule">Today's action: send five messages using the script above. Tomorrow, five more.</div>
+</section>
+
+<!-- ============================== 05 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">05</div>
+  <div class="ctitle">Build it in a weekend</div>
+  <div class="clead">Version one should be useful, not perfect. Ugly and finished beats beautiful and in your head.</div>
+  <img src="build/art/kai-type.png">
+</section>
+<section class="chapter">
+  <h2>The weekend build</h2>
+  <p>Give yourself one weekend. A deadline stops you polishing forever. If it takes longer, the product is too big: cut it in half.</p>
+  <table>
+    <tr><th>When</th><th>Do this</th></tr>
+    <tr><td><strong>Saturday morning</strong></td><td>Write the outline: every step, section or tab, in order. Use the words from your ten conversations.</td></tr>
+    <tr><td><strong>Saturday afternoon</strong></td><td>Build the core. Fill in every section roughly. Do not design anything yet.</td></tr>
+    <tr><td><strong>Sunday morning</strong></td><td>Add one fully worked example. People learn from examples more than instructions.</td></tr>
+    <tr><td><strong>Sunday afternoon</strong></td><td>Make it clean and readable. Then test it with two real people and watch them use it.</td></tr>
+  </table>
+
+  <h3>Free tools that are enough</h3>
+  <ul>
+    <li><strong>Google Sheets</strong> for trackers, calculators and budgets.</li>
+    <li><strong>Google Docs</strong> for guides, scripts and checklists. Export as PDF.</li>
+    <li><strong>Canva</strong> (free plan) for planners, printables, covers and product images.</li>
+    <li><strong>Notion</strong> for planners and templates people duplicate into their own account.</li>
+  </ul>
+
+  <h3>A shape that works for guides</h3>
+  <ol>
+    <li><strong>The problem</strong>, in their words, so they feel understood.</li>
+    <li><strong>The result</strong> they will have at the end.</li>
+    <li><strong>The steps</strong>, numbered, one action each.</li>
+    <li><strong>An example</strong> of someone doing it.</li>
+    <li><strong>A checklist</strong> they can tick off.</li>
+  </ol>
+
+  <p><strong>For templates and trackers:</strong> an instructions tab in plain language, a filled-in example so they can see what "done" looks like, and a blank version ready to use.</p>
+
+  <h3 style="margin-top:10pt">Before you call it finished</h3>
+  <ul class="check">
+    <li>Two people from your group used it without your help</li>
+    <li>It opens properly on a phone</li>
+    <li>No spelling mistakes in the title or first page</li>
+    <li>It delivers the promise from your one-sentence promise</li>
+    <li>Your name or brand is on it</li>
+  </ul>
+
+  <div class="rule">Today's action: book your build weekend in your calendar. Tell one person, so you have to do it.</div>
+</section>
+
+<!-- ============================== 06 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">06</div>
+  <div class="ctitle">Price it</div>
+  <div class="clead">Price the result, not the number of pages. A one-page script that wins a pay rise is worth more than a 200-page ebook.</div>
+  <img src="build/art/kai-after.png">
+</section>
+<section class="chapter">
+  <h2>How much to charge</h2>
+  <p>For a first, small product, most prices land between <strong>$7 and $29</strong>. Low enough to be an easy yes, high enough to be taken seriously. Free is not a price: people value what they pay for, and free downloads mostly sit unopened.</p>
+
+  <h3>Three questions</h3>
+  <ol>
+    <li><strong>What does the problem cost them?</strong> If it costs a driver $300 a year in missed tax deductions, $9 is nothing.</li>
+    <li><strong>What do they already pay for nearby?</strong> If they spend $15 on a book about it, you can sit near $15.</li>
+    <li><strong>How fast is the result?</strong> Faster results justify higher prices.</li>
+  </ol>
+
+  <table>
+    <tr><th>Product</th><th>Typical starting range</th></tr>
+    <tr><td>Checklist, single template, scripts</td><td>$5 – $12</td></tr>
+    <tr><td>Tracker or spreadsheet with maths built in</td><td>$9 – $19</td></tr>
+    <tr><td>Kit or bundle of several pieces</td><td>$12 – $29</td></tr>
+    <tr><td>Detailed guide with worksheets</td><td>$15 – $35</td></tr>
+    <tr><td>Short video course</td><td>$29 – $99</td></tr>
+  </table>
+  <p class="small">These ranges are common starting points, not rules. Your group and your result matter more.</p>
+
+  <h3>Launch price</h3>
+  <p>Start a little lower for your first twenty buyers and say so honestly: "Launch price for the first 20 people." It gives early buyers a reason to act now, and you can raise the price once you have reviews.</p>
+
+  <div class="rule">Today's action: pick a price. Write it next to your one-sentence promise. Do not change it for two weeks.</div>
+</section>
+
+<!-- ============================== 07 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">07</div>
+  <div class="ctitle">Open your shop</div>
+  <div class="clead">You do not need a website. A product page on a selling platform is enough to take your first payment today.</div>
+  <img src="build/art/kai-laptop.png" style="height:3.6in; bottom:1in; right:0.2in;">
+</section>
+<section class="chapter">
+  <h2>Setting up on a selling platform</h2>
+  <p>Platforms like Payhip, Gumroad and Stan handle the payment, deliver the file automatically and send the receipt. Most charge a small percentage per sale and nothing upfront. The steps below use Payhip as the example; the others work in a very similar way. Menus change over time, so if a button has moved, check the platform's help pages.</p>
+  <ol class="steps">
+    <li><strong>Create your account</strong> and connect a way to get paid (PayPal and/or Stripe).</li>
+    <li><strong>Add a product</strong> and choose a digital download.</li>
+    <li><strong>Upload your file</strong>. For PDFs, turn on PDF stamping if available, so each copy carries the buyer's email.</li>
+    <li><strong>Write the title</strong>: the result, not the format. "Get Interviews: The Callback Kit" beats "Résumé Template Pack".</li>
+    <li><strong>Write the description</strong> using the formula below.</li>
+    <li><strong>Add images</strong>: a cover, plus two or three images showing the inside.</li>
+    <li><strong>Set the price</strong> and, if you want, a launch coupon.</li>
+    <li><strong>Buy it yourself</strong> with a 100% coupon to test that the download arrives.</li>
+  </ol>
+
+  <h3>The product page formula</h3>
+  <ol>
+    <li><strong>Headline:</strong> your one-sentence promise.</li>
+    <li><strong>The problem:</strong> two or three lines in their words.</li>
+    <li><strong>What's inside:</strong> a short list. Say what each part does, not just what it is.</li>
+    <li><strong>Who it's for</strong> (and who it's not for). Honesty builds trust.</li>
+    <li><strong>Pictures of the inside</strong>, so they know exactly what they get.</li>
+    <li><strong>Questions people ask</strong>, answered in one line each.</li>
+    <li><strong>Your refund policy</strong>, stated plainly.</li>
+  </ol>
+
+  <div class="rule">Today's action: open your shop and publish the product, even if it feels early.</div>
+</section>
+
+<!-- ============================== 08 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">08</div>
+  <div class="ctitle">Your first ten sales</div>
+  <div class="clead">Forget going viral. You need ten people. Show the problem every day, and point to the fix.</div>
+  <img src="build/art/kai-cheer.png">
+</section>
+<section class="chapter">
+  <h2>Show the problem, every day</h2>
+  <p>People do not search for "templates". They search for answers to the thing that is hurting them. So do not make videos about your product. Make videos about <strong>their problem</strong>, and let the product be the obvious next step.</p>
+
+  <h3>The 30-second video formula</h3>
+  <table>
+    <tr><th>Seconds</th><th>What happens</th><th>Example</th></tr>
+    <tr><td>0–3</td><td>Name the pain</td><td>"Why your résumé never gets a reply."</td></tr>
+    <tr><td>3–20</td><td>Show one useful thing, for free</td><td>Show the before and after of one line</td></tr>
+    <tr><td>20–30</td><td>One line pointing to the full fix</td><td>"The full kit is in my bio."</td></tr>
+  </table>
+  <p>Post one every day on TikTok, Reels and Shorts; the same video works on all three. Most early videos get few views. That is normal.</p>
+
+  <h3>Twelve video ideas for any product</h3>
+  <div class="two">
+    <ul>
+      <li>The mistake everyone makes with…</li>
+      <li>Before and after</li>
+      <li>"I did this for five years so you don't have to"</li>
+      <li>Reacting to a real question you were asked</li>
+      <li>Fixing one thing live</li>
+      <li>The myth about…</li>
+    </ul>
+    <ul>
+      <li>What I wish I knew when I started</li>
+      <li>A day in the life of [your group]</li>
+      <li>Three signs you need…</li>
+      <li>A customer's result (with permission)</li>
+      <li>Your own failure story</li>
+      <li>"Steal my exact…"</li>
+    </ul>
+  </div>
+
+  <h3>Do not forget the direct route</h3>
+  <p>Go back to the ten people from chapter 4. They told you about their problem. Tell them you made something for it, and offer them the launch price. Some of your first sales will come from these messages, not from videos.</p>
+
+  <h3>Track four numbers</h3>
+  <p>Once a week, write down: <strong>views</strong>, <strong>clicks</strong> to your page, <strong>sales</strong>, and <strong>what people said</strong>. Use worksheet 5. It tells you exactly what to fix (chapter 9).</p>
+
+  <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
+  <p>Kai posted a video every day for weeks. Forty views. Sixty. Thirty-one. Then he posted all one hundred of his rejection emails with one line underneath: "Here is what I changed before number one hundred and one." Honest stories about your own struggle are often what finally connect.</p></div>
+
+  <div class="rule">Today's action: film and post your first video. It will not be good. Post it anyway.</div>
+</section>
+
+<!-- ============================== 09 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">09</div>
+  <div class="ctitle">When it goes wrong</div>
+  <div class="clead">It will. Zero sales, angry customers, a broken file. How you respond is what people remember.</div>
+  <img src="build/art/kai-before.png">
+</section>
+<section class="chapter">
+  <h2>No sales after two weeks</h2>
+  <p>Do not delete it. Find the leak. Look at your four numbers from chapter 8.</p>
+  <table>
+    <tr><th>What you see</th><th>What it means</th><th>What to do</th></tr>
+    <tr><td>Hardly any views</td><td>Nobody is seeing it</td><td>Post more, in more places. Talk to people directly.</td></tr>
+    <tr><td>Views, but no clicks</td><td>The message is not landing</td><td>Name the pain more clearly in the first three seconds.</td></tr>
+    <tr><td>Clicks, but no sales</td><td>The page or offer is not convincing</td><td>Better inside images, clearer promise, check the price.</td></tr>
+    <tr><td>Sales, but refunds</td><td>The product does not deliver the promise</td><td>Ask why, fix it, and email past buyers the update.</td></tr>
+  </table>
+
+  <h3>Refunds</h3>
+  <p>Give them, quickly and politely. Fighting over a few dollars costs you far more in reputation. Ask one question: "What did you hope it would do?" The answer is free research.</p>
+
+  <h3>An angry public comment</h3>
+  <p>Do not delete it, and do not argue. Reply in public, calmly, and offer to fix their problem personally. Other people are watching how you handle it. A complaint handled well can sell more than any advert.</p>
+
+  <h3>A mistake in your product</h3>
+  <p>Tell every buyer, fix it fast, send the fixed version, and say sorry once, clearly. Most people forgive mistakes. Almost nobody forgives being ignored.</p>
+
+  <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
+  <p>"I bought your kit. I still got rejected." Kai could have deleted it. He replied in public, rewrote her résumé himself for free, and nine days later she posted a photo of her new office badge. That post sold more than anything he ever wrote about himself.</p></div>
+
+  <div class="rule">Today's action: decide your refund rule now, before anyone asks, and write it on your product page.</div>
+</section>
+
+<!-- ============================== 10 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">10</div>
+  <div class="ctitle">Product two and three</div>
+  <div class="clead">Your customers will tell you what to make next. Every question they ask is your next product.</div>
+  <img src="build/art/kai-wave.png">
+</section>
+<section class="chapter">
+  <h2>From one product to a small shop</h2>
+  <p>The hardest product is the first. After that, you have three things you did not have before: buyers, their questions, and proof. Use all three.</p>
+
+  <h3>Listen for the next question</h3>
+  <p>Keep a note of every question a buyer asks. When the same one appears three times, that is product two. Kai's résumé kit buyers asked "what do I say in the interview?" and "how do I ask for more money?" That became an interview guide and a salary script.</p>
+
+  <h3>Build a ladder</h3>
+  <table>
+    <tr><th>Step</th><th>Example</th><th>Price</th></tr>
+    <tr><td>Free</td><td>A one-page checklist, in return for an email address</td><td>$0</td></tr>
+    <tr><td>Starter</td><td>Your first product</td><td>$7 – $19</td></tr>
+    <tr><td>Bundle</td><td>Products one, two and three together, at a discount</td><td>$29 – $49</td></tr>
+    <tr><td>Bigger</td><td>A course, or personal help</td><td>$99+</td></tr>
+  </table>
+
+  <h3>Collect emails</h3>
+  <p>Followers belong to the app. Email addresses belong to you. Most platforms collect the buyer's email automatically; write to your list when you have something genuinely useful or new.</p>
+
+  <h3>Raise your price</h3>
+  <p>Once you have around twenty sales and a few good reviews, raise the price a little. If sales hold, raise it again later.</p>
+
+  <div class="rule">Today's action: start a "questions" note. Every question a buyer or viewer asks goes in it.</div>
+</section>
+
+<!-- ============================== 11 ============================== -->
+<section class="full opener">
+  <div class="label">CHAPTER</div><div class="num">11</div>
+  <div class="ctitle">Your 30-day plan</div>
+  <div class="clead">Four weeks, one product, live and selling. Tick it off as you go.</div>
+  <img src="build/art/kai-point.png">
+</section>
+<section class="chapter">
+  <h2>Thirty days, from zero</h2>
+  <h3>Week 1: the idea</h3>
+  <ul class="check">
+    <li>Fill in the pain inventory (worksheet 1)</li>
+    <li>Score your ideas and pick one</li>
+    <li>Write your one-sentence promise (worksheet 2)</li>
+    <li>Message ten people from your group</li>
+  </ul>
+  <h3>Week 2: the check and the build</h3>
+  <ul class="check">
+    <li>Finish the ten conversations and note their exact words (worksheet 3)</li>
+    <li>Adjust the idea based on what they said</li>
+    <li>Build version one over the weekend</li>
+    <li>Test it with two people</li>
+  </ul>
+  <h3>Week 3: the shop</h3>
+  <ul class="check">
+    <li>Pick your price and launch price</li>
+    <li>Make your cover and inside images</li>
+    <li>Write your product page (worksheet 4)</li>
+    <li>Publish and do a test purchase</li>
+    <li>Tell the ten people it is live</li>
+  </ul>
+  <h3>Week 4: the first sales</h3>
+  <ul class="check">
+    <li>Post one video every day</li>
+    <li>Reply to every comment and message</li>
+    <li>Fill in your numbers (worksheet 5) at the end of the week</li>
+    <li>Fix the biggest leak</li>
+    <li>Start your "questions" note for product two</li>
+  </ul>
+  <div class="box dark"><p class="big">Thirty days from now you will either have <b>your first sale</b>, or you will know <b>exactly why not</b>, and what to change. Both are further than zero.</p></div>
+</section>
+
+<!-- ============================== WORKSHEETS ============================== -->
+<section class="ws">
+  <div class="eyebrow">Worksheet 1</div>
+  <h2>The pain inventory</h2>
+  <p class="hint">Five lines under each lens. Do not judge them yet; just write.</p>
+  <div class="two">
+    <div><p><strong>My work</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
+    <div><p><strong>Problems I have solved</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
+  </div>
+  <div class="two">
+    <div><p><strong>What people ask me</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
+    <div><p><strong>Groups I belong to</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
+  </div>
+  <p><strong>Score your top five</strong> (1–5 each)</p>
+  <table class="grid">
+    <tr><th>Idea</th><th>Hurts</th><th>Reach</th><th>Will pay</th><th>Know it</th><th>Total</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</section>
+
+<section class="ws">
+  <div class="eyebrow">Worksheet 2</div>
+  <h2>The one-sentence promise</h2>
+  <p class="hint">If you cannot fill it in, the idea is not clear yet.</p>
+  <p><strong>Product name</strong></p><div class="fill"></div>
+  <p><strong>helps (who, as specific as possible)</strong></p><div class="fill"></div>
+  <p><strong>get (what result)</strong></p><div class="fill"></div>
+  <p><strong>without (what pain)</strong></p><div class="fill"></div>
+  <p><strong>Format</strong> (guide / template / tracker / kit / scripts / planner / course)</p><div class="fill"></div>
+  <p><strong>Price</strong> and <strong>launch price</strong></p><div class="fill"></div>
+  <p style="margin-top:16pt"><strong>Read it out loud. Rewrite it more specifically:</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div>
+</section>
+
+<section class="ws">
+  <div class="eyebrow">Worksheet 3</div>
+  <h2>The ten conversations</h2>
+  <p class="hint">Write down their exact words. Those sentences become your product and your videos.</p>
+  <table class="grid">
+    <tr><th style="width:18%">Name</th><th style="width:42%">Their exact words about the problem</th><th style="width:25%">Paid for anything?</th><th>Flag</th></tr>
+    <tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <p><strong>What did I hear more than twice?</strong></p><div class="fill"></div><div class="fill"></div>
+</section>
+
+<section class="ws">
+  <div class="eyebrow">Worksheet 4</div>
+  <h2>Your product page</h2>
+  <p class="hint">Fill this in, then copy it straight onto your shop.</p>
+  <p><strong>Headline</strong> (your promise)</p><div class="fill"></div>
+  <p><strong>The problem, in their words</strong></p><div class="fill"></div><div class="fill"></div>
+  <p><strong>What's inside</strong> (and what each part does)</p><div class="fill"></div><div class="fill"></div><div class="fill"></div>
+  <p><strong>Who it's for / not for</strong></p><div class="fill"></div><div class="fill"></div>
+  <p><strong>Three questions people will ask, with one-line answers</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div>
+  <p><strong>Refund policy</strong></p><div class="fill"></div>
+</section>
+
+<section class="ws">
+  <div class="eyebrow">Worksheet 5</div>
+  <h2>Weekly numbers</h2>
+  <p class="hint">Once a week. The numbers tell you what to fix (chapter 9).</p>
+  <table class="grid">
+    <tr><th>Week</th><th>Videos posted</th><th>Views</th><th>Clicks</th><th>Sales</th><th>What people said</th></tr>
+    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>5</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>8</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <p><strong>The biggest leak right now is:</strong></p><div class="fill"></div>
+  <p><strong>This week I will fix it by:</strong></p><div class="fill"></div><div class="fill"></div>
+</section>
+
+<!-- ============================== END ============================== -->
+<section class="full end">
+  <h1>This could be <span>you</span> too.</h1>
+  <div class="copy">Every story on the channel starts the same way: at zero. Nobody in those stories had a big idea, money, or followers. They had something they already knew, and the nerve to press publish.<br><br>Your notebook is waiting. Go and find it.<br><br><span style="color:#39ff14; font-weight:800; letter-spacing:0.2em; font-size:11pt">FROM ZERO · NEW STORY EVERY WEEK</span></div>
+  <img src="build/art/kai-before.png" style="left:1.7in;">
+  <img src="build/art/kai-after.png" style="right:1.7in;">
+</section>
+
+<section style="break-before: page;">
+  <p class="small" style="margin-top:7in"><strong>Legal.</strong> © From Zero. All rights reserved. This guide is for your personal use; please do not share or resell it. The stories referenced are fictional and for illustration. Nothing in this guide is financial, legal or tax advice, and no particular income or result is promised or implied. Results depend on your product, your effort and your market. Platform features and fees change; check each platform's current terms.</p>
+</section>
+
+</body>
+</html>

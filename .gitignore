@@ -5,3 +5,6 @@ episodes/*/out/*.wav
 episodes/*/out/*.f32
 episodes/*/out/body.mp4
 episodes/*/out/sheets/
+
+# product build intermediates
+product/build/
