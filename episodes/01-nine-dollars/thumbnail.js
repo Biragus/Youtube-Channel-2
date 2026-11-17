@@ -13,5 +13,5 @@ render(path.join(__dirname, 'out', 'thumbnail.png'), () => {
     stamp('FIRED', 20, 40, 1.0, -0.22);
   }, -0.06);
   halo(1450, 470); bust('kai', 1450, 470, 3.1, 'worried', { look: -0.4 });
-  big('$9 →', 70, 160, 210, '#ffffff'); big('$100,000', 70, 360, 210, K.GOLD);
+  { const sz = 165; big('$9 →', 70, 170, sz, '#ffffff'); big('$100,000', 70 + K.textWidth('$9 → ', sz, false, 2), 170, sz, K.GOLD); }
 });
