@@ -1,6 +1,6 @@
 # Episode 03 — The Gym He Couldn't Afford
 
-- **Length:** about 1,590 words of narration, around 9.5 minutes.
+- **Length:** about 1,525 words of narration, around 9 minutes.
 - **Narration:** Charliee, spoken to "you". Character lines are read by the narrator.
 - **Hero:** Kai, same look as before. Grey hoodie (bigger, rounder build) until chapter 9, then the navy suit.
 - **New character:** Brick, the muscular gym manager in a tight red polo with a clipboard. Returning: Mom, Dex, Sam. Also a doctor in a white coat.
