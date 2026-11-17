@@ -54,7 +54,8 @@
   th { text-align: left; background: var(--deep); color: #fff; padding: 5pt 8pt; font-weight: 800; }
   td { padding: 4.5pt 8pt; border-bottom: 1pt solid var(--line); vertical-align: top; }
   tr:nth-child(even) td { background: var(--paper); }
-  .script { font-family: 'JetBrains Mono', monospace; font-size: 9.6pt; background: #10151a; color: #e8f5ec; border-radius: 10pt; padding: 12pt 14pt; margin: 10pt 0 14pt; white-space: pre-wrap; line-height: 1.55; break-inside: avoid; }
+  .script::before { content: 'COPY THIS PROMPT'; display: block; font-family: Inter, sans-serif; font-size: 7.5pt; letter-spacing: 0.25em; color: #39ff14; font-weight: 800; margin-bottom: 5pt; }
+  .script { break-inside: avoid; font-family: 'JetBrains Mono', monospace; font-size: 9.6pt; background: #10151a; color: #e8f5ec; border-radius: 10pt; padding: 12pt 14pt; margin: 10pt 0 14pt; white-space: pre-wrap; line-height: 1.55; break-inside: avoid; }
   .check { list-style: none; padding-left: 0; }
   .check li { padding-left: 22pt; position: relative; }
   .check li::before { content: ''; position: absolute; left: 0; top: 3pt; width: 11pt; height: 11pt; border: 1.6pt solid var(--ink); border-radius: 3pt; }
@@ -87,7 +88,7 @@
   <img class="face" src="build/art/kai-face.png">
   <div class="title">FROM ZERO</div>
   <div class="sub">Make and sell your first digital product</div>
-  <div class="sub2">Turn something you already know into a file that sells while you sleep. Step by step, with worksheets.</div>
+  <div class="sub2">Turn something you already know into a file that sells while you sleep. Step by step, with copy-paste prompts that do the work for you.</div>
   <svg class="line" viewBox="0 0 850 240" preserveAspectRatio="none"><polyline fill="none" stroke="#39ff14" stroke-opacity="0.35" stroke-width="5" stroke-linejoin="round" points="0,220 60,214 120,222 180,206 240,210 300,190 360,196 420,170 480,172 540,140 600,138 660,100 720,92 780,48 850,20"/></svg>
   <div class="foot">FROM ZERO · NEW STORY EVERY WEEK</div>
 </section>
@@ -99,7 +100,9 @@
   <p>If you found this through the channel, you already know how the stories go. Somebody is stuck: broke, fired, rejected, laughed at. Then they take something they already know, put it into a simple file, and sell it to the people who need it. Nine dollars at a time, their life changes.</p>
   <p>Those stories are told as stories. This book is the part they skip: <strong>the exact steps</strong>. How to find an idea that people will actually pay for, how to check it before you waste a month, how to build it in a weekend, how to price it, how to put it up for sale, and how to get your first ten buyers when nobody knows who you are.</p>
 
-  <div class="box dark"><p class="big">By the end of this book you will have <b>one real product, for sale, with a plan for your first ten sales</b>. Not a business plan. Not a dream. A file with a price on it.</p></div>
+  <p>And then the part that makes it easier than ever: <strong>chapter 11 shows you how to do every step with Claude</strong>, an AI assistant. You type a few plain words, and Claude finds the idea with you, writes and designs the product, writes your shop page, and even makes animated videos to sell it.</p>
+
+  <div class="box dark"><p class="big">By the end of this book you will have <b>one real product, for sale, with videos pointing to it</b>. Not a business plan. Not a dream. A file with a price on it.</p></div>
 
   <h3>Who this is for</h3>
   <ul>
@@ -111,8 +114,8 @@
   <h3>How to use it</h3>
   <ul>
     <li>Read one chapter a day. Each one ends with a small action. Do the action before you read on.</li>
-    <li>The worksheets are at the back. Print them or copy them into a notebook.</li>
-    <li>The whole thing is built to take about 30 days, alongside a full-time job.</li>
+    <li>Chapters 1 to 10 explain what to do and why. Chapter 11 is the step-by-step checklist with the prompts that do it for you.</li>
+    <li>You can start with chapter 11 and come back to the others when you want to understand a step.</li>
   </ul>
 
 </section>
@@ -130,7 +133,7 @@
     <li><span class="n">08</span>Your first ten sales</li>
     <li><span class="n">09</span>When it goes wrong</li>
     <li><span class="n">10</span>Product two and three</li>
-    <li><span class="n">11</span>Your 30-day plan + worksheets</li>
+    <li><span class="n">11</span>Do it all with Claude: the step-by-step checklist</li>
   </ul>
   <p class="small">An honest note: nobody can promise you money, and this book does not. Most first products sell a handful of copies. What this book gives you is a method that removes the most common mistakes, so your first product has a fair chance and your second one is better.</p>
 </section>
@@ -155,7 +158,7 @@
     <tr><td><strong>Checklist</strong></td><td>A short list that stops people forgetting things</td><td>Moving-house checklist, launch checklist</td></tr>
     <tr><td><strong>Planner</strong></td><td>A structure for time or goals</td><td>Notion study planner for students</td></tr>
     <tr><td><strong>Kit / bundle</strong></td><td>Several small pieces that solve one problem together</td><td>The Callback Kit: word lists + layout + tracker</td></tr>
-    <tr><td><strong>Mini-course</strong></td><td>A few short videos with a worksheet</td><td>"Fix your posture in 10 days"</td></tr>
+    <tr><td><strong>Mini-course</strong></td><td>A few short videos with a handout</td><td>"Fix your posture in 10 days"</td></tr>
   </table>
 
   <h3>Three myths that keep people at zero</h3>
@@ -182,7 +185,7 @@
   <p>Pain is easy to spot once you look for it. It sounds like: <em>"I hate doing this." "I never know how to start." "I keep losing track of." "This takes me forever." "I'm scared of getting it wrong."</em></p>
 
   <h3>The pain inventory</h3>
-  <p>Look at your life through four lenses. Write at least five lines under each. Use worksheet 1 at the back.</p>
+  <p>Look at your life through four lenses. Write at least five lines under each, or let Claude interview you (chapter 11, step 1).</p>
   <ol>
     <li><strong>Your work.</strong> What is annoying, slow or confusing in your job, past or present? What did you have to figure out on your own?</li>
     <li><strong>Problems you have solved.</strong> Debt you paid off, weight you lost, a visa you got, a landlord you dealt with, an exam you passed. Every solved problem is a map for someone still lost.</li>
@@ -203,7 +206,7 @@
   <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
   <p>In <em>Rejected 100 Times</em>, Kai's "pain" is a spreadsheet of one hundred job applications that went nowhere. It felt like proof he was a failure. It was actually research nobody else had. The thing that hurts you most is often the thing you understand best.</p></div>
 
-  <div class="rule">Today's action: fill in worksheet 1 and score your top five ideas.</div>
+  <div class="rule">Today's action: list and score your top five ideas, or do chapter 11, step 1.</div>
 </section>
 
 <!-- ============================== 03 ============================== -->
@@ -242,7 +245,7 @@
     <li><em>The Callback Kit</em> helps job seekers get interviews by writing résumés the hiring software can read, without rewriting everything from scratch.</li>
   </ul>
 
-  <div class="rule">Today's action: write your one-sentence promise on worksheet 2. Read it out loud. If it sounds vague, make it more specific.</div>
+  <div class="rule">Today's action: write your one-sentence promise (chapter 11, step 2). Read it out loud. If it sounds vague, make it more specific.</div>
 </section>
 
 <!-- ============================== 04 ============================== -->
@@ -275,7 +278,7 @@ If something fixed [the most annoying part], what would it look like?</div>
     <div class="box warn"><p><strong>Red: change something</strong></p><ul><li>"Yeah, that's a cool idea" and nothing else</li><li>They have never tried to solve it</li><li>They cannot remember the last time it happened</li><li>Everyone wants something different</li></ul></div>
   </div>
 
-  <p><strong>Write down their exact words</strong> (worksheet 3). "I just want it on my phone, two taps, max" becomes your product, your sales page and your videos.</p>
+  <p><strong>Write down their exact words</strong> (chapter 11, step 3). "I just want it on my phone, two taps, max" becomes your product, your sales page and your videos.</p>
 
   <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
   <p>Kai's first spreadsheet sold nothing. Then he stood outside the depot in the cold and asked drivers what was wrong with it. "Too complicated. I need it on my phone. Two taps." He rebuilt it. That version sold.</p></div>
@@ -307,6 +310,7 @@ If something fixed [the most annoying part], what would it look like?</div>
     <li><strong>Google Docs</strong> for guides, scripts and checklists. Export as PDF.</li>
     <li><strong>Canva</strong> (free plan) for planners, printables, covers and product images.</li>
     <li><strong>Notion</strong> for planners and templates people duplicate into their own account.</li>
+    <li><strong>Claude</strong> to write, design and check all of it with you (chapter 11).</li>
   </ul>
 
   <h3>A shape that works for guides</h3>
@@ -445,7 +449,7 @@ If something fixed [the most annoying part], what would it look like?</div>
   <p>Go back to the ten people from chapter 4. They told you about their problem. Tell them you made something for it, and offer them the launch price. Some of your first sales will come from these messages, not from videos.</p>
 
   <h3>Track four numbers</h3>
-  <p>Once a week, write down: <strong>views</strong>, <strong>clicks</strong> to your page, <strong>sales</strong>, and <strong>what people said</strong>. Use worksheet 5. It tells you exactly what to fix (chapter 9).</p>
+  <p>Once a week, write down: <strong>views</strong>, <strong>clicks</strong> to your page, <strong>sales</strong>, and <strong>what people said</strong>. It tells you exactly what to fix (chapter 9).</p>
 
   <div class="box kai"><img src="build/art/kai-face.png"><div class="who">THE STORY</div>
   <p>Kai posted a video every day for weeks. Forty views. Sixty. Thirty-one. Then he posted all one hundred of his rejection emails with one line underneath: "Here is what I changed before number one hundred and one." Honest stories about your own struggle are often what finally connect.</p></div>
@@ -521,117 +525,113 @@ If something fixed [the most annoying part], what would it look like?</div>
 <!-- ============================== 11 ============================== -->
 <section class="full opener">
   <div class="label">CHAPTER</div><div class="num">11</div>
-  <div class="ctitle">Your 30-day plan</div>
-  <div class="clead">Four weeks, one product, live and selling. Tick it off as you go.</div>
-  <img src="build/art/kai-point.png">
+  <div class="ctitle">Do it all with Claude</div>
+  <div class="clead">Everything in this book, done for you. You type what you want in plain words, and Claude does the heavy lifting: the idea, the product, the shop page and the videos.</div>
+  <img src="build/art/kai-laptop.png" style="height:3.6in; bottom:1in; right:0.2in;">
 </section>
+
 <section class="chapter">
-  <h2>Thirty days, from zero</h2>
-  <h3>Week 1: the idea</h3>
+  <div class="eyebrow">The Claude checklist</div>
+  <h2>It has never been this easy</h2>
+  <p>A few years ago, making a digital product meant learning design software, writing every word yourself, and paying an editor to make your videos. Today you can do every part of it by talking to an AI assistant. This chapter shows you exactly how, using <strong>Claude</strong>.</p>
+  <p>You do not need to know how to code. You do not need design skills. You copy a prompt from this chapter, paste it into Claude, fill in the parts in [brackets], and answer Claude's questions. That is it.</p>
+
+  <div class="box dark"><p class="big">How it works: <b>copy the prompt</b>, paste it into Claude, <b>answer its questions</b>, and tell it what to change. Plain words, like texting a friend.</p></div>
+
+  <h3>Before you start</h3>
   <ul class="check">
-    <li>Fill in the pain inventory (worksheet 1)</li>
-    <li>Score your ideas and pick one</li>
-    <li>Write your one-sentence promise (worksheet 2)</li>
-    <li>Message ten people from your group</li>
+    <li><strong>A Claude account.</strong> Use Claude in your browser or the Claude app. A paid plan gives you more room for long projects like a video.</li>
+    <li><strong>Claude Code</strong> for the videos. It is the part of Claude that can write and run code for you, which is how the animation gets made. You never have to read the code.</li>
+    <li><strong>An ElevenLabs account</strong> for the narration voice, music and sound effects. Connect it to Claude in Claude's connectors settings so Claude can use it for you. ElevenLabs charges for credits; a full video's voice usually costs a few dollars.</li>
+    <li><strong>A shop account</strong> on a selling platform such as Payhip, so you can take payments.</li>
   </ul>
-  <h3>Week 2: the check and the build</h3>
+  <p class="small">Apps and menus change over time. If something has moved, ask Claude: "Where do I find [the setting] now?"</p>
+
+  <h3>Three rules that make it work</h3>
+  <ol>
+    <li><strong>Tell it about you.</strong> Claude is only as specific as you are. Your job, your problems, your people.</li>
+    <li><strong>Ask to see it first.</strong> Say "show me a sample before you do the whole thing". It saves time and money.</li>
+    <li><strong>Give notes like a director.</strong> "The music is too loud at 1:35, make it a third." Specific notes get exact fixes.</li>
+  </ol>
+</section>
+
+<section style="margin-top:18pt">
+  <div class="eyebrow">Part A · Find your product</div>
+  <h2>Steps 1 to 4: the idea</h2>
+
+  <h3 style="break-after: avoid">☐ Step 1 · Find what hurts</h3>
+  <div class="script">Interview me to find a digital product idea I could sell. Ask me one question at a time about my job, problems I have solved in my life, what people ask me for help with, and groups I belong to. When you have enough, give me 5 product ideas and score each from 1 to 5 on: how much the problem hurts, how easy the buyers are to reach, whether they already pay for solutions, and how well I know the problem. Recommend the best one and tell me why.</div>
+
+  <h3 style="break-after: avoid">☐ Step 2 · Make it specific</h3>
+  <div class="script">For the idea "[your idea]", write my one-sentence promise in this form: [Product] helps [who] [get what result] without [the pain]. Then give me 3 versions, each more specific than the last, and suggest the best format (guide, template, tracker, checklist, kit or scripts) and a price.</div>
+
+  <h3 style="break-after: avoid">☐ Step 3 · Check it with real people</h3>
+  <div class="script">Write a short, friendly message I can send to people in [your group] to ask about [the problem] without selling anything. Then list 10 places online where these people talk to each other, and the rules I should follow so I do not come across as spam.</div>
+  <p>Send it to ten people (chapter 4). Then paste their answers back in:</p>
+  <div class="script">Here are the answers I got: [paste them]. What did people say more than twice? Which exact phrases should I use in my product and my videos? Should I change the idea?</div>
+
+  <h3 style="break-after: avoid">☐ Step 4 · Pick the price</h3>
+  <div class="script">Based on everything above, what should I charge for my first version, and should I offer a launch price? Give me one clear answer and the reason in two sentences.</div>
+
+  <div class="box kai"><img src="build/art/kai-face.png"><div class="who">TIP</div>
+  <p>If you do not like an answer, just say so: "None of these feel like me, try again with ideas from my time working nights." Claude will keep going until one fits.</p></div>
+</section>
+
+<section style="margin-top:18pt">
+  <div class="eyebrow">Part B · Make the product</div>
+  <h2>Steps 5 to 9: the product and the shop</h2>
+
+  <h3 style="break-after: avoid">☐ Step 5 · Write it</h3>
+  <div class="script">Write the full [format] for "[your promise]". Use these exact phrases from my buyers: [paste]. Plain language, short sentences, numbered steps, one real example per section, and a checklist at the end. Start with a detailed outline and wait for my OK before writing the rest.</div>
+
+  <h3 style="break-after: avoid">☐ Step 6 · Design it</h3>
+  <div class="script">Turn this into a beautifully designed, branded PDF. Style: [your colours and mood, e.g. dark green and black, bold and modern]. Add a cover, a contents page and a designed opener for each chapter. Make sure no page is left half empty. Show me previews of every page before you finish.</div>
+  <p>For a spreadsheet or tracker, ask instead: "Build this as a Google Sheets template with an instructions tab, a filled-in example and a blank copy."</p>
+
+  <h3 style="break-after: avoid">☐ Step 7 · Make the shop images</h3>
+  <div class="script">Make 4 square images for my shop page, in the same style as the PDF: 1) the cover as a 3D book mockup, 2) a look inside with three pages fanned out, 3) a "what you'll learn" list, 4) the most useful page up close.</div>
+
+  <h3 style="break-after: avoid">☐ Step 8 · Write the shop page</h3>
+  <div class="script">Write my product page for [Payhip / your platform]: a title that names the result, the price, a description that starts with the buyer's problem, a list of what is inside and what each part does, who it is for and not for, five FAQs with one-line answers, and a plain refund policy. Do not promise any income.</div>
+
+  <h3 style="break-after: avoid">☐ Step 9 · Publish</h3>
   <ul class="check">
-    <li>Finish the ten conversations and note their exact words (worksheet 3)</li>
-    <li>Adjust the idea based on what they said</li>
-    <li>Build version one over the weekend</li>
-    <li>Test it with two people</li>
+    <li>Paste the page into your shop, upload the PDF and the 4 images</li>
+    <li>Turn on PDF stamping and email collection if your platform has them</li>
+    <li>Do a test purchase with a 100% coupon, then delete the coupon</li>
+    <li>Copy your product link. Every video will point to it.</li>
   </ul>
-  <h3>Week 3: the shop</h3>
-  <ul class="check">
-    <li>Pick your price and launch price</li>
-    <li>Make your cover and inside images</li>
-    <li>Write your product page (worksheet 4)</li>
-    <li>Publish and do a test purchase</li>
-    <li>Tell the ten people it is live</li>
-  </ul>
-  <h3>Week 4: the first sales</h3>
-  <ul class="check">
-    <li>Post one video every day</li>
-    <li>Reply to every comment and message</li>
-    <li>Fill in your numbers (worksheet 5) at the end of the week</li>
-    <li>Fix the biggest leak</li>
-    <li>Start your "questions" note for product two</li>
-  </ul>
-  <div class="box dark"><p class="big">Thirty days from now you will either have <b>your first sale</b>, or you will know <b>exactly why not</b>, and what to change. Both are further than zero.</p></div>
 </section>
 
-<!-- ============================== WORKSHEETS ============================== -->
-<section class="ws">
-  <div class="eyebrow">Worksheet 1</div>
-  <h2>The pain inventory</h2>
-  <p class="hint">Five lines under each lens. Do not judge them yet; just write.</p>
-  <div class="two">
-    <div><p><strong>My work</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
-    <div><p><strong>Problems I have solved</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
-  </div>
-  <div class="two">
-    <div><p><strong>What people ask me</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
-    <div><p><strong>Groups I belong to</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div><div class="fill"></div></div>
-  </div>
-  <p><strong>Score your top five</strong> (1–5 each)</p>
-  <table class="grid">
-    <tr><th>Idea</th><th>Hurts</th><th>Reach</th><th>Will pay</th><th>Know it</th><th>Total</th></tr>
-    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-</section>
+<section style="margin-top:18pt">
+  <div class="eyebrow">Part C · Make the videos</div>
+  <h2>Steps 10 to 16: animated story videos</h2>
+  <p>Use Claude Code for this part. Short story videos are what bring buyers to your page (chapter 8). Claude can write them, voice them, animate them and edit them.</p>
 
-<section class="ws">
-  <div class="eyebrow">Worksheet 2</div>
-  <h2>The one-sentence promise</h2>
-  <p class="hint">If you cannot fill it in, the idea is not clear yet.</p>
-  <p><strong>Product name</strong></p><div class="fill"></div>
-  <p><strong>helps (who, as specific as possible)</strong></p><div class="fill"></div>
-  <p><strong>get (what result)</strong></p><div class="fill"></div>
-  <p><strong>without (what pain)</strong></p><div class="fill"></div>
-  <p><strong>Format</strong> (guide / template / tracker / kit / scripts / planner / course)</p><div class="fill"></div>
-  <p><strong>Price</strong> and <strong>launch price</strong></p><div class="fill"></div>
-  <p style="margin-top:16pt"><strong>Read it out loud. Rewrite it more specifically:</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div>
-</section>
+  <h3 style="break-after: avoid">☐ Step 10 · Create your character</h3>
+  <div class="script">Design an original cartoon stickman character drawn entirely in code, with a "before" outfit (struggling) and an "after" outfit (successful), a set of facial expressions, and 5 supporting characters (a doubter, a family member, a boss, a friend who believes in him, a mentor). Render one character sheet image so I can approve the look.</div>
 
-<section class="ws">
-  <div class="eyebrow">Worksheet 3</div>
-  <h2>The ten conversations</h2>
-  <p class="hint">Write down their exact words. Those sentences become your product and your videos.</p>
-  <table class="grid">
-    <tr><th style="width:18%">Name</th><th style="width:42%">Their exact words about the problem</th><th style="width:25%">Paid for anything?</th><th>Flag</th></tr>
-    <tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr>
-    <tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr>
-  </table>
-  <p><strong>What did I hear more than twice?</strong></p><div class="fill"></div><div class="fill"></div>
-</section>
+  <h3 style="break-after: avoid">☐ Step 11 · Write the script</h3>
+  <div class="script">Write an animated story script, about 1,550 words (8 to 9 minutes), spoken to "you". Start straight in the story, no intro. Story: someone broke and stuck in [their situation] turns [their own experience] into a digital product: [your product]. Structure: situation, the problem, a first try that fails, a small start that works, proof, making the product, slow first sales, a hard moment handled well, the new life, the people who doubted come back, a short close. One shot per line, with what is on screen and the sound. Last line: "If you want to learn how to do it, the step-by-step guide is linked in my bio. And subscribe."</div>
 
-<section class="ws">
-  <div class="eyebrow">Worksheet 4</div>
-  <h2>Your product page</h2>
-  <p class="hint">Fill this in, then copy it straight onto your shop.</p>
-  <p><strong>Headline</strong> (your promise)</p><div class="fill"></div>
-  <p><strong>The problem, in their words</strong></p><div class="fill"></div><div class="fill"></div>
-  <p><strong>What's inside</strong> (and what each part does)</p><div class="fill"></div><div class="fill"></div><div class="fill"></div>
-  <p><strong>Who it's for / not for</strong></p><div class="fill"></div><div class="fill"></div>
-  <p><strong>Three questions people will ask, with one-line answers</strong></p><div class="fill"></div><div class="fill"></div><div class="fill"></div>
-  <p><strong>Refund policy</strong></p><div class="fill"></div>
-</section>
+  <h3 style="break-after: avoid">☐ Step 12 · Give it a voice</h3>
+  <div class="script">Using ElevenLabs, find 3 deep, calm narrator voices that suit this story and generate the first 20 seconds with each, so I can pick one. Do not generate the full narration until I approve.</div>
 
-<section class="ws">
-  <div class="eyebrow">Worksheet 5</div>
-  <h2>Weekly numbers</h2>
-  <p class="hint">Once a week. The numbers tell you what to fix (chapter 9).</p>
-  <table class="grid">
-    <tr><th>Week</th><th>Videos posted</th><th>Views</th><th>Clicks</th><th>Sales</th><th>What people said</th></tr>
-    <tr><td>1</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>5</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>8</td><td></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-  <p><strong>The biggest leak right now is:</strong></p><div class="fill"></div>
-  <p><strong>This week I will fix it by:</strong></p><div class="fill"></div><div class="fill"></div>
+  <h3 style="break-after: avoid">☐ Step 13 · Music and sound effects</h3>
+  <div class="script">Generate background music in four moods (sad, curious, driving, warm) and the sound effects this script needs. Keep effects quiet and the music well under the voice.</div>
+
+  <h3 style="break-after: avoid">☐ Step 14 · Animate and render</h3>
+  <div class="script">Animate every shot in code using my character, with a new shot about every 5 seconds, timed to the narration. Mix the voice, music and sound effects and render a 1080p MP4. Before the full render, show me one still of every shot so I can check them.</div>
+
+  <h3 style="break-after: avoid">☐ Step 15 · Watch it and give notes</h3>
+
+  <div class="script">At 0:35 the clock sound is too loud, make it a fifth. At 1:32 the caption gets cut off, move it up. At 6:10 the pause is too long, shorten it. Fix all of these, then render again.</div>
+
+  <h3 style="break-after: avoid">☐ Step 16 · Make it remember</h3>
+  <div class="script">Save everything we agreed (the voice, the sound levels, the style and my notes) in a project notes file, so every future video starts from these settings.</div>
+  <p>From now on, your next video starts with one message: <strong>"Write the next video about [new story], same style and settings as last time."</strong></p>
+
+  <p><strong>Then post it</strong>, put your product link in the description and your bio, and do it again next week. Your first video may take a few rounds of notes; every one after that gets faster.</p>
 </section>
 
 <!-- ============================== END ============================== -->
