@@ -1,33 +1,27 @@
 # Episode 03 — The Gym He Couldn't Afford
 
-- **Length:** about 1,525 words of narration, around 9 minutes.
+- **Length:** about 1,584 words of narration, around 9.6 minutes.
 - **Narration:** Charliee, spoken to "you". Character lines are read by the narrator.
 - **Hero:** Kai, same look as before. Grey hoodie (bigger, rounder build) until chapter 9, then the navy suit.
 - **New character:** Brick, the muscular gym manager in a tight red polo with a clipboard. Returning: Mom, Dex, Sam. Also a doctor in a white coat.
-- **Recurring devices:** a stairs counter, a "DAY" tag, and a notebook of ticks that grows across the video. From chapter 7, a sales counter.
+- **Recurring devices:** a stairs counter, the credit-card balance, a "DAY" tag, and a notebook of ticks that grows across the video. From chapter 7, a sales counter.
 - **The digital product:** *The Living Room Plan*, a 12-week beginner workout PDF for people with no gym, no equipment and no time. $9.
 - **Health note:** the story stays realistic (small daily steps, steady loss over months, a doctor's advice). No miracle numbers.
-- **Call to action:** only in the final line, pointing to the guide.
+- **Opening:** no hook or title card. The video starts straight in the story with "You work in a call centre."
+- **Money thread:** he is broke as well as out of shape; the product fixes both.
+- **Call to action:** only in the final line: the guide, "linked in my bio".
 
 Columns: shot · narration · on screen · sound.
 
 ---
 
-## 1. Hook (0:00 – 0:22)
+## 2. The situation (0:00 – 1:30)
 
 | # | Narration | On screen | Sound |
 |---|---|---|---|
-| 1a | Fourteen stairs. | Black screen. A staircase builds itself step by step. Counter: STAIRS 14. | Footsteps, counter |
-| 1b | That is all it takes to leave you out of breath, holding the rail. | Kai halfway up, bent over the rail, sweat drop. | Heavy breathing, heartbeat |
-| 1c | You are twenty-nine years old. | Close on Kai's face, eyes tired. | Low boom |
-| 1d | A year from now, the gym that turned you away will ask you to teach its members. | Kai in the suit, silhouette, standing in front of a gym window. Green eyes snap open. | Riser, bass hit |
-| 1e | But tonight, you cannot even finish the stairs to your own flat. | Back to the stairs. Title slams in: THE GYM HE COULDN'T AFFORD. | Title slam |
-
-## 2. The situation (0:22 – 1:35)
-
-| # | Narration | On screen | Sound |
-|---|---|---|---|
-| 2a | You work in a call centre. Eight hours a day in a chair, with a headset on. | Rows of desks. Kai in a headset, chair creaking. | Office hum |
+| 2a | You work in a call centre. Eight hours a day in a chair, with a headset on, for just above minimum wage. | Cold open, no title: rows of desks. Kai in a headset, chair creaking. A small tag: $14.20 / HOUR. | Office hum |
+| 2a2 | It pays the rent. Most months. It does not pay for much else. | Bank app: rent leaves, the balance drops to double digits. | Counter |
+| 2a3 | There is a credit card you try not to look at. Four thousand dollars, and the number only goes up. | A credit card statement face down on the table. Kai flips it: $4,180. | Paper, low boom |
 | 2b | Lunch comes from a vending machine. Dinner comes from whatever is open at ten at night. | Vending machine drops a snack. Then a takeaway bag on a tiny table. | Machine clunk, bag rustle |
 | 2b2 | You are not lazy. You are tired. There is a difference, and nobody seems to see it. | Kai at his desk at 9pm, still on a call, eyes half closed. | Phone beep |
 | 2c | Somewhere along the way, the hoodie stopped being a style. It became a hiding place. | Kai pulling the hood up in a mirror. | Soft note |
@@ -54,6 +48,7 @@ Columns: shot · narration · on screen · sound.
 | 3i | You walk out past a wall of mirrors. You do not look in any of them. | Kai walking past mirrors, eyes on the floor. | Footsteps |
 | 3j | Your bank balance says three hundred and twelve dollars. Rent is due in nine days. | Phone: $312.40. Tag: RENT IN 9 DAYS. | Counter |
 | 3k | You cannot afford the gym. And according to your doctor, you cannot afford to wait. | Split screen: the gym door closing, the blood pressure gauge. | Heartbeat |
+| 3k0 | And that is when you see it clearly. Your body and your bank account are stuck in the same place. | Split screen: the stairs counter at 14, the credit card at $4,180. | Low boom |
 | 3k2 | On the walk home, you pass a bus stop advert. A man with a perfect body, and two words. No excuses. | Bus stop poster: a ripped stickman, NO EXCUSES. Kai walks past it, hood up. | Traffic |
 | 3k3 | You have plenty of excuses. Every one of them is real. That is the problem. | Kai at home, the empty shoebox on the floor. | Low drone |
 
@@ -102,6 +97,7 @@ Columns: shot · narration · on screen · sound.
 | 6h | Six weeks later, Sam sends you a message. "I did the stairs. All of them." | Phone: message from SAM with a stairs emoji and a flexed arm. | Notification, chime |
 | 6i | And then his sister asks for a copy. And then her friend. | Three phones in a row lighting up: "can I get the plan?" | Notifications ×3 |
 | 6j | And that is when you realise the notebook is not just yours anymore. | The notebook glowing green on the desk. | Rising tone |
+| 6j2 | Something you made out of being broke and out of breath might be worth something to someone else. | The notebook beside the credit card statement. | Soft chime |
 
 ## 7. Trying (5:45 – 6:35)
 
@@ -140,13 +136,14 @@ Columns: shot · narration · on screen · sound.
 | 8o | That update gets you more five-star reviews than the original plan ever did. | Review cards landing with five stars. | Soft bells |
 | 8p | People ask for more. So you add a walking plan. Then a cheap meal guide. Each one from a question in your comments. | Product cards stack: LIVING ROOM PLAN · WALKING PLAN · $5 MEALS. | Pops |
 | 8q | Nine dollars at a time, the side project starts paying more than the call centre. | Two counters side by side: the plan's monthly sales passing the call-centre salary. | Counter, riser |
+| 8q2 | The credit card gets paid off first. Then the rent stops being a monthly panic. | The credit card counter runs from $4,180 to $0. Rent tag turns green. | Counter, chime |
 | 8r | And one morning, you hand back the headset. | Kai placing the headset on the desk, gently. | Soft clack |
 
 ## 9. New life (8:00 – 8:40)
 
 | # | Narration | On screen | Sound |
 |---|---|---|---|
-| 9a | One year after the fourteen stairs, thirty thousand people have used your plan. | Map lighting up with green dots. Counter: 30,000. | Dots chime |
+| 9a | One year after you couldn't climb fourteen stairs, thirty thousand people have used your plan. | Map lighting up with green dots. Counter: 30,000. | Dots chime |
 | 9b | You have lost eighteen kilos. Slowly. Your doctor high-fives you, which you did not know doctors did. | Doctor's office, the doctor high-fiving Kai. Gauge in the green. | Slap, chime |
 | 9c | The hoodie goes into a drawer. | Poof: hoodie Kai becomes suit Kai. | Poof |
 | 9d | You hire Sam to answer the messages. He still does the stairs every morning. | Office door: SAM · COMMUNITY. Sam jogging up a staircase in the background. | Footsteps, high five |
@@ -175,5 +172,6 @@ Columns: shot · narration · on screen · sound.
 |---|---|---|---|
 | 11a | You did not need a gym. You needed a plan small enough to start. | The kitchen counter, ten squats, sunrise. | Music softens |
 | 11b | And the thing that helped you is the thing someone else is still searching for. | The notebook, glowing green. | Glow hum |
+| 11b2 | You fixed your body, and the thing you built while fixing it fixed your bank account. | Split screen from 3k0 again: stairs counter green, credit card at $0. | Warm chord |
 | 11c | That is what a digital product is. Something you lived, turned into something someone else can use. | Notebook turns into a PDF, then into a sales counter ticking up. | Soft chime |
-| 11d | If you want to learn how to turn what you know into your first digital product, the full step-by-step guide is in the description. And subscribe. Because next week, somebody else starts from zero. | Suit Kai turns to camera. The From Zero guide cover appears with "LINK IN DESCRIPTION". Subscribe button. | Pop, music out |
+| 11d | If you want to learn how to turn what you know into your first digital product, the step-by-step guide is linked in my bio. And subscribe. Because next week, somebody else starts from zero. | Suit Kai turns to camera. The From Zero guide cover appears with "LINK IN BIO". Subscribe button. | Pop, music out |
