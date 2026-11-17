@@ -122,7 +122,7 @@ function buildAudio(file, from, to) {
   timeline.forEach((s, i) => {
     const def = shots[s.id]; const list = (typeof def === 'object' && def.sfx) || [];
     if (i > 0 && !(def && def.quietCut)) add(sfx('whoosh'), s.start - 0.12, LEVEL.whoosh * SFX_GAIN * 0.8 * (SCALE.whoosh ?? 1));
-    for (const [name, off = 0, mul = 1] of list) { if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); mul *= SCALE[name] ?? 1; if (LOOPY.has(name)) add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul, 0, Math.max(0.3, s.d - off), 0, 0.2); else add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
+    for (const [name, off = 0, baseMul = 1] of list) { let mul = baseMul; if (!LEVEL[name]) throw new Error(`unknown sfx ${name} in ${s.id}`); mul *= SCALE[name] ?? 1; if (LOOPY.has(name)) add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul, 0, Math.max(0.3, s.d - off), 0, 0.2); else add(sfx(name), s.start + off, LEVEL[name] * SFX_GAIN * mul); }
   });
   // soft limiter so peaks never clip
   for (let i = 0; i < len; i++) { const v = mix[i]; mix[i] = Math.abs(v) > 0.7 ? Math.sign(v) * (0.7 + 0.28 * Math.tanh((Math.abs(v) - 0.7) / 0.28)) : v; }
