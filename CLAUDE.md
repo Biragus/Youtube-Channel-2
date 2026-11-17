@@ -10,6 +10,10 @@ Animated stickman videos, 8 minutes or longer, drawn entirely in code. Episode 0
 - Large emoji look blurry. Anything drawn bigger than about 130 px must be a code-drawn icon (`engine/icons.js`).
 - On-screen captions should be sparse; they called a busy end caption "ugly".
 
+## Channel goal
+
+The channel sells the owner's own product: teaching people how to make and sell digital products. Every story should show a digital product (template, guide, course, tool, kit) built from the hero's own experience, and the closing call to action points viewers there. That CTA is the most important line in the video.
+
 ## Story format
 
 Hook (premise in the first 7 seconds, spoken to "you") → starting situation → the problem → work toward the fix, failing first → the problem solved, new life → doubters return → close.
