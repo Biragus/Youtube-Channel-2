@@ -8,3 +8,4 @@ episodes/*/out/sheets/
 
 # product build intermediates
 product/build/
+shorts/out/*.png
