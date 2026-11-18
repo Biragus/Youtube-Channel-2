@@ -44,3 +44,16 @@ function lifestyle(t) {
   shade('#ffffff', 0.8 * (1 - K.prog(t, 0, 0.25))); // flash on the cut
 }
 module.exports.typing = typing; module.exports.lifestyle = lifestyle;
+
+// ---- motion helpers ------------------------------------------------------------
+// camera: looks at (x, y) with zoom z; shake in pixels (use impact() for a hit that dies away)
+function camera(v, fn) {
+  const c = K.ctx(); const sh = v.shake ?? 0; const now = v.t ?? 0;
+  c.save(); c.translate(W / 2 + Math.sin(now * 83) * sh, H / 2 + Math.cos(now * 71) * sh); c.scale(v.z ?? 1, v.z ?? 1); c.rotate(v.rot ?? 0); c.translate(-(v.x ?? W / 2), -(v.y ?? H / 2)); fn(); c.restore();
+}
+const impact = (t, at, amount = 16, dur = 0.4) => (t < at ? 0 : amount * Math.max(0, 1 - (t - at) / dur));
+// a hop: 0 most of the time, up to h pixels in a quick arc starting at `at`
+const hop = (t, at, h = 60, dur = 0.45) => (t < at || t > at + dur ? 0 : Math.sin(((t - at) / dur) * Math.PI) * h);
+// a pulse for counters that just changed: 1 -> 1+amp -> 1
+const pulse = (t, period, amp = 0.08) => 1 + amp * Math.max(0, Math.cos(((t % period) / period) * Math.PI * 2)) ** 6;
+module.exports.camera = camera; module.exports.impact = impact; module.exports.hop = hop; module.exports.pulse = pulse;
