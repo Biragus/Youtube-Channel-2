@@ -4,7 +4,7 @@ const W = 1080; const H = 1920;
 function dark(cy = 900) { const c = K.ctx(); const g = c.createRadialGradient(W / 2, cy, 0, W / 2, cy, 1300); g.addColorStop(0, '#1c202c'); g.addColorStop(1, '#040506'); c.fillStyle = g; c.fillRect(0, 0, W, H); }
 function spot(x, y, r, color = 'rgba(120,140,190,0.22)') { const c = K.ctx(); const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, color); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2); }
 const label = (str, x, y, size, color = '#ffffff', o = {}) => K.T(str, x, y, size, color, { spacing: o.spacing ?? 4, glow: o.glow, blur: o.blur ?? 30, align: o.align, weight: o.weight });
-function watermark() { K.T('FROM ZERO', W / 2, 1855, 26, 'rgba(255,255,255,0.28)', { spacing: 8, weight: 800 }); }
+function watermark() { K.T('FROM ZERO', W / 2, 1885, 26, 'rgba(255,255,255,0.28)', { spacing: 8, weight: 800 }); }
 function linkTag(k) { if (k <= 0) return; K.at(W / 2, 1765, k, () => { K.card(-190, -44, 380, 88, K.GREEN, 44); K.T('LINK IN BIO', 0, 3, 40, K.INK, { spacing: 3 }); }); }
 function shade(color, a, x = 0, y = 0, w = W, h = H) { K.alpha(a, () => { K.ctx().fillStyle = color; K.ctx().fillRect(x, y, w, h); }); }
 module.exports = { W, H, dark, spot, label, watermark, linkTag, shade };
@@ -38,7 +38,9 @@ function lifestyle(t) {
     K.line([[-300, -46], [300, -40]], K.GREEN, 6); K.card(305, -46, 30, 14, '#fff3bf', 6); K.card(-334, -50, 18, 16, '#ff4d4d', 6);
     for (const wx of [-210, 210]) { K.circle(wx, -6, 62, '#0d0d12'); K.circle(wx, -6, 34, '#c9ccd2'); const a = t * 30; K.line([[wx + Math.cos(a) * 30, -6 + Math.sin(a) * 30], [wx - Math.cos(a) * 30, -6 - Math.sin(a) * 30]], '#6b6f78', 6); }
   });
-  linkTag(K.pop(t, 0.5)); watermark();
+  // the call to action
+  K.at(W / 2, 1690, K.pop(t, 0.5), () => { K.card(-250, -62, 500, 124, K.GREEN, 62); K.T('LINK IN BIO', 0, 4, 58, K.INK, { spacing: 4 }); label('TO LEARN HOW', 0, 108, 40, '#ffffff', { spacing: 8 }); });
+  watermark();
   shade('#ffffff', 0.8 * (1 - K.prog(t, 0, 0.25))); // flash on the cut
 }
 module.exports.typing = typing; module.exports.lifestyle = lifestyle;

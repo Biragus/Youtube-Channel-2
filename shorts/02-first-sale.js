@@ -25,6 +25,7 @@ function lane(i, name, color, t, draw) {
 }
 
 module.exports = {
+  cut: CUT,
   duration: 18.0,
   draw: (t) => {
     if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 17.5, 18.0)); return; }

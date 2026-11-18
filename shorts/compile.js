@@ -1,34 +1,31 @@
-// Luxury-clip compilation short: 4 clips, white-flash cuts, then a "link in bio" end card. Silent (music is added on YouTube).
-//   node shorts/compile.js <name> clip1.mp4 clip2.mp4 clip3.mp4 clip4.mp4  -> shorts/out/<name>.mp4
-// Each clip is cropped to fill 1080x1920 and its middle CLIP seconds are used. Only use clips you have the rights to.
+// Joins four animated shorts into one: each plays up to its payoff, a white flash cuts to the next,
+// and the compilation ends on the sports-car scene with the "link in bio, to learn how" call to action.
+//   node shorts/compile.js <name> 01-employee-vs-creator 02-first-sale 03-excuses-vs-action 04-day-1-vs-day-100
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { spawn } = require('child_process');
 const { createCanvas } = require('@napi-rs/canvas');
 const K = require('../engine/kit');
-const { dark, label, watermark } = require('./lib');
+const { lifestyle, shade } = require('./lib');
 
-const [name, ...clips] = process.argv.slice(2);
-if (!name || clips.length !== 4) throw new Error('usage: node shorts/compile.js <name> <4 clips>');
-const CLIP = 3.0; const CARD = 3.0; const FLASH = 0.18;
-const OUT = path.join(__dirname, 'out'); const TMP = path.join(OUT, `.${name}`); fs.mkdirSync(TMP, { recursive: true });
-const dur = (f) => +execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString();
+const [name, ...ids] = process.argv.slice(2);
+const parts = ids.map((id) => require(path.join(__dirname, id)));
+const END = 3.6; const FPS = 30; const W = 1080; const H = 1920;
+const starts = []; let total = 0; for (const p of parts) { starts.push(total); total += p.cut; } const DURATION = total + END;
+const canvas = createCanvas(W, H); const ctx = canvas.getContext('2d'); K.use(ctx);
 
-// the end card, drawn once as a still
-const cv = createCanvas(1080, 1920); K.use(cv.getContext('2d')); K.setTime(0); dark(900);
-label('WANT THIS', 540, 760, 92, '#ffffff', { spacing: 6 }); label('LIFE?', 540, 870, 120, K.GOLD, { spacing: 8, glow: K.GOLD });
-K.at(540, 1080, 1, () => { K.card(-330, -70, 660, 140, K.GREEN, 70); K.T('LINK IN BIO', 0, 4, 66, K.INK, { spacing: 4 }); });
-label('TO LEARN HOW', 540, 1230, 54, '#c9d6cf', { spacing: 8 }); watermark();
-const card = path.join(TMP, 'card.png'); fs.writeFileSync(card, cv.toBuffer('image/png'));
-
-// ffmpeg: crop each clip to 9:16, take its middle seconds, flash into the next, end on the card
-const inputs = []; const parts = [];
-clips.forEach((c, i) => { const start = Math.max(0, dur(c) / 2 - CLIP / 2); inputs.push('-ss', String(start), '-t', String(CLIP), '-i', c);
-  parts.push(`[${i}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,fps=30,format=yuv420p,fade=t=in:st=0:d=${FLASH}:color=white,eq=saturation=1.1[v${i}]`); });
-inputs.push('-loop', '1', '-t', String(CARD), '-i', card);
-parts.push(`[4:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p,fade=t=in:st=0:d=${FLASH}:color=white,fade=t=out:st=${CARD - 0.4}:d=0.4[v4]`);
-parts.push('[v0][v1][v2][v3][v4]concat=n=5:v=1:a=0[v]');
-const out = path.join(OUT, `${name}.mp4`); const total = 4 * CLIP + CARD;
-execFileSync('ffmpeg', ['-v', 'error', '-y', ...inputs, '-f', 'lavfi', '-t', String(total), '-i', 'anullsrc=r=44100:cl=stereo', '-filter_complex', parts.join(';'),
-  '-map', '[v]', '-map', '5:a', '-c:v', 'libx264', '-crf', '19', '-preset', 'medium', '-c:a', 'aac', '-shortest', out]);
-fs.rmSync(TMP, { recursive: true, force: true }); console.log('wrote', out, `${total}s`);
+function frame(T) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0; K.setTime(T); ctx.save();
+  if (T >= total) { lifestyle(T - total); shade('#000000', K.prog(T, DURATION - 0.4, DURATION)); }
+  else { let i = parts.length - 1; while (starts[i] > T) i--; const t = T - starts[i]; parts[i].draw(Math.max(t, i ? 0.3 : t)); // later parts skip their fade-in from black
+    if (i > 0) shade('#ffffff', 0.85 * (1 - K.prog(t, 0, 0.25))); }
+  ctx.restore();
+}
+(async () => {
+  const out = path.join(__dirname, 'out', `${name}.mp4`); fs.mkdirSync(path.dirname(out), { recursive: true });
+  const ff = spawn('ffmpeg', ['-loglevel', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-r', String(FPS), '-i', '-',
+    '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-shortest', '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+  const n = Math.round(DURATION * FPS);
+  for (let i = 0; i < n; i++) { frame(i / FPS); if (!ff.stdin.write(canvas.data())) await new Promise((r) => ff.stdin.once('drain', r)); }
+  ff.stdin.end(); await new Promise((r) => ff.on('close', r)); console.log('wrote', out, `${DURATION.toFixed(1)}s`);
+})();

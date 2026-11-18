@@ -31,6 +31,7 @@ function half(y0, f) { // y0 = top of the half (0 or 980); f = { creator, t }
 }
 
 module.exports = {
+  cut: CUT,
   duration: 15.6,
   draw: (t) => {
     if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 15.1, 15.6)); return; }

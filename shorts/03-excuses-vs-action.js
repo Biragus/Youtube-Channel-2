@@ -24,6 +24,7 @@ function pan(x, y, glow) { // hanging from (x, y); the pan's rim is ROPE below
 }
 
 module.exports = {
+  cut: CUT,
   duration: 13.8,
   draw: (t) => {
     if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 13.3, 13.8)); return; }
