@@ -1,7 +1,8 @@
 // Short 1: EMPLOYEE vs CREATOR. Both work all day; at night only the creator's money keeps coming in.
 const K = require('../engine/kit');
 const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, alpha, card, line, circle, who, P, counter, floaters, money } = K;
-const { W, dark, spot, label, watermark, linkTag, shade } = require('./lib');
+const { W, dark, spot, label, watermark, linkTag, shade, typing, lifestyle } = require('./lib');
+const CUT = 12.6; // the payoff: cut to the lifestyle scene
 
 const NIGHT = 7.0; // seconds: when the sun goes down
 const worker = { hair: { type: 'short', color: '#2b2b33' }, top: { type: 'shirt', color: '#5c6f8a' }, pants: '#3b4252', shoes: '#e5e5e5', acc: ['badge'] };
@@ -17,7 +18,7 @@ function half(y0, f) { // y0 = top of the half (0 or 980); f = { creator, t }
     card(400, floorY - 250, 300, 24, '#3a3f4d', 6); card(420, floorY - 226, 18, 226, '#2b2f3a', 4); card(662, floorY - 226, 18, 226, '#2b2f3a', 4);
     card(470, floorY - 400, 200, 140, '#22252e', 12); card(482, floorY - 388, 176, 112, creator ? '#123d1c' : '#2b3a55', 6);
     if (creator) { const k = prog(t, 0.8, NIGHT - 0.4); card(500, floorY - 300, 140, 12, '#0b1a0f', 6); card(500, floorY - 300, 140 * k, 12, GREEN, 6); }
-    who(spec, { x: 330, y: floorY, s: 0.95, pose: P.type, expr: creator ? 'determined' : 'tired' });
+    who(spec, { x: 330, y: floorY, s: 0.95, pose: typing(t, creator ? 1.3 : 0), expr: creator ? 'determined' : 'tired' });
   });
   // night: asleep in bed
   alpha(night, () => { card(150, floorY - 90, 560, 90, '#2a3150', 18); card(150, floorY - 120, 130, 50, '#3a4368', 16); asleep(spec, 640, floorY - 100, 0.8, creator ? 'smile' : 'tired'); floaters(t, 12, (i, life) => label('z', 260 + (i % 3) * 30, floorY - 200 - life * 150, 44, '#9aa3b5'), { every: 0.6, from: NIGHT + 0.6, life: 1.6 }); });
@@ -30,8 +31,9 @@ function half(y0, f) { // y0 = top of the half (0 or 980); f = { creator, t }
 }
 
 module.exports = {
-  duration: 16,
+  duration: 15.6,
   draw: (t) => {
+    if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 15.1, 15.6)); return; }
     dark(960);
     half(0, { creator: false, t }); half(980, { creator: true, t });
     line([[0, 960], [W, 960]], 'rgba(255,255,255,0.25)', 4);
@@ -39,7 +41,7 @@ module.exports = {
     at(W / 2, 960, 1, () => { circle(0, 0, 56, '#0b0c12'); K.ctx().strokeStyle = 'rgba(255,255,255,0.5)'; K.ctx().lineWidth = 4; K.ctx().beginPath(); K.ctx().arc(0, 0, 56, 0, Math.PI * 2); K.ctx().stroke();
       alpha(1 - night, () => { circle(0, 0, 26, GOLD); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; line([[Math.cos(a) * 34, Math.sin(a) * 34], [Math.cos(a) * 44, Math.sin(a) * 44]], GOLD, 5); } });
       alpha(night, () => { circle(0, 0, 28, '#f6f1c9'); circle(12, -8, 24, '#0b0c12'); }); });
-    linkTag(pop(t, 13.4)); watermark();
-    shade('#000000', 1 - prog(t, 0, 0.3)); shade('#000000', prog(t, 15.5, 16));
+    watermark();
+    shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

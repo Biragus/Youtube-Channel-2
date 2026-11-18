@@ -1,7 +1,8 @@
 // Short 2: WHO GETS THE FIRST SALE? Four lanes; only the one who ships and keeps going reaches the $.
 const K = require('../engine/kit');
 const { GREEN, GOLD, RED, lerp, prog, ease, pop, at, alpha, card, line, circle, who, P, floaters, rnd } = K;
-const { W, dark, spot, label, watermark, linkTag, shade } = require('./lib');
+const { W, dark, spot, label, watermark, linkTag, shade, lifestyle } = require('./lib');
+const CUT = 15.0; // the payoff: cut to the lifestyle scene
 
 const GOAL = 930; const START = 150; const ARRIVE = 13.5;
 const person = (i, col) => ({ hair: { type: ['curly', 'short', 'bun'][i], color: '#2b2b33' }, top: { type: 'tee', color: col }, pants: '#3b4252', shoes: '#e5e5e5' });
@@ -24,8 +25,9 @@ function lane(i, name, color, t, draw) {
 }
 
 module.exports = {
-  duration: 18,
+  duration: 18.0,
   draw: (t) => {
+    if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 17.5, 18.0)); return; }
     dark(900);
     at(W / 2, 170, pop(t, 0.2), () => { label('WHO GETS THE', 0, -45, 64, '#ffffff', { spacing: 6 }); label('FIRST SALE?', 0, 40, 84, GOLD, { spacing: 6, glow: GOLD }); });
     // 1. the planner: plans forever, never starts
@@ -37,7 +39,7 @@ module.exports = {
     // 4. Kai: slow and steady, ships and keeps going
     lane(3, 'THE ONE WHO SHIPS', '#39ff14', t, (fy) => { const x = lerp(START, GOAL - 150, prog(t, 1.0, ARRIVE)); spot(x, fy - 120, 180); who('kai', { x, y: fy, s: 0.48, pose: t > ARRIVE ? 'cheer' : P.walk(t * 1.1), expr: t > ARRIVE ? 'happy' : 'determined' });
       if (t > ARRIVE) { at(460, fy - 150, pop(t, ARRIVE + 0.1), () => label('FIRST SALE!', 0, 0, 56, GREEN, { glow: GREEN })); floaters(t, 30, (k, life) => card(GOAL - 150 + rnd(k) * 260, fy - 300 + life * 260 - 100, 12, 20, ['#ffd43b', '#51cf66', '#74c0fc', '#ff8787'][k % 4], 3), { every: 0.04, from: ARRIVE, life: 1.2 }); } });
-    linkTag(pop(t, 15.4)); watermark();
-    shade('#000000', 1 - prog(t, 0, 0.3)); shade('#000000', prog(t, 17.5, 18));
+    watermark();
+    shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

@@ -1,7 +1,8 @@
 // Short 3: WHAT WEIGHS MORE? A pile of excuses on one side of the scale, one small action on the other.
 const K = require('../engine/kit');
 const { GREEN, GOLD, RED, INK, lerp, prog, ease, easeOut, pop, at, alpha, card, line, circle, who, P, floaters, rnd } = K;
-const { W, dark, spot, label, watermark, linkTag, shade } = require('./lib');
+const { W, dark, spot, label, watermark, linkTag, shade, lifestyle } = require('./lib');
+const CUT = 10.8; // the payoff: cut to the lifestyle scene
 
 const PX = 540; const PY = 680; const ARM = 320; const ROPE = 230;
 const EXCUSES = ['NO TIME', 'NO MONEY', 'NOT READY', 'TOO LATE', 'WHAT IF I FAIL?'];
@@ -23,8 +24,9 @@ function pan(x, y, glow) { // hanging from (x, y); the pan's rim is ROPE below
 }
 
 module.exports = {
-  duration: 16,
+  duration: 13.8,
   draw: (t) => {
+    if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 13.3, 13.8)); return; }
     dark(800);
     at(W / 2, 180, pop(t, 0.2), () => { label('WHAT WEIGHS', 0, -45, 70, '#ffffff', { spacing: 6 }); label('MORE?', 0, 45, 90, GOLD, { spacing: 8, glow: GOLD }); });
     const a = angle(t); const [L, R] = ends(a); const won = t > PLACE + 0.4;
@@ -50,7 +52,7 @@ module.exports = {
     const throwing = t > 6.2 && t < PLACE + 0.3;
     who('kai', { x: 540, y: 1700, s: 1.1, pose: won ? 'cheer' : (throwing ? 'wave' : 'stand'), expr: won ? 'happy' : (t > 5.6 ? 'determined' : 'worried') });
     if (won) floaters(t, 24, (i, life) => card(R[0] - 180 + rnd(i) * 360, R[1] + 120 - life * 260, 12, 20, ['#51cf66', '#ffd43b', '#74c0fc'][i % 3], 3), { every: 0.05, from: PLACE + 0.4, life: 1.2 });
-    linkTag(pop(t, 13.4)); watermark();
-    shade('#000000', 1 - prog(t, 0, 0.3)); shade('#000000', prog(t, 15.5, 16));
+    watermark();
+    shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };
