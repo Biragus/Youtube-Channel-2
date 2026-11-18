@@ -57,3 +57,34 @@ const hop = (t, at, h = 60, dur = 0.45) => (t < at || t > at + dur ? 0 : Math.si
 // a pulse for counters that just changed: 1 -> 1+amp -> 1
 const pulse = (t, period, amp = 0.08) => 1 + amp * Math.max(0, Math.cos(((t % period) / period) * Math.PI * 2)) ** 6;
 module.exports.camera = camera; module.exports.impact = impact; module.exports.hop = hop; module.exports.pulse = pulse;
+
+// ---- smooth poses ------------------------------------------------------------------
+const { POSES } = require('../engine/characters');
+const asPose = (p) => (typeof p === 'string' ? POSES[p] : p);
+// blend two poses: k = 0 gives a, 1 gives b (eased), so pose changes glide instead of snapping
+function blend(a, b, k) {
+  a = asPose(a); b = asPose(b); k = K.ease(K.clamp(k)); if (k <= 0) return a; if (k >= 1) return b;
+  const out = {}; for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) { const x = a[key] ?? (Array.isArray(b[key]) ? [0, 0] : 0); const y = b[key] ?? (Array.isArray(a[key]) ? [0, 0] : 0); out[key] = Array.isArray(x) ? [K.lerp(x[0], y[0], k), K.lerp(x[1], y[1], k)] : K.lerp(x, y, k); }
+  return out;
+}
+
+// ---- a person working at a laptop, seen from the front ----------------------------------
+// Seated behind a desk; the laptop's lid faces the camera. Elbows and forearms tap in turn, the head
+// nods a little, and the screen lights the face. o.cheer (0..1) blends into arms-up celebration.
+function workstation(x, floorY, s, spec, t, o = {}) {
+  const c = K.ctx(); const hipY = floorY - 85 * s; const deskTop = hipY - 40 * s; const ph = o.phase ?? 0;
+  const a = Math.sin(t * 15 + ph) * 0.7 + Math.sin(t * 26 + ph) * 0.3; const b = Math.sin(t * 15 + ph + Math.PI) * 0.7 + Math.sin(t * 23 + ph + 1) * 0.3;
+  const typingPose = { lean: 0, tilt: 5 + Math.sin(t * 2.3 + ph) * 2.5, drop: 0, armL: [55 + a * 5, -95 + a * 14], armR: [55 + b * 5, -95 + b * 14], legL: [85, -85], legR: [85, -85] };
+  const cheerPose = { lean: 0, tilt: -6, drop: 0, armL: [150, 16], armR: [150, 16], legL: [85, -85], legR: [85, -85] };
+  const sighPose = { lean: 0, tilt: 16, drop: 8, armL: [40, -110], armR: [40, -110], legL: [85, -85], legR: [85, -85] };
+  let pose = typingPose; if (o.sigh) pose = blend(pose, sighPose, o.sigh); if (o.cheer) pose = blend(pose, cheerPose, o.cheer);
+  K.card(x - 95 * s, hipY - 190 * s, 190 * s, 190 * s, '#2b2f3a', 22 * s);                       // chair back
+  if (o.glow !== false) spot(x, hipY - 220 * s, 170 * s, o.glowColor ?? 'rgba(120,200,255,0.30)'); // screen light on the face
+  K.who(spec, { x, y: floorY - (o.hop ?? 0), s, pose, expr: o.expr ?? 'determined', still: true });
+  // desk and laptop lid
+  K.card(x - 260 * s, deskTop, 520 * s, 22 * s, '#3a3f4d', 6 * s); K.card(x - 240 * s, deskTop + 22 * s, 480 * s, floorY - deskTop - 22 * s, '#262a34', 6 * s);
+  c.fillStyle = '#c9ccd2'; c.beginPath(); c.moveTo(x - 70 * s, deskTop); c.lineTo(x + 70 * s, deskTop); c.lineTo(x + 62 * s, deskTop - 100 * s); c.lineTo(x - 62 * s, deskTop - 100 * s); c.closePath(); c.fill();
+  c.strokeStyle = '#8d939e'; c.lineWidth = 4 * s; c.stroke();
+  K.circle(x, deskTop - 52 * s, 11 * s, o.logo ?? `rgba(57,255,20,${0.55 + 0.35 * Math.abs(Math.sin(t * 4))})`);
+}
+module.exports.blend = blend; module.exports.workstation = workstation;

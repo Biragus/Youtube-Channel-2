@@ -1,7 +1,7 @@
 // Short 1: EMPLOYEE vs CREATOR. Both work all day; at night only the creator's money keeps coming in.
 const K = require('../engine/kit');
 const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, alpha, card, line, circle, who, P, counter, floaters, money } = K;
-const { W, dark, spot, label, watermark, linkTag, shade, typing, lifestyle, camera, hop, pulse } = require('./lib');
+const { W, dark, spot, label, watermark, linkTag, shade, typing, lifestyle, camera, hop, pulse, workstation } = require('./lib');
 const CUT = 12.6; // the payoff: cut to the lifestyle scene
 
 const NIGHT = 7.0; // seconds: when the sun goes down
@@ -15,14 +15,11 @@ function half(y0, f) { // y0 = top of the half (0 or 980); f = { creator, t }
   const spec = creator ? 'kai' : worker;
   // day: working at a desk
   alpha(1 - night, () => {
-    card(400, floorY - 250, 300, 24, '#3a3f4d', 6); card(420, floorY - 226, 18, 226, '#2b2f3a', 4); card(662, floorY - 226, 18, 226, '#2b2f3a', 4);
-    card(470, floorY - 400, 200, 140, '#22252e', 12); card(482, floorY - 388, 176, 112, creator ? '#123d1c' : '#2b3a55', 6);
-    if (creator) { const k = prog(t, 0.8, NIGHT - 0.4); card(500, floorY - 300, 140, 12, '#0b1a0f', 6); card(500, floorY - 300, 140 * k, 12, GREEN, 6); }
-    const stretch = !creator && t > 3.4 && t < 4.6; const done = creator && t > NIGHT - 1.2;
-    const pose = stretch ? { lean: 0, tilt: -10, armL: [160, 10], armR: [160, 10], legL: [6, 0], legR: [6, 0] } : (done ? 'cheer' : typing(t, creator ? 1.3 : 0));
-    who(spec, { x: 330, y: floorY - hop(t, NIGHT - 1.2, 70) - hop(t, NIGHT - 0.7, 40), s: 0.95, pose, expr: stretch ? 'tired' : (done ? 'happy' : (creator ? 'determined' : 'tired')) });
-    if (!creator) floaters(t, 4, (i, life) => K.ctx() && card(705, floorY - 300 - life * 60, 8, 26, 'rgba(255,255,255,0.35)', 4), { every: 0.5, from: 0.2, life: 1.2 }); // coffee steam
-    if (!creator) { card(690, floorY - 290, 36, 40, '#c2410c', 6); }
+    const stretch = creator ? 0 : prog(t, 3.3, 3.7) * (1 - prog(t, 4.4, 4.9)); const done = creator ? prog(t, NIGHT - 1.3, NIGHT - 0.9) : 0;
+    workstation(330, floorY, 1.05, spec, t, { phase: creator ? 1.3 : 0, cheer: done || stretch, hop: hop(t, NIGHT - 1.0, 60) * (creator ? 1 : 0), expr: stretch > 0.3 ? 'tired' : (done ? 'happy' : (creator ? 'determined' : 'tired')), glowColor: creator ? 'rgba(57,255,20,0.25)' : undefined });
+    if (creator) { const k = prog(t, 0.8, NIGHT - 1.4); card(620, floorY - 330, 280, 70, '#0d1018', 16, GREEN, 3); label('BUILDING', 760, floorY - 312, 22, '#9aa3b5', { spacing: 4 }); card(640, floorY - 292, 240, 14, '#123d1c', 7); card(640, floorY - 292, 240 * k, 14, GREEN, 7); }
+    if (!creator) floaters(t, 4, (i, life) => card(552, floorY - 210 - life * 60, 8, 26, 'rgba(255,255,255,0.35)', 4), { every: 0.5, from: 0.2, life: 1.2 }); // coffee steam
+    if (!creator) { card(538, floorY - 180, 36, 42, '#c2410c', 6); }
   });
   // night: asleep in bed
   alpha(night, () => { card(150, floorY - 90, 560, 90, '#2a3150', 18); card(150, floorY - 120, 130, 50, '#3a4368', 16); asleep(spec, 640, floorY - 100 - Math.sin(t * 2.4) * 3, 0.8, creator ? 'smile' : 'tired'); card(760, floorY - 120, 120, 120, '#3a2f2a', 10); const flash = creator && t > NIGHT + 0.9 ? Math.max(0, Math.cos(((t - NIGHT) % 0.3) / 0.3 * Math.PI * 2)) ** 4 : 0; card(790, floorY - 150, 60, 34, flash > 0.1 ? '#39ff14' : '#1b1e27', 6); if (flash > 0.1) spot(820, floorY - 140, 90, `rgba(57,255,20,${0.5 * flash})`); floaters(t, 12, (i, life) => label('z', 260 + (i % 3) * 30, floorY - 200 - life * 150, 44, '#9aa3b5'), { every: 0.6, from: NIGHT + 0.6, life: 1.6 }); });
