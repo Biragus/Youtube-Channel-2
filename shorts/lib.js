@@ -39,7 +39,7 @@ function lifestyle(t) {
     for (const wx of [-210, 210]) { K.circle(wx, -6, 62, '#0d0d12'); K.circle(wx, -6, 34, '#c9ccd2'); const a = t * 30; K.line([[wx + Math.cos(a) * 30, -6 + Math.sin(a) * 30], [wx - Math.cos(a) * 30, -6 - Math.sin(a) * 30]], '#6b6f78', 6); }
   });
   // the call to action
-  K.at(W / 2, 1690, K.pop(t, 0.5), () => { K.card(-250, -62, 500, 124, K.GREEN, 62); K.T('LINK IN BIO', 0, 4, 58, K.INK, { spacing: 4 }); label('TO LEARN HOW', 0, 108, 40, '#ffffff', { spacing: 8 }); });
+  K.at(W / 2, 880, K.pop(t, 0.5) * (1 + 0.04 * Math.sin(t * 6)), () => { K.ctx().save(); K.ctx().shadowColor = K.GREEN; K.ctx().shadowBlur = 50; K.card(-300, -76, 600, 152, K.GREEN, 76); K.ctx().restore(); K.T('LINK IN BIO', 0, 5, 72, K.INK, { spacing: 4 }); K.card(-270, 100, 540, 80, 'rgba(0,0,0,0.6)', 40); label('TO LEARN HOW', 0, 140, 44, '#ffffff', { spacing: 8 }); });
   watermark();
   shade('#ffffff', 0.8 * (1 - K.prog(t, 0, 0.25))); // flash on the cut
 }
