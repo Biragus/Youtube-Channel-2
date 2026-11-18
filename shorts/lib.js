@@ -88,3 +88,20 @@ function workstation(x, floorY, s, spec, t, o = {}) {
   K.circle(x, deskTop - 52 * s, 11 * s, o.logo ?? `rgba(57,255,20,${0.55 + 0.35 * Math.abs(Math.sin(t * 4))})`);
 }
 module.exports.blend = blend; module.exports.workstation = workstation;
+
+// ---- short template ---------------------------------------------------------------
+// makeShort(cut, body): body(t) draws the animation up to its payoff; after `cut` the lifestyle scene plays.
+function makeShort(CUT, body) {
+  return { cut: CUT, duration: CUT + 3, draw: (t) => {
+    if (t >= CUT) { lifestyle(t - CUT); shade('#000000', K.prog(t, CUT + 2.5, CUT + 3)); return; }
+    body(t); watermark(); shade('#000000', 1 - K.prog(t, 0, 0.3));
+  } };
+}
+// a title, kept clear of the top edge
+const title = (str, color = '#ffffff', y = 300, size = 72, glow) => label(str, W / 2, y, size, color, { spacing: 4, glow });
+// a split-screen half with its own slow camera; draw(y0) paints it
+function halves(t, CUT, draw) { for (const y0 of [0, 980]) { const c = K.ctx(); c.save(); c.beginPath(); c.rect(0, y0 - 20, W, 960); c.clip(); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: 960, z: K.lerp(1, 1.07, t / CUT), t }, () => draw(y0)); c.restore(); } K.line([[0, 960], [W, 960]], 'rgba(255,255,255,0.25)', 4); }
+function rain(t, x0, y0, w, h, n = 40, color = 'rgba(160,190,255,0.45)') { for (let i = 0; i < n; i++) { const x = x0 + K.rnd(i) * w; const y = y0 + ((t * 900 + K.rnd(i + 9) * h) % h); K.line([[x, y], [x - 8, y + 30]], color, 3); } }
+function sun(x, y, r, t) { spot(x, y, r * 3, 'rgba(255,214,120,0.35)'); K.circle(x, y, r, '#ffd43b'); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 + t; K.line([[x + Math.cos(a) * r * 1.3, y + Math.sin(a) * r * 1.3], [x + Math.cos(a) * r * 1.7, y + Math.sin(a) * r * 1.7]], '#ffd43b', 6); } }
+function cloud(x, y, s, col = '#4a5068') { K.at(x, y, s, () => { K.circle(-60, 10, 50, col); K.circle(0, -10, 65, col); K.circle(65, 10, 50, col); K.card(-110, 10, 220, 50, col, 25); }); }
+Object.assign(module.exports, { makeShort, title, halves, rain, sun, cloud });

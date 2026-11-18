@@ -31,7 +31,7 @@ module.exports = {
     dark(800);
     const up = ease(prog(t, 6.5, PLACE)) * (1 - ease(prog(t, PLACE + 1.2, PLACE + 2.2)));
     camera({ x: 540, y: lerp(960 - Math.sin(t * 0.6) * 10, 860, up), z: lerp(lerp(1.12, 1, ease(prog(t, 0, 1.5))), 1.12, up), shake: impact(t, PLACE, 18) + impact(t, DROP(4), 6), t }, () => {
-    at(W / 2, 180, pop(t, 0.2), () => { label('WHAT WEIGHS', 0, -45, 70, '#ffffff', { spacing: 6 }); label('MORE?', 0, 45, 90, GOLD, { spacing: 8, glow: GOLD }); });
+    at(W / 2, 250, pop(t, 0.2), () => { label('WHAT WEIGHS', 0, -45, 70, '#ffffff', { spacing: 6 }); label('MORE?', 0, 45, 90, GOLD, { spacing: 8, glow: GOLD }); });
     const a = angle(t); const [L, R] = ends(a); const won = t > PLACE + 0.4;
     line([[PX, 300], [PX, PY]], 'rgba(255,255,255,0.6)', 5); line([L, R], '#e6c35a', 12); circle(PX, PY, 16, '#e6c35a');
     pan(L[0], L[1], null); pan(R[0], R[1], won ? 'rgba(57,255,20,0.35)' : null);

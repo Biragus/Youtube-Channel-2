@@ -24,7 +24,7 @@ module.exports = {
     line([[0, SEA], [W, SEA]], 'rgba(255,255,255,0.7)', 6);
     for (let i = 0; i < 6; i++) line([[i * 200 + (t * 40) % 200 - 100, SEA + 14], [i * 200 + (t * 40) % 200, SEA + 14]], 'rgba(255,255,255,0.3)', 4);
     // on top: the suit, the success
-    label('WHAT THEY SEE', W / 2, 190, 76, GOLD, { spacing: 6, glow: GOLD });
+    label('WHAT THEY SEE', W / 2, 270, 76, GOLD, { spacing: 6, glow: GOLD });
     // underneath: what it took
     alpha(prog(t, 2.6, 3.2), () => label('WHAT IT TOOK', W / 2, SEA + 110, 70, '#a5d8ff', { spacing: 6 }));
     BELOW.forEach((s, i) => { const y = 1180 + i * 250; at(W / 2 + Math.sin(t * 1.6 + i) * 14, y + bob, pop(t, 3.2 + i * 1.05), () => { K.ctx().rotate(Math.sin(t * 1.2 + i) * 0.03); const w = K.textWidth(s, 46, false, 3) + 80; card(-w / 2, -50, w, 100, 'rgba(2,10,20,0.75)', 50, '#74c0fc', 4); label(s, 0, 2, 46, '#ffffff', { spacing: 3 }); }); });

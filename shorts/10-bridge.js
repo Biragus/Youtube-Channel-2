@@ -27,7 +27,7 @@ module.exports = {
       who(done ? 'kai2' : 'kai', { x: kx, y: TOP - hop(t, lands(4) + 2.4, 70) - hop(t, lands(4) + 2.9, 45), s: 0.95, pose: done ? blend('stand', 'cheer', prog(t, lands(4) + 2.3, lands(4) + 2.6)) : (moving ? P.walk(t * 1.3) : blend('stand', { lean: 0, tilt: 6, armL: [30, -60], armR: [30, -60], legL: [6, 0], legR: [6, 0] }, 0.5 + 0.5 * Math.sin(t * 3))), expr: done ? 'happy' : 'determined' });
       if (done) floaters(t, 30, (i, life) => card(R + 100 + rnd(i) * 400, TOP - 500 + life * 300, 12, 20, ['#ffd43b', '#51cf66', '#74c0fc'][i % 3], 3), { every: 0.04, from: lands(4) + 2.3, life: 1.2 });
     });
-    label('THE GAP', W / 2, 220, 100, '#ffffff', { spacing: 10 }); label('IS BUILT ONE PIECE AT A TIME', W / 2, 310, 40, '#9aa3b5', { spacing: 4 });
+    label('THE GAP', W / 2, 290, 100, '#ffffff', { spacing: 10 }); label('IS BUILT ONE PIECE AT A TIME', W / 2, 380, 40, '#9aa3b5', { spacing: 4 });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

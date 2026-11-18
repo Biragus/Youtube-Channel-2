@@ -26,7 +26,7 @@ module.exports = {
       const end = prog(t, 9.6, 9.9);
       who(end > 0 ? 'kai2' : 'kai', { x: kx, y: ky - hop(t, 9.9, 50), s: 0.62, pose: blend(P.walk(t * 1.6), 'cheer', end), expr: end > 0 ? 'happy' : (Math.abs(kx - DIPX) < 200 ? 'tired' : 'determined') });
     });
-    label('MOST PEOPLE QUIT', W / 2, 200, 66, '#ffffff', { spacing: 4 }); label('RIGHT BEFORE IT WORKS.', W / 2, 290, 56, GOLD, { spacing: 4, glow: GOLD });
+    label('MOST PEOPLE QUIT', W / 2, 280, 66, '#ffffff', { spacing: 4 }); label('RIGHT BEFORE IT WORKS.', W / 2, 370, 56, GOLD, { spacing: 4, glow: GOLD });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

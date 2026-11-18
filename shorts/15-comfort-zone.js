@@ -27,7 +27,7 @@ module.exports = {
       const pose = sitting ? sit : (t < EDGE - 1.6 ? blend(sit, 'stand', prog(t, STAND, STAND + 0.6)) : (t < EDGE ? P.walk(t * 1.4) : (t < OUT - 0.4 ? blend('stand', 'slump', 0.5 + 0.5 * Math.sin(t * 3)) : (t < OUT + 0.3 ? P.walk(t * 1.4) : blend('stand', 'cheer', prog(t, OUT + 0.3, OUT + 0.7))))));
       who(burst > 0.3 ? 'kai2' : 'kai', { x: kx, y: (sitting ? FY - 80 : FY) - hop(t, OUT + 0.7, 60), s: 0.85, pose, expr: t < EDGE ? 'neutral' : (t < OUT ? 'worried' : 'happy'), prop: sitting ? 'phone' : undefined, look: t > EDGE && t < OUT ? 0.7 : 0 });
     });
-    label(t < OUT ? 'EVERYTHING YOU WANT' : 'IS ON THE OTHER SIDE.', W / 2, 220, 66, t < OUT ? '#ffffff' : GREEN, { spacing: 4, glow: t < OUT ? undefined : GREEN });
+    label(t < OUT ? 'EVERYTHING YOU WANT' : 'IS ON THE OTHER SIDE.', W / 2, 300, 66, t < OUT ? '#ffffff' : GREEN, { spacing: 4, glow: t < OUT ? undefined : GREEN });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

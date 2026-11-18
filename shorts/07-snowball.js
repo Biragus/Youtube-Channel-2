@@ -40,7 +40,7 @@ module.exports = {
         const size = Math.min(r * 0.42, (r * 1.5) / (s.length * 0.62)); if (size > 7) label(s, 0, 2, size, n >= 1000 ? '#2b8a3e' : INK, { spacing: 1 });
       });
     });
-    label('START SMALL.', W / 2, 200, 100, '#ffffff', { spacing: 8 });
+    label('START SMALL.', W / 2, 280, 100, '#ffffff', { spacing: 8 });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

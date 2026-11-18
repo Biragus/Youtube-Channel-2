@@ -32,7 +32,7 @@ module.exports = {
       const pose = t < GO ? blend('slump', { lean: 0, tilt: -8, armL: [20, 0], armR: [20, 0], legL: [6, 0], legR: [6, 0] }, breathe) : (t < ARRIVE ? P.walk(t * 1.1) : blend(P.walk(t * 1.1), 'power', prog(t, ARRIVE, ARRIVE + 0.4)));
       who('kai', { x: kx + shiver, y: FY - hop(t, ARRIVE + 0.7, 40), s: 1.0, pose, expr: t < GO - 0.6 ? 'worried' : (t > ARRIVE + 0.5 ? 'smug' : 'determined'), look: t > ARRIVE ? 0.6 : 0 });
     });
-    label(t < 6 ? 'THE CLOSER YOU GET...' : '...THE SMALLER IT IS.', W / 2, 230, 70, t < 6 ? '#ffffff' : GREEN, { spacing: 4, glow: t < 6 ? undefined : GREEN });
+    label(t < 6 ? 'THE CLOSER YOU GET...' : '...THE SMALLER IT IS.', W / 2, 300, 70, t < 6 ? '#ffffff' : GREEN, { spacing: 4, glow: t < 6 ? undefined : GREEN });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

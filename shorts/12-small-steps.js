@@ -16,7 +16,7 @@ module.exports = {
     dark(900); const c = K.ctx(); const top = prog(t, 1.0, 9.0); const stepN = Math.min(STEPS, top * STEPS);
     camera({ x: 540, y: lerp(1100, 980, top), z: lerp(1.05, 0.98, top), shake: [1.6, 4.6, 7.6].reduce((a, x) => a + impact(t, x + 0.95, 8), 0), t }, () => {
       line([[540, 380], [540, FY + 100]], 'rgba(255,255,255,0.2)', 4);
-      label('ONE BIG LEAP', 270, 500, 40, '#ff8787', { spacing: 4 }); label('SMALL STEPS', 810, 500, 40, GREEN, { spacing: 4 });
+      label('ONE BIG LEAP', 270, 540, 40, '#ff8787', { spacing: 4 }); label('SMALL STEPS', 810, 540, 40, GREEN, { spacing: 4 });
       for (const x0 of [40, 580]) { card(x0 + 300, TOPY, 200, FY - TOPY, '#262a36', 6); line([[x0 + 300, TOPY], [x0 + 500, TOPY]], GOLD, 6); circle(x0 + 400, TOPY - 40, 26 + Math.sin(t * 3) * 3, GOLD); }
       line([[40, FY], [1040, FY]], 'rgba(255,255,255,0.2)', 4);
       // left: the leap
@@ -28,7 +28,7 @@ module.exports = {
       who('kai', { x: kx + (top >= 1 ? 40 : 0), y: ky - Math.abs(Math.sin(t * 9)) * 6 * (top < 1 ? 1 : 0) - hop(t, 9.1, 50), s: 0.62, pose: top >= 1 ? blend(P.walk(t * 1.6), 'cheer', prog(t, 9.0, 9.4)) : P.walk(t * 1.6), expr: top >= 1 ? 'happy' : 'determined' });
       if (top >= 1) floaters(t, 24, (i, life) => card(800 + rnd(i) * 220, TOPY - 300 + life * 250, 10, 18, ['#ffd43b', '#51cf66', '#74c0fc'][i % 3], 3), { every: 0.05, from: 9.0, life: 1.1 });
     });
-    label('HOW DO YOU GET TO THE TOP?', W / 2, 220, 56, '#ffffff', { spacing: 4 });
+    label('HOW DO YOU GET TO THE TOP?', W / 2, 300, 56, '#ffffff', { spacing: 4 });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

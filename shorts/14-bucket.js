@@ -31,7 +31,7 @@ module.exports = {
       who(over > 0.5 ? 'kai2' : 'kai', { x: kx, y: BY + 10 - hop(t, FULL + 0.2, 80) - hop(t, FULL + 0.8, 60) - hop(t, FULL + 1.4, 40), s: 0.95, pose: blend(waitPose, 'cheer', prog(t, FULL, FULL + 0.3)), expr: over > 0 ? 'happy' : (t > 5 ? 'smile' : 'neutral'), look: 0.5 });
     });
     counter('EARNED', money(Math.round(9 * landed)), W / 2, 1720, GREEN, pop(t, 1.0) * pulse(t, Math.max(0.1, 1.1 - t * 0.1), 0.05), { size: 80, rot: 0 });
-    label('DROP BY DROP.', W / 2, 220, 90, '#ffffff', { spacing: 6 });
+    label('DROP BY DROP.', W / 2, 290, 90, '#ffffff', { spacing: 6 });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

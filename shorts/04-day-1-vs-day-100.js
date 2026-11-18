@@ -19,7 +19,7 @@ module.exports = {
     const zoomK = t < FLIP ? lerp(1, 1.1, t / FLIP) : (t < D100 ? 1 + Math.sin(t * 18) * 0.015 : lerp(1.15, 1.02, ease(prog(t, D100, D100 + 1.2))));
     camera({ x: 540, y: 900, z: zoomK, shake: (t > FLIP && t < D100 ? 5 : 0) + impact(t, D100, 22), t }, () => {
     if (t < FLIP) { // day 1: nothing happens
-      label('DAY 1', W / 2, 230, 130, '#ffffff', { spacing: 10 }); desk(t, false);
+      label('DAY 1', W / 2, 300, 130, '#ffffff', { spacing: 10 }); desk(t, false);
       counter('SALES', '0', W / 2, 560, '#9aa3b5', pop(t, 0.3), { size: 150, rot: Math.sin(t * 1.4) * 0.02 });
       at(840, 1000, pop(t, 2.0), () => { card(-120, -40, 240, 80, '#2b2f3a', 40); label('+1 VIEW', 0, 2, 34, '#9aa3b5', { spacing: 2 }); });
     } else if (t < D100) { // the days fly past
@@ -27,7 +27,7 @@ module.exports = {
       for (let i = 0; i < 4; i++) { const ph = ((t * 6 + i / 4) % 1); alpha(1 - ph, () => at(W / 2 + ph * 300 * (i % 2 ? 1 : -1), 900 - ph * 700, 1 - ph * 0.4, () => card(-300, -320, 600, 640, '#f1f3f5', 30), ph * (i % 2 ? 1.2 : -1.2))); }
       at(W / 2, 900, 1, () => { card(-300, -320, 600, 640, '#ffffff', 30); card(-300, -320, 600, 150, RED, 30); label('DAY', 0, -245, 70, '#ffffff', { spacing: 10 }); label(String(n), 0, 80, 240, INK, { spacing: 0 }); });
     } else { // day 100: it all comes back
-      label('DAY 100', W / 2, 230, 130, GREEN, { spacing: 10, glow: GREEN }); desk(t, true);
+      label('DAY 100', W / 2, 300, 130, GREEN, { spacing: 10, glow: GREEN }); desk(t, true);
       const v = Math.round(1284 * easeOut(prog(t, D100 + 0.3, D100 + 3.2)));
       counter('SALES', v.toLocaleString('en-US'), W / 2, 560, GREEN, pop(t, D100 + 0.1) * pulse(t, 0.18, 0.05), { size: 150, rot: Math.sin(t * 3) * 0.03 });
       floaters(t, 30, (i, life) => { at(780 + (i % 3) * 90, 1000 - life * 380, 1, () => { card(-70, -30, 140, 60, '#123d1c', 30, GREEN, 3); label('+$9', 0, 2, 32, GREEN, { spacing: 1 }); }); }, { every: 0.12, from: D100 + 0.3, life: 1.1 });

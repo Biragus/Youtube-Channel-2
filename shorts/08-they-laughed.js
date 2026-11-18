@@ -22,7 +22,7 @@ module.exports = {
     if (!after) { who('kai', { x: 260, y: fy, s: 1.0, pose: K.P.give, expr: t > 2.5 ? 'determined' : 'sad' }); at(430, fy - 300 + Math.sin(t * 6) * 4, 1, () => { card(-70, -50, 140, 100, '#ffffff', 10, INK, 5); label('$9', 0, 4, 54, INK, { spacing: 0 }); }, 0.06); }
     else { const walk = ease(prog(t, SKIP + 0.6, SKIP + 2.0)); who('kai2', { x: lerp(-120, 260, walk), y: fy, s: 1.0, pose: walk < 1 ? K.P.walk(t * 1.6) : 'power', expr: 'smug' }); counter('SALES', Math.round(30000 * ease(prog(t, SKIP + 0.8, SKIP + 3))).toLocaleString('en-US'), W / 2, 640, GREEN, pop(t, SKIP + 2.0) * pulse(t, 0.2, 0.05), { size: 130, rot: Math.sin(t * 2) * 0.03 }); }
     });
-    label(after ? 'NOW THEY ASK HOW.' : 'THEY LAUGHED.', W / 2, 260, after ? 80 : 100, after ? GREEN : '#ffffff', { spacing: 6, glow: after ? GREEN : undefined });
+    label(after ? 'NOW THEY ASK HOW.' : 'THEY LAUGHED.', W / 2, 320, after ? 80 : 100, after ? GREEN : '#ffffff', { spacing: 6, glow: after ? GREEN : undefined });
     // the jump in time
     const j = prog(t, SKIP - 0.1, SKIP + 1.0);
     if (j > 0 && j < 1) { shade('#000000', 0.75 * Math.sin(j * Math.PI)); at(W / 2, 960, pop(t, SKIP - 0.1), () => { card(-330, -70, 660, 140, '#ffffff', 70); label('1 YEAR LATER', 0, 4, 64, INK, { spacing: 6 }); }); }

@@ -13,15 +13,15 @@ const says = (str, x, y, t, a, b) => alpha(prog(t, a, a + 0.2) * (1 - prog(t, b 
 const path = (t, keys) => { if (t <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) return lerp(keys[i - 1][1], keys[i][1], ease(prog(t, keys[i - 1][0], keys[i][0]))); return keys[keys.length - 1][1]; };
 
 function lane(i, name, color, t, draw) {
-  const y0 = 300 + i * 390; const floorY = y0 + 320; const won = i === 3 && t > ARRIVE;
-  card(40, y0, 1000, 360, won ? '#0f2414' : '#101219', 22, won ? GREEN : 'rgba(255,255,255,0.12)', 4);
+  const y0 = 360 + i * 372; const floorY = y0 + 308; const won = i === 3 && t > ARRIVE;
+  card(40, y0, 1000, 345, won ? '#0f2414' : '#101219', 22, won ? GREEN : 'rgba(255,255,255,0.12)', 4);
   circle(80, y0 + 40, 8, color); label(name, 100, y0 + 41, 30, color, { align: 'left', spacing: 4 });
   line([[70, floorY], [1010, floorY]], 'rgba(255,255,255,0.12)', 3);
   // the goal: a gold coin with a dollar sign
   const g = won ? 1 + 0.15 * Math.sin((t - ARRIVE) * 8) * Math.exp(-(t - ARRIVE)) : 1;
   at(GOAL, floorY - 130 + Math.sin(t * 2.5 + i) * 8, g, () => { spot(0, 0, 120, won ? 'rgba(57,255,20,0.35)' : 'rgba(242,193,78,0.25)'); K.ctx().scale(0.35 + 0.65 * Math.abs(Math.cos(t * (won ? 9 : 1.6) + i)), 1); circle(0, 0, 54, GOLD); circle(0, 0, 44, '#e0a92e'); label('$', 0, 4, 64, '#5c3d00', { spacing: 0 }); });
   draw(floorY);
-  if (t > 15 && i < 3) shade('#000000', 0.45 * prog(t, 15, 15.6), 40, y0, 1000, 360);
+  if (t > 15 && i < 3) shade('#000000', 0.45 * prog(t, 15, 15.6), 40, y0, 1000, 345);
 }
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
     dark(900);
     const zin = ease(prog(t, ARRIVE - 0.6, ARRIVE + 0.5)); const zout = ease(prog(t, 0, 1.4));
     camera({ x: 540 + Math.sin(t * 0.5) * 6, y: lerp(lerp(700, 960, zout), 1080, zin), z: lerp(lerp(1.22, 1, zout), 1.12, zin), shake: impact(t, ARRIVE, 14), t }, () => {
-    at(W / 2, 170, pop(t, 0.2), () => { label('WHO GETS THE', 0, -45, 64, '#ffffff', { spacing: 6 }); label('FIRST SALE?', 0, 40, 84, GOLD, { spacing: 6, glow: GOLD }); });
+    at(W / 2, 235, pop(t, 0.2), () => { label('WHO GETS THE', 0, -45, 64, '#ffffff', { spacing: 6 }); label('FIRST SALE?', 0, 40, 84, GOLD, { spacing: 6, glow: GOLD }); });
     // 1. the planner: plans forever, never starts
     lane(0, 'THE PLANNER', '#74c0fc', t, (fy) => { who(person(0, '#1c7ed6'), { x: START + 40, y: fy, s: 0.48, pose: { lean: 0, tilt: -6 + Math.sin(t * 2) * 4, armL: [34 + Math.sin(t * 14) * 8, -100 + Math.sin(t * 14) * 10], armR: [26, -150], legL: [5, 0], legR: [5, 0] }, expr: t > 8 ? 'worried' : 'neutral' }); at(START + 130, fy - 175, 0.8, () => { card(-40, -50, 80, 100, '#ffffff', 6); for (let k = 0; k < 4; k++) card(-28, -36 + k * 22, 56 - (k % 2) * 16, 8, '#adb5bd', 3); }, 0.1); says('NOT READY YET', 540, fy - 150, t, 2.5, 6.5); says('NEED A BETTER PLAN', 560, fy - 150, t, 8, 12.5); });
     // 2. the perfectionist: starts, then keeps going back to fix things

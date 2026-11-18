@@ -11,7 +11,7 @@ const asleep = (spec, x, y, s, expr) => at(x, y, 1, () => who(spec, { x: 0, y: 0
 function half(y0, f) { // y0 = top of the half (0 or 980); f = { creator, t }
   const { creator, t } = f; const floorY = y0 + 780; const night = prog(t, NIGHT, NIGHT + 0.6);
   spot(360, y0 + 560, 420); line([[60, floorY], [1020, floorY]], 'rgba(255,255,255,0.15)', 4);
-  label(creator ? 'CREATOR' : 'EMPLOYEE', W / 2, y0 + 90, 64, creator ? GREEN : '#ffffff', { spacing: 10, glow: creator ? GREEN : undefined });
+  label(creator ? 'CREATOR' : 'EMPLOYEE', W / 2, y0 + (y0 ? 90 : 170), 64, creator ? GREEN : '#ffffff', { spacing: 10, glow: creator ? GREEN : undefined });
   const spec = creator ? 'kai' : worker;
   // day: working at a desk
   alpha(1 - night, () => {
@@ -27,7 +27,7 @@ function half(y0, f) { // y0 = top of the half (0 or 980); f = { creator, t }
   if (!creator) floaters(t, 14, (i, life) => label('+$', 560 + (i % 2) * 70, floorY - 430 - life * 160, 48, GOLD), { every: 0.5, from: 0.6, life: 1.0 });
   if (creator) floaters(t, 40, (i, life) => label('+$9', 470 + (i % 3) * 90, floorY - 260 - life * 220, 50, GREEN, { glow: GREEN }), { every: lerp(0.45, 0.16, prog(t, NIGHT + 1, 14)), from: NIGHT + 0.9, life: 1.2 });
   const v = creator ? Math.round(9 * Math.floor(prog(t, NIGHT + 0.9, 15) ** 1.4 * 60)) : Math.round(144 * prog(t, 0.6, NIGHT));
-  counter('EARNED', money(v), 860, y0 + 300, creator ? GREEN : GOLD, pop(t, 0.4) * (creator ? (t > NIGHT + 0.9 ? pulse(t, 0.3, 0.06) : 1) : (t < NIGHT ? pulse(t, 0.5, 0.05) : 1)), { size: 70, rot: Math.sin(t * 1.3 + y0) * 0.02 });
+  counter('EARNED', money(v), 860, y0 + (y0 ? 300 : 370), creator ? GREEN : GOLD, pop(t, 0.4) * (creator ? (t > NIGHT + 0.9 ? pulse(t, 0.3, 0.06) : 1) : (t < NIGHT ? pulse(t, 0.5, 0.05) : 1)), { size: 70, rot: Math.sin(t * 1.3 + y0) * 0.02 });
   shade('#0a1030', 0.35 * night, 0, y0, W, 940);
 }
 
