@@ -18,5 +18,5 @@ module.exports = makeShort(CUT, (t) => {
       tank(880, fy, built ? Math.min(1, (t - BUILT) * 0.2 + 0.05) : 0);
       const kx = built ? 420 : 240 + segs * 110; who(built && t > BUILT + 2 ? 'kai2' : 'kai', { x: kx, y: fy - 130 - hop(t, BUILT + 2, 40), s: 0.7, pose: built ? blend({ lean: 0, tilt: 6, armL: [22, -100], armR: [22, -100], legL: [5, 0], legR: [5, 0] }, 'cheer', prog(t, BUILT + 1.8, BUILT + 2.2)) : { lean: 0, tilt: 4, armL: [8, 4], armR: [90 + Math.sin(t * 12) * 20, -40 + Math.sin(t * 12) * 30], legL: [6, 0], legR: [6, 0] }, expr: built ? 'happy' : 'determined' }); }
   });
-  K.at(W / 2, 960, 1, () => { K.card(-210, -40, 420, 80, '#0d1018', 40, 'rgba(255,255,255,0.5)', 3); label('BUILD IT ONCE.', 0, 3, 32, '#ffffff', { spacing: 3 }); });
+  require('./lib').pill('BUILD IT ONCE.', W / 2, 960, 32);
 });

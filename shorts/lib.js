@@ -105,3 +105,6 @@ function rain(t, x0, y0, w, h, n = 40, color = 'rgba(160,190,255,0.45)') { for (
 function sun(x, y, r, t) { spot(x, y, r * 3, 'rgba(255,214,120,0.35)'); K.circle(x, y, r, '#ffd43b'); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 + t; K.line([[x + Math.cos(a) * r * 1.3, y + Math.sin(a) * r * 1.3], [x + Math.cos(a) * r * 1.7, y + Math.sin(a) * r * 1.7]], '#ffd43b', 6); } }
 function cloud(x, y, s, col = '#4a5068') { K.at(x, y, s, () => { K.circle(-60, 10, 50, col); K.circle(0, -10, 65, col); K.circle(65, 10, 50, col); K.card(-110, 10, 220, 50, col, 25); }); }
 Object.assign(module.exports, { makeShort, title, halves, rain, sun, cloud });
+// a rounded tag sized to its text, so the words never spill out
+function pill(str, x, y, size, color = '#ffffff', o = {}) { const w = K.textWidth(str, size, false, o.spacing ?? 3) + (o.pad ?? 70); const h = size * 1.9; K.card(x - w / 2, y - h / 2, w, h, o.fill ?? '#0d1018', h / 2, o.border ?? 'rgba(255,255,255,0.5)', 3); label(str, x, y + 3, size, color, { spacing: o.spacing ?? 3 }); }
+module.exports.pill = pill;

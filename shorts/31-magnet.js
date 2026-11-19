@@ -19,5 +19,5 @@ module.exports = makeShort(CUT, (t) => {
         for (let i = 0; i < 4; i++) K.ctx().strokeStyle = 'rgba(242,193,78,0.3)'; }
       who(won ? 'kai2' : 'kai', { x: 330, y: fy - hop(t, PULL + 2.1, 50), s: 0.85, pose: t < PULL ? { lean: 0, tilt: 4, armL: [8, 4], armR: [90 + Math.sin(t * 12) * 20, -40 + Math.sin(t * 12) * 30], legL: [6, 0], legR: [6, 0] } : blend('stand', 'cheer', prog(t, PULL + 2, PULL + 2.4)), expr: won ? 'happy' : 'determined' }); }
   });
-  K.at(W / 2, 960, 1, () => { K.card(-200, -40, 400, 80, '#0d1018', 40, 'rgba(255,255,255,0.5)', 3); label("DON'T CHASE. ATTRACT.", 0, 3, 28, '#ffffff', { spacing: 2 }); });
+  require('./lib').pill("DON'T CHASE. ATTRACT.", W / 2, 960, 30);
 });
