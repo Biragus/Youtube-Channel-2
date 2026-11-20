@@ -22,6 +22,7 @@ module.exports = makeShort(CUT, (t) => {
     if (!done) floaters(t, 30, (i, life) => circle(890 - life * 30, GY - 230 + life * 220, 6, '#74c0fc'), { every: 0.1, from: 0.5, life: 0.6 });
     if (storm > 0) { cloud(300, 620, 1.4, '#343a52'); cloud(780, 600, 1.4, '#343a52'); rain(t, 0, 600, 1080, 600, 70); }
   });
-  title(t > STORM ? 'THE STORM ALWAYS COMES.' : 'FAST vs DEEP', t > STORM ? '#ffffff' : '#ffffff', 300, 66);
+  // the narration sits in the soil, among the roots
+  K.T(t > STORM ? 'THE STORM ALWAYS COMES.' : 'FAST vs DEEP', W / 2, 1320, 64, '#ffffff', { spacing: 4, stroke: '#2a2219', strokeWidth: 14 });
   whichOne(t, END, [['EGO', '#ffd43b'], ['CONFIDENCE', GREEN]]);
 });
