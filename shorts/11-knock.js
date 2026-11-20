@@ -27,7 +27,7 @@ module.exports = {
         alpha(1 - inside * 0.7, () => who('kai', { x: lerp(x, DX + 160, ease(inside)), y: FY - hop(t, OPEN + 0.1, 40), s: 0.95, pose: t < 4.4 ? P.walk(t * 1.4) : (t < OPEN ? knock(t * (1 + (t - 4.4) * 0.35)) : (inside > 0 ? P.walk(t * 1.4) : blend(knock(t), 'cheer', prog(t, OPEN, OPEN + 0.4)))), expr: t > OPEN ? 'happy' : 'determined' }));
         if (t > 4.4 && t < OPEN) floaters(t, 40, (i, life) => label('KNOCK', DX - 40 + (i % 3) * 30, FY - 420 - life * 120, 30, '#ffffff', { spacing: 2 }), { every: 0.22, from: 4.4, life: 0.6 }); }
     });
-    if (kaiOn) at(W / 2, 1720, pop(t, 4.4), () => { card(-230, -60, 460, 120, '#0d1018', 30, t > OPEN ? GREEN : 'rgba(255,255,255,0.4)', 4); label(`KNOCKS: ${knocks || 1}`, 0, 4, 54, t > OPEN ? GREEN : '#ffffff', { spacing: 3 }); });
+    if (kaiOn) at(W / 2, 450, pop(t, 4.4), () => { card(-230, -60, 460, 120, '#0d1018', 30, t > OPEN ? GREEN : 'rgba(255,255,255,0.4)', 4); label(`KNOCKS: ${knocks || 1}`, 0, 4, 54, t > OPEN ? GREEN : '#ffffff', { spacing: 3 }); });
     label(t < OPEN ? 'MOST PEOPLE KNOCK ONCE.' : 'KEEP KNOCKING.', W / 2, 300, t < OPEN ? 62 : 90, t < OPEN ? '#ffffff' : GOLD, { spacing: 4, glow: t < OPEN ? undefined : GOLD });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },

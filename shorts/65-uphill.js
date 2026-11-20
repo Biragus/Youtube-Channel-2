@@ -23,7 +23,7 @@ module.exports = makeShort(CUT, (t) => {
       else if (i === 0 && sat) who(spec, { x: hx(0.04), y: hy(0.04), s: 0.4, pose: { lean: 0, tilt: 14, armL: [10, 8], armR: [10, 8], legL: [85, -85], legR: [85, -85] }, expr: 'tired' });
       else if (i === 1) who(spec, { x: hx(0) - 60 + Math.sin(t * 1.4) * 40, y: hy(0), s: 0.4, flip: Math.cos(t * 1.4) < 0, pose: { lean: 0, tilt: -6, armL: [8, 4], armR: [26, -150], legL: [5, 0], legR: [5, 0] }, expr: 'worried' });
       else { if (i === 3) spot(hx(kk), hy(kk) - 100, 120, 'rgba(57,255,20,0.2)'); who(done ? 'kai2' : spec, { x: done ? hx(1) - 40 : hx(kk), y: (done ? hy(1) : hy(kk)) - (done ? hop(t, 16.7, 20) : 0), s: 0.4, pose: done ? 'cheer' : push(t, i === 0 ? 2 : 1), expr: done ? 'happy' : 'determined' }); }
-      at(900, fy - 10, 1, () => pill(`${Math.round(k * 500)} M`, 0, 0, 22, i === 3 ? GREEN : col, { pad: 30 }));
+      at(790, fy - 10, 1, () => pill(`${Math.round(k * 500)} M`, 0, 0, 22, i === 3 ? GREEN : col, { pad: 30 }));
       if (i === 0) { says("LET'S GO!", 360, y0 + 70, t, 0.5, 3, '#ffd43b'); says("I'M TIRED.", 360, y0 + 70, t, 4.2, 6.2, '#ffd43b'); }
       if (i === 1) { says("WHAT'S THE BEST ANGLE?", 420, y0 + 70, t, 1, 8, '#74c0fc'); says('IF THE SLOPE IS 5 DEGREES...', 440, y0 + 70, t, 9, 17, '#74c0fc'); }
       if (i === 2) { says('THERE MUST BE A HACK.', 420, y0 + 70, t, 1, 6.3, '#da77f2'); }

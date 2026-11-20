@@ -21,6 +21,6 @@ module.exports = makeShort(CUT, (t) => {
     spot(kx, ky - 160, 180, 'rgba(57,255,20,0.2)');
     who(done ? 'kai2' : 'kai', { x: done ? 800 : kx, y: (done ? TOPY : ky) - hop(t, ARRIVE + 0.1, 50), s: 0.6, flip: !done && f % 2 === 1, pose: done ? blend(P.walk(t), 'cheer', prog(t, ARRIVE, ARRIVE + 0.3)) : { ...P.walk(t * 2.6), lean: 6 }, expr: done ? 'happy' : 'determined' });
   });
-  pill(done ? 'FLOOR 6' : `FLOOR ${Math.min(6, f + 1)}`, W / 2, 1720, 44, done ? GREEN : '#ffffff', { border: done ? GREEN : undefined });
+  pill(done ? 'FLOOR 6' : `FLOOR ${Math.min(6, f + 1)}`, W / 2, 450, 44, done ? GREEN : '#ffffff', { border: done ? GREEN : undefined });
   title(done ? 'TAKE THE STAIRS.' : 'WAITING FOR A SHORTCUT?', done ? GREEN : '#ffffff', 300, done ? 86 : 62, done ? GREEN : undefined);
 });

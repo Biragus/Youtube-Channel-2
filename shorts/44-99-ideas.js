@@ -16,6 +16,6 @@ module.exports = makeShort(CUT, (t) => {
     if (lit) { spot(540, 760, 520 * prog(t, LIGHT, LIGHT + 0.5), 'rgba(255,214,120,0.55)'); for (let i = 0; i < 14; i++) { const a = i * Math.PI / 7 + t * 0.3; line([[540 + Math.cos(a) * 230, 740 + Math.sin(a) * 230], [540 + Math.cos(a) * 300, 740 + Math.sin(a) * 300]], 'rgba(255,214,120,0.6)', 8); } }
     workstation(400, FY, 1.0, lit ? 'kai2' : 'kai', t, { sigh: t > 4.0 && t < LIGHT ? prog(t, 4.0, 4.4) : 0, cheer: lit ? prog(t, LIGHT, LIGHT + 0.3) : 0, hop: lit ? hop(t, LIGHT + 0.3, 40) : 0, expr: lit ? 'happy' : (t > 3.2 ? 'tired' : 'determined'), glowColor: lit ? 'rgba(255,214,120,0.3)' : undefined });
   });
-  pill(lit ? '1 GREAT IDEA' : `${count} BAD IDEAS`, W / 2, 1720, 46, lit ? GOLD : '#ffffff', { border: lit ? GOLD : undefined });
+  pill(lit ? '1 GREAT IDEA' : `${count} BAD IDEAS`, W / 2, 450, 46, lit ? GOLD : '#ffffff', { border: lit ? GOLD : undefined });
   title(lit ? 'ONE IS ALL IT TAKES.' : 'MOST IDEAS ARE BAD.', lit ? GOLD : '#ffffff', 300, 72, lit ? GOLD : undefined);
 });

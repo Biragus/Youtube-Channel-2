@@ -25,6 +25,6 @@ module.exports = makeShort(CUT, (t) => {
     const pull = { lean: 0, tilt: 8 + Math.sin(t * 8) * 3, armL: [60, -20], armR: [60, -20], legL: [14, 0], legR: [14, 0] };
     who(free ? 'kai2' : 'kai', { x: lerp(KX + strain, 1300, run), y: FY - hop(t, 8.4, 70), s: 1.0, pose: free ? (run > 0 ? P.walk(t * 1.8) : blend(pull, 'cheer', prog(t, 8.2, 8.6))) : pull, expr: free ? 'happy' : 'determined' });
   });
-  counter('SALES', String(sales), W / 2, 1700, GREEN, pop(t, 1.2) * pulse(t, 0.25, 0.05), { size: 80, rot: 0 });
+  K.at(W / 2, 470, pop(t, 1.2) * pulse(t, 0.25, 0.05), () => require('./lib').pill(`SALES: ${sales}`, 0, 0, 36, GREEN, { border: GREEN }));
   title('EVERY SALE', '#ffffff', 290, 76); title('BREAKS A CHAIN.', GREEN, 380, 76, GREEN);
 });

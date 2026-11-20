@@ -22,6 +22,6 @@ module.exports = makeShort(CUT, (t) => {
     who(done ? 'kai2' : 'kai', { x: px(d), y: py(d) - hop(t, 9.1, 50), s: 0.6, pose: done ? blend(P.walk(t * 1.4), 'cheer', prog(t, 9.0, 9.4)) : P.walk(t * 1.6), expr: done ? 'happy' : 'determined' });
     if (done) { at(px(365) - 330, py(365) + 260, pop(t, 9.1), () => label('37x', 0, 0, 110, GREEN, { spacing: 2, glow: GREEN })); at(px(365) - 60, BASE - 100, pop(t, 9.3), () => label('1x', 0, 0, 70, '#868e96', { spacing: 2 })); }
   });
-  K.at(W / 2, 1720, 1, () => { K.card(-180, -44, 360, 88, '#0d1018', 44, 'rgba(255,255,255,0.4)', 3); label(`DAY ${Math.max(1, d)}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
+  K.at(W / 2, 470, 1, () => { K.card(-180, -44, 360, 88, '#0d1018', 44, 'rgba(255,255,255,0.4)', 3); label(`DAY ${Math.max(1, d)}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
   title('1% BETTER', GREEN, 290, 90, GREEN); title('EVERY DAY.', '#ffffff', 390, 70);
 });

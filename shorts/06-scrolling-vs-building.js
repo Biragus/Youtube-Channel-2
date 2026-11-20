@@ -13,10 +13,10 @@ function half(y0, building, t) {
   if (!building) { // the couch, every night
     spot(330, y0 + 600, 300, `rgba(116,192,252,${0.25 + 0.12 * Math.abs(Math.sin(t * 7))})`); card(110, floorY - 170, 470, 170, '#3b3f5c', 30); card(110, floorY - 260, 470, 110, '#4a4f72', 30);
     who(scroller, { x: 330, y: floorY - 80, s: 0.95, pose: sit(t, after), expr: after ? 'tired' : 'neutral', prop: 'phone' });
-    counter('SCREEN TIME', after ? '1,168 HRS' : `${Math.floor(lerp(0, 3.2, prog(t, 0.4, YEAR)))}h ${String(Math.floor(lerp(0, 192, prog(t, 0.4, YEAR))) % 60).padStart(2, '0')}m`, 790, y0 + (y0 ? 330 : 380), '#9aa3b5', pop(t, 0.4), { size: 64, rot: 0 });
+    counter('SCREEN TIME', after ? '1,168 HRS' : `${Math.floor(lerp(0, 3.2, prog(t, 0.4, YEAR)))}h ${String(Math.floor(lerp(0, 192, prog(t, 0.4, YEAR))) % 60).padStart(2, '0')}m`, 720, y0 + (y0 ? 330 : 380), '#9aa3b5', pop(t, 0.4), { size: 64, rot: 0 });
   } else { // the desk, every night
     workstation(330, floorY, 1.05, after ? 'kai2' : 'kai', t, { cheer: after ? 0.5 + 0.5 * Math.sin(t * 5) : 0, hop: after ? Math.abs(Math.sin(t * 5)) * 30 : 0, expr: after ? 'happy' : 'determined', glowColor: 'rgba(57,255,20,0.25)' });
-    counter('SALES', after ? Math.round(2140 * ease(prog(t, YEAR + 0.4, YEAR + 3))).toLocaleString('en-US') : '0', 790, y0 + (y0 ? 330 : 380), after ? GREEN : '#9aa3b5', pop(t, 0.4) * (after ? pulse(t, 0.2, 0.05) : 1), { size: 64, rot: Math.sin(t * 2) * 0.03 });
+    counter('SALES', after ? Math.round(2140 * ease(prog(t, YEAR + 0.4, YEAR + 3))).toLocaleString('en-US') : '0', 720, y0 + (y0 ? 330 : 380), after ? GREEN : '#9aa3b5', pop(t, 0.4) * (after ? pulse(t, 0.2, 0.05) : 1), { size: 64, rot: Math.sin(t * 2) * 0.03 });
     if (after) floaters(t, 20, (i, life) => label('+$9', 470 + (i % 3) * 80, floorY - 300 - life * 200, 44, GREEN, { glow: GREEN }), { every: 0.18, from: YEAR + 0.4, life: 1.1 });
   }
 }

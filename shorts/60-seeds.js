@@ -17,6 +17,6 @@ module.exports = makeShort(CUT, (t) => {
     const kx = t < 3.2 ? lerp(60, 1000, prog(t, 0.3, 3.0)) : 1000; const done = t > GROW + 1.4; spot(kx, GY - 220, 200, 'rgba(57,255,20,0.15)');
     who(done ? 'kai2' : 'kai', { x: kx, y: GY - hop(t, GROW + 1.5, 50), s: 0.75, flip: done, pose: t < 3.0 ? { ...P.walk(t * 1.8), armR: [80 + Math.sin(t * 9) * 20, -30] } : (done ? blend('stand', 'cheer', prog(t, GROW + 1.4, GROW + 1.7)) : 'stand'), expr: done ? 'happy' : 'determined', look: t > GROW ? -0.6 : 0 });
   });
-  pill(t > GROW + 0.3 ? '12 POSTS. 1 HIT.' : '12 POSTS', W / 2, 1720, 44, t > GROW ? GREEN : '#ffffff', { border: t > GROW ? GREEN : undefined });
+  pill(t > GROW + 0.3 ? '12 POSTS. 1 HIT.' : '12 POSTS', W / 2, 450, 44, t > GROW ? GREEN : '#ffffff', { border: t > GROW ? GREEN : undefined });
   title(t > GROW + 1 ? 'ONE IS ENOUGH.' : 'MOST WON\'T GROW.', t > GROW + 1 ? GREEN : '#ffffff', 280, 76, t > GROW + 1 ? GREEN : undefined); if (t > 1.2 && t < GROW + 1) title('PLANT ANYWAY.', GOLD, 370, 66, GOLD);
 });

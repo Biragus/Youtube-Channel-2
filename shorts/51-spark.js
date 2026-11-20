@@ -19,6 +19,6 @@ module.exports = makeShort(CUT, (t) => {
     for (let i = 0; i < people; i++) { const side = i % 2 ? 1 : -1; const tx = FX + side * (330 + Math.floor(i / 2) * 140); const arrive = ease(prog(t, CATCH + 0.5 + i * 0.5, CATCH + 1.3 + i * 0.5)); const x = lerp(FX + side * 1200, tx, arrive); who(guest(i), { x, y: FY, s: 0.75, flip: side > 0, pose: arrive < 1 ? P.walk(t * 1.6) : { lean: 0, tilt: 4, armL: [60, -20], armR: [60, -20], legL: [6, 0], legR: [6, 0] }, expr: 'happy' }); }
     who(lit ? 'kai2' : 'kai', { x: FX - 200, y: FY - (lit ? hop(t, CATCH + 0.1, 40) : 0), s: 0.8, pose: lit ? blend(rub(t), 'cheer', prog(t, CATCH, CATCH + 0.3)) : rub(t), expr: lit ? 'happy' : (t > 2 ? 'worried' : 'determined') });
   });
-  pill(lit ? 'FIRST SALE' : 'NOTHING YET...', W / 2, 1700, 44, lit ? '#ffa94d' : '#ffffff', { border: lit ? '#ffa94d' : undefined });
+  pill(lit ? 'FIRST SALE' : 'NOTHING YET...', W / 2, 450, 44, lit ? '#ffa94d' : '#ffffff', { border: lit ? '#ffa94d' : undefined });
   title(lit ? 'ONE SPARK IS ENOUGH.' : 'KEEP STRIKING.', lit ? '#ffa94d' : '#ffffff', 300, 80, lit ? '#ffa94d' : undefined);
 });

@@ -19,6 +19,6 @@ module.exports = makeShort(CUT, (t) => {
     who(done ? 'kai2' : 'kai', { x: 320, y: GY - hop(t, SHOOT + 0.6, 60), s: 0.85, pose: done ? blend(water(t), 'cheer', prog(t, SHOOT + 0.4, SHOOT + 0.8)) : water(t), expr: done ? 'happy' : (year >= 3 ? 'tired' : 'determined'), look: done ? 0.8 : 0 });
     if (!done) { at(320 + 130, GY - 280, 1, () => { card(-40, -30, 80, 60, '#1c7ed6', 10, INK, 4); line([[40, -10], [80, -40]], '#1c7ed6', 10); }, 0.3); floaters(t, 30, (i, life) => circle(530 + life * 30, GY - 300 + life * 290, 6, '#74c0fc'), { every: 0.08, from: 0.3, life: 0.6 }); }
   });
-  pill(t > SHOOT ? 'YEAR 5' : `YEAR ${year}`, W / 2, 1720, 44, t > SHOOT ? GREEN : '#ffffff', { border: t > SHOOT ? GREEN : undefined });
+  pill(t > SHOOT ? 'YEAR 5' : `YEAR ${year}`, W / 2, 450, 44, t > SHOOT ? GREEN : '#ffffff', { border: t > SHOOT ? GREEN : undefined });
   title(t > SHOOT ? 'THEN IT ALL SHOWS UP.' : 'NOTHING TO SHOW FOR IT?', t > SHOOT ? GREEN : '#ffffff', 300, 66, t > SHOOT ? GREEN : undefined);
 });

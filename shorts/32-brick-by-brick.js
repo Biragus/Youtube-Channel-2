@@ -18,6 +18,6 @@ module.exports = makeShort(CUT, (t) => {
     who(done ? 'kai2' : 'kai', { x: done ? 180 : kx, y: FY - hop(t, BUILT + 0.6, 60), s: 0.85, flip: !done && Math.cos(t * 2.2) < 0, pose: done ? blend('stand', 'cheer', prog(t, BUILT + 0.4, BUILT + 0.8)) : { ...P.walk(t * 2), armL: [30, -100], armR: [30, -100] }, expr: done ? 'happy' : 'determined' });
     if (!done) at(done ? 0 : kx + (Math.cos(t * 2.2) < 0 ? -40 : 40), FY - 200, 0.6, () => card(-BW / 2, -BH / 2, BW, BH, '#b5543c', 4, '#5c2a1c', 2));
   });
-  K.at(W / 2, 1720, 1, () => { K.card(-170, -44, 340, 88, '#0d1018', 44, 'rgba(255,255,255,0.4)', 3); label(`DAY ${Math.max(1, Math.round(n / N * 365))}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
+  K.at(W / 2, 450, 1, () => { K.card(-170, -44, 340, 88, '#0d1018', 44, 'rgba(255,255,255,0.4)', 3); label(`DAY ${Math.max(1, Math.round(n / N * 365))}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
   title('BRICK BY BRICK.', done ? GOLD : '#ffffff', 300, 86, done ? GOLD : undefined);
 });

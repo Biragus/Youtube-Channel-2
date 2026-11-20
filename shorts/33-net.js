@@ -15,14 +15,14 @@ module.exports = makeShort(CUT, (t) => {
       const reel = (t % 3) / 3; who(fisher, { x: 240, y: sea - 40, s: 0.8, pose: { lean: 0, tilt: 4, armL: [60, -40], armR: [60, -40], legL: [6, 0], legR: [6, 0] }, expr: 'tired' });
       line([[300, sea - 230], [620, sea - 300]], '#8d939e', 6); line([[620, sea - 300], [620 + Math.sin(t) * 10, sea + 160 - (reel > 0.7 ? (reel - 0.7) * 600 : 0)]], 'rgba(255,255,255,0.4)', 2);
       if (reel > 0.7) fish(620, sea + 180 - (reel - 0.7) * 600, 0.8);
-      counter('CAUGHT', String(Math.floor(t / 3)), 860, y0 + 400, '#9aa3b5', pop(t, 0.4), { size: 60, rot: 0 });
+      counter('CAUGHT', String(Math.floor(t / 3)), 720, y0 + 400, '#9aa3b5', pop(t, 0.4), { size: 60, rot: 0 });
     } else { const n = t > NET ? Math.floor((t - NET) ** 1.6 * 9) : 0;
       who(t > NET + 2 ? 'kai2' : 'kai', { x: 240, y: sea - 40 - hop(t, NET + 2, 40), s: 0.8, pose: t < NET ? { lean: 0, tilt: 4, armL: [80, -60 + Math.sin(t * 8) * 20], armR: [80, -60 - Math.sin(t * 8) * 20], legL: [6, 0], legR: [6, 0] } : blend('stand', 'cheer', prog(t, NET + 1.6, NET + 2)), expr: t > NET ? 'happy' : 'determined' });
       // the net: woven before, then full of fish
       const span = lerp(0, 1, ease(prog(t, 0.6, NET))); c.strokeStyle = 'rgba(200,230,255,0.6)'; c.lineWidth = 3; for (let i = 0; i <= 8; i++) { line([[440 + i * 70 * span, sea + 20], [440 + i * 70 * span, sea + 320]], 'rgba(200,230,255,0.5)', 3); } for (let j = 0; j <= 5; j++) line([[440, sea + 20 + j * 60], [440 + 560 * span, sea + 20 + j * 60]], 'rgba(200,230,255,0.5)', 3);
       label('PRODUCT', 720, sea - 30, 30, GREEN, { spacing: 4 });
       for (let i = 0; i < Math.min(n, 30); i++) fish(470 + (i % 7) * 76 + Math.sin(t * 3 + i) * 6, sea + 60 + Math.floor(i / 7) * 60, 0.6);
-      counter('CAUGHT', String(n), 860, y0 + 330, GREEN, pop(t, 0.4) * (n ? pulse(t, 0.25, 0.05) : 1), { size: 60, rot: 0 }); }
+      counter('CAUGHT', String(n), 720, y0 + 330, GREEN, pop(t, 0.4) * (n ? pulse(t, 0.25, 0.05) : 1), { size: 60, rot: 0 }); }
   });
   require('./lib').pill('BUILD THE NET.', W / 2, 960, 32);
 });

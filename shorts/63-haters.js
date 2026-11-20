@@ -16,10 +16,10 @@ module.exports = makeShort(CUT, (t) => {
       const posts = i === 3 ? Math.max(1, Math.floor(prog(t, 0.5, 17) ** 1.1 * 120)) : (i === 0 ? 1 : Math.max(1, Math.floor(prog(t, 0.5, 17) * [1, 6, 4][i])));
       // comments flying in from the right
       const n = Math.floor((t - 0.4) / 0.5); for (let j = Math.max(0, n - 4); j <= n; j++) { const a = 0.4 + j * 0.5; const f = prog(t, a, a + 1.6); if (f <= 0 || f >= 1 || (i === 0 && t > 4.4)) continue; const good = i === 3 && a > turn; const s = good ? LOVE[j % LOVE.length] : HATE[(j + i) % HATE.length];
-        alpha(1 - f * f, () => pill(s, lerp(1050, 520, f), y0 + 90 + ((j * 53 + i * 31) % 170), 22, good ? GREEN : '#ff8787', { pad: 30, border: good ? GREEN : 'rgba(255,135,135,0.5)' })); }
+        alpha(1 - f * f, () => pill(s, lerp(1050, 520, f), y0 + 90 + ((j * 53 + i * 31) % 120), 22, good ? GREEN : '#ff8787', { pad: 30, border: good ? GREEN : 'rgba(255,135,135,0.5)' })); }
       const kx = 230; phoneMini(kx + 110, fy - 150, posts, i === 3 && t > turn ? '#123d1c' : '#1b2a45');
       const follows = i === 3 ? Math.floor(prog(t, 2, 17.5) ** 2.2 * 10000) : (i === 0 ? 0 : (i === 1 ? Math.max(0, Math.floor(40 - t * 3)) : 12));
-      at(840, fy - 20, 1, () => pill(i === 0 && gone ? 'DELETED' : `${follows.toLocaleString('en-US')} FOLLOWERS`, 0, 0, 22, i === 3 && follows > 50 ? GREEN : '#9aa3b5', { pad: 30 }));
+      at(780, fy - 10, 1, () => pill(i === 0 && gone ? 'DELETED' : `${follows.toLocaleString('en-US')} FOLLOWERS`, 0, 0, 22, i === 3 && follows > 50 ? GREEN : '#9aa3b5', { pad: 30 }));
       if (i === 0) { const x = gone ? lerp(kx, -120, prog(t, 4.4, 5.6)) : kx; if (x > -100) who(spec, { x, y: fy, s: 0.42, flip: gone, pose: gone ? P.walk(t * 2) : { lean: 0, tilt: 8, armL: [8, 4], armR: [22, -132], legL: [5, 0], legR: [5, 0] }, expr: 'sad', prop: gone ? undefined : 'phone' }); says('DELETE ACCOUNT.', 520, y0 + 70, t, 3.0, 5, '#ced4da'); }
       if (i === 1) { who(spec, { x: kx, y: fy, s: 0.42, pose: { lean: 0, tilt: -4, armL: [34 + Math.sin(t * 20) * 5, -70 + Math.sin(t * 20) * 14], armR: [34 - Math.sin(t * 20) * 5, -70], legL: [6, 0], legR: [6, 0] }, expr: 'angry' }); says('REPLYING TO EVERY HATER...', 560, y0 + 70, t, 2.0, 15, '#ff8787'); }
       if (i === 2) { who(spec, { x: kx, y: fy, s: 0.42, pose: 'power', expr: 'smug' }); says("I'M THE BEST.", 520, y0 + 70, t, 1.5, 15, '#ffd43b'); }

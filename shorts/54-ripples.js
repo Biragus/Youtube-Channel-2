@@ -16,6 +16,6 @@ module.exports = makeShort(CUT, (t) => {
     if (t < DROP) at(CX, lerp(CY - 900, CY, prog(t, 0.2, DROP) ** 2), 1, () => { circle(0, 0, 26, '#adb5bd'); label('1 POST', 0, -60, 30, '#ffffff', { spacing: 2 }); });
     if (t > DROP && t < DROP + 0.6) floaters(t, 16, (i, life) => circle(CX + Math.cos(i) * life * 90, CY - Math.sin(i * 0.5 + 1) * 150 * life + life * life * 200, 8, '#74c0fc'), { every: 0.01, from: DROP, life: 0.6 });
   });
-  pill(`REACHED: ${Math.round(lit * 143).toLocaleString('en-US')}`, W / 2, 1720, 44, GREEN, { border: GREEN });
+  pill(`REACHED: ${Math.round(lit * 143).toLocaleString('en-US')}`, W / 2, 450, 44, GREEN, { border: GREEN });
   title('ONE POST.', '#ffffff', 280, 80); if (t > 2.6) title('ENDLESS REACH.', GREEN, 380, 70, GREEN);
 });

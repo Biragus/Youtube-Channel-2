@@ -1,8 +1,9 @@
 // Short 14: DROP BY DROP. One sale at a time drips into a bucket, faster and faster, until it overflows.
+const { pill } = require('./lib');
 const K = require('../engine/kit');
 const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, alpha, card, line, circle, who, P, counter, floaters, rnd, money } = K;
 const { W, dark, spot, label, watermark, shade, lifestyle, camera, impact, blend, hop, pulse } = require('./lib');
-const CUT = 10.6; const FULL = 8.2; const BX = 620; const BY = 1480; const TAPY = 560;
+const CUT = 10.6; const FULL = 8.2; const BX = 620; const BY = 1480; const TAPY = 720;
 // drop times: slow at first, faster every time
 const DROPS = []; { let tt = 1.0; let gap = 1.1; while (tt < FULL + 2) { DROPS.push(tt); tt += gap; gap = Math.max(0.06, gap * 0.8); } }
 
@@ -30,7 +31,7 @@ module.exports = {
       const waitPose = { lean: 0, tilt: 6 + Math.sin(t * 1.5) * 4, armL: [22, -100], armR: [22, -100], legL: [5, 0], legR: [5, 0] };
       who(over > 0.5 ? 'kai2' : 'kai', { x: kx, y: BY + 10 - hop(t, FULL + 0.2, 80) - hop(t, FULL + 0.8, 60) - hop(t, FULL + 1.4, 40), s: 0.95, pose: blend(waitPose, 'cheer', prog(t, FULL, FULL + 0.3)), expr: over > 0 ? 'happy' : (t > 5 ? 'smile' : 'neutral'), look: 0.5 });
     });
-    counter('EARNED', money(Math.round(9 * landed)), W / 2, 1720, GREEN, pop(t, 1.0) * pulse(t, Math.max(0.1, 1.1 - t * 0.1), 0.05), { size: 80, rot: 0 });
+    K.at(W / 2, 395, pop(t, 1.0) * pulse(t, Math.max(0.1, 1.1 - t * 0.1), 0.05), () => pill(`EARNED ${money(Math.round(9 * landed))}`, 0, 0, 34, GREEN, { border: GREEN }));
     label('DROP BY DROP.', W / 2, 290, 90, '#ffffff', { spacing: 6 });
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },

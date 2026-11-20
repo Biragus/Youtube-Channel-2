@@ -14,8 +14,8 @@ module.exports = makeShort(CUT, (t) => {
     lane(i, name, col, (y0, fy) => {
       const rev = Math.min(revenue[i](mf), i === 3 ? 4200 : 99999);
       // a little revenue graph per lane
-      const gx = 560; const gy = y0 + 250; K.ctx().strokeStyle = i === 3 ? GREEN : col; K.ctx().lineWidth = 5; K.ctx().beginPath(); for (let k = 0; k <= mf * 10; k++) { const mm = k / 10; const v = Math.min(revenue[i](mm), 4200) / 4200; const x = gx + mm * 30; const y = gy - v * 150; k ? K.ctx().lineTo(x, y) : K.ctx().moveTo(x, y); } K.ctx().stroke(); line([[gx, gy], [gx + 380, gy]], 'rgba(255,255,255,0.2)', 2);
-      at(870, y0 + 100, 1, () => pill(`${money(rev)}/MO`, 0, 0, 26, i === 3 && rev > 100 ? GREEN : '#9aa3b5', { pad: 36 }));
+      const gx = 500; const gy = y0 + 200; K.ctx().strokeStyle = i === 3 ? GREEN : col; K.ctx().lineWidth = 5; K.ctx().beginPath(); for (let k = 0; k <= mf * 10; k++) { const mm = k / 10; const v = Math.min(revenue[i](mm), 4200) / 4200; const x = gx + mm * 30; const y = gy - v * 110; k ? K.ctx().lineTo(x, y) : K.ctx().moveTo(x, y); } K.ctx().stroke(); line([[gx, gy], [gx + 380, gy]], 'rgba(255,255,255,0.2)', 2);
+      at(800, y0 + 90, 1, () => pill(`${money(rev)}/MO`, 0, 0, 26, i === 3 && rev > 100 ? GREEN : '#9aa3b5', { pad: 36 }));
       const kx = 250;
       if (i === 0) { who(spec, { x: kx, y: fy, s: 0.45, pose: { lean: 0, tilt: 10, drop: 0, armL: [22, -100], armR: [22, -100], legL: [85, -85], legR: [85, -85] }, expr: 'happy' }); K.card(kx - 90, fy - 70, 180, 70, '#3b3f5c', 20); thought(kx + 150, y0 + 110, 60, 1, () => { K.card(-30, -20, 60, 40, GOLD, 4); label('$$$', 0, 2, 18, INK, { spacing: 0 }); }); says('ONE DAY...', 400, y0 + 210, t, 1, 18, '#74c0fc'); }
       if (i === 1) { workstation(kx, fy, 0.45, spec, t, { phase: 1 }); const idea = IDEAS[Math.floor(mf / 2) % IDEAS.length]; at(kx + 170, y0 + 110, 0.9 + 0.1 * Math.sin(t * 6), () => pill(`NEW IDEA: ${idea}`, 0, 0, 20, '#da77f2', { pad: 26 })); }
@@ -23,7 +23,7 @@ module.exports = makeShort(CUT, (t) => {
       if (i === 3) { const done = mf > 11; spot(kx, fy - 120, 150, 'rgba(57,255,20,0.18)'); workstation(kx, fy, 0.45, done ? 'kai2' : 'kai', t, { cheer: done ? 0.6 + 0.4 * Math.sin(t * 5) : 0, hop: done ? Math.abs(Math.sin(t * 5)) * 12 : 0, expr: done ? 'happy' : 'determined', glowColor: 'rgba(57,255,20,0.25)' }); says('SAME THING. EVERY DAY.', 450, y0 + 80, t, 1, 8, GREEN); }
     }, { dim: crashed ? prog(mf, 5, 6) * 0.45 : 0, border: i === 3 && mf > 8 ? GREEN : undefined });
   });
-  pill(`MONTH ${Math.max(1, Math.ceil(mf))}`, W / 2, 1830, 34, '#ffffff');
+  pill(`MONTH ${Math.max(1, Math.ceil(mf))}`, W / 2, 385, 30, '#ffffff');
   title('WHO BUILDS IT IN 12 MONTHS?', GOLD, 300, 60, GOLD);
   whichOne(t, END, [['DREAMER', '#74c0fc'], ['SHINY OBJECT', '#da77f2'], ['BURNOUT', '#ff6b6b'], ['CONSISTENT', GREEN]]);
 });

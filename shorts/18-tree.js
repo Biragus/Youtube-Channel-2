@@ -31,6 +31,6 @@ module.exports = makeShort(CUT, (t) => {
     who(t > 8.4 ? 'kai2' : 'kai', { x: kx, y: FY - hop(t, 8.8, 60) - hop(t, 9.4, 40), s: 0.95, pose, expr: t > 8.4 ? 'happy' : 'determined' });
     if (t > 2.2 && t < 8.4) { at(kx + 150, FY - 300, 1, () => { card(-40, -30, 80, 60, '#1c7ed6', 10, INK, 4); line([[40, -10], [80, -40]], '#1c7ed6', 10); }, 0.3); floaters(t, 30, (i, life) => circle(kx + 240 + life * 40, FY - 330 + life * 300, 6, '#74c0fc'), { every: 0.08, from: 2.2, life: 0.6 }); }
   });
-  K.at(W / 2, 1720, 1, () => { K.card(-170, -44, 340, 88, '#0d1018', 44, 'rgba(255,255,255,0.4)', 3); label(`DAY ${Math.max(1, days)}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
+  K.at(W / 2, 450, 1, () => { K.card(-170, -44, 340, 88, '#0d1018', 44, 'rgba(255,255,255,0.4)', 3); label(`DAY ${Math.max(1, days)}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
   title(t < 8.4 ? 'PLANT IT ONCE.' : 'HARVEST FOREVER.', t < 8.4 ? '#ffffff' : GREEN, 300, 80, t < 8.4 ? undefined : GREEN);
 });

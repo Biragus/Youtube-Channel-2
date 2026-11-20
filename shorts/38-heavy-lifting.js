@@ -15,6 +15,6 @@ module.exports = makeShort(CUT, (t) => {
     label(done ? 'SKILL' : 'FAILURE', 540, handY - 120, 36, done ? GREEN : '#ff8787', { spacing: 4 });
     if (lift > 0.9 && !done) floaters(t, 6, (i, life) => circle(500 + i * 20, FY - 400 * s - life * 60, 8, '#74c0fc'), { every: 0.1, from: 0, life: 0.5 });
   });
-  counter('REPS', String(reps), W / 2, 1700, done ? GREEN : '#ffffff', pop(t, 0.8) * pulse(t, 0.8, 0.05), { size: 80, rot: 0 });
+  K.at(W / 2, 400, pop(t, 0.8) * pulse(t, 0.8, 0.05), () => require('./lib').pill(`REPS: ${reps}`, 0, 0, 36, done ? GREEN : '#ffffff'));
   title(done ? 'NOW IT IS STRENGTH.' : 'EVERY FAIL IS A REP.', done ? GREEN : '#ffffff', 300, 72, done ? GREEN : undefined);
 });

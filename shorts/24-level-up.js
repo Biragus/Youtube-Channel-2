@@ -22,7 +22,7 @@ module.exports = makeShort(CUT, (t) => {
     who(lvl >= 5 ? 'kai2' : 'kai', { x, y: FY - jump, s: 0.85, pose: t > 9.4 ? blend(P.walk(t * 2.4), 'cheer', prog(t, 9.4, 9.7)) : P.walk(t * 2.4), expr: 'happy' });
   });
   // the game HUD
-  K.at(W / 2, 470, 1, () => { card(-420, -60, 840, 120, '#0d1018', 30, 'rgba(255,255,255,0.35)', 3); label(`LVL ${lvl}`, -320, 2, 48, GOLD, { spacing: 3 }); card(-220, -18, 600, 36, '#1b1f2b', 18); card(-220, -18, 600 * Math.min(1, lerp(0, xp / xpNeed, 1)), 36, GREEN, 18); });
-  if (t - lastUp < 1.0 && got) K.at(W / 2, 1660, pop(t, lastUp), () => label('LEVEL UP!', 0, 0, 110, GOLD, { spacing: 6, glow: GOLD }));
+  K.at(W / 2, 430, 1, () => { card(-420, -60, 840, 120, '#0d1018', 30, 'rgba(255,255,255,0.35)', 3); label(`LVL ${lvl}`, -320, 2, 48, GOLD, { spacing: 3 }); card(-220, -18, 600, 36, '#1b1f2b', 18); card(-220, -18, 600 * Math.min(1, lerp(0, xp / xpNeed, 1)), 36, GREEN, 18); });
+  if (t - lastUp < 1.0 && got) K.at(W / 2, 640, pop(t, lastUp), () => label('LEVEL UP!', 0, 0, 110, GOLD, { spacing: 6, glow: GOLD }));
   title('LEVEL UP.', '#ffffff', 300, 90);
 });

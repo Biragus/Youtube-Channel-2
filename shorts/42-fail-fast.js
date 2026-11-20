@@ -23,6 +23,6 @@ module.exports = makeShort(CUT, (t) => {
     who(won ? 'kai2' : 'kai', { x: kx, y: ky, s: 0.75, pose: won ? blend(P.walk(t * 3), 'cheer', prog(t, WIN, WIN + 0.3)) : (i > 0 && k < 0.15 ? { lean: 6, tilt: 8, drop: 14, armL: [30, -20], armR: [30, -20], legL: [25, -50], legR: [25, -50] } : P.walk(t * 3)), expr: won ? 'happy' : 'determined', still: true });
     if (won) floaters(t, 30, (j, life) => card(winX - 200 + rnd(j) * 400, FY - winH - 300 + life * 260, 10, 18, ['#51cf66', '#ffd43b', '#74c0fc'][j % 3], 3), { every: 0.03, from: WIN + 0.5, life: 1.1 });
   });
-  pill(won ? 'SUCCESS' : `ATTEMPT ${n}`, W / 2, 1700, 44, won ? GREEN : '#ff8787', { border: won ? GREEN : 'rgba(255,135,135,0.6)' });
+  pill(won ? 'SUCCESS' : `ATTEMPT ${n}`, W / 2, 450, 44, won ? GREEN : '#ff8787', { border: won ? GREEN : 'rgba(255,135,135,0.6)' });
   title('IF YOU HAD TO FAIL 100 TIMES,', '#ffffff', 280, 52); title('HOW FAST WOULD YOU FAIL?', GOLD, 360, 60, GOLD);
 });

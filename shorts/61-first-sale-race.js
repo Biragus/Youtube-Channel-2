@@ -16,8 +16,8 @@ module.exports = makeShort(CUT, (t) => {
         const k = prodK[i](t); const kx = quit ? lerp(250, -120, prog(t, 6.5, 8)) : 250;
         if (!quit) workstation(kx, fy, 0.5, done ? 'kai2' : spec, t, { phase: i, sigh: i === 0 ? prog(t, 4, 4.6) : (i === 1 ? 0.6 : 0), cheer: done ? 0.7 + 0.3 * Math.sin(t * 5) : (i === 3 && t > 13.5 && t < 14.5 ? 1 : 0), hop: done ? Math.abs(Math.sin(t * 5)) * 12 : 0, expr: done ? 'happy' : ['determined', 'worried', 'neutral', 'determined'][i], glowColor: i === 3 ? 'rgba(57,255,20,0.2)' : undefined });
         else who(spec, { x: kx, y: fy, s: 0.5, flip: true, pose: P.walk(t * 1.6), expr: 'sad' });
-        bar(520, y0 + 110, 420, k, i === 3 ? GREEN : col, i === 3 && pub ? 'PUBLISHED' : `PRODUCT ${Math.round(k * 100)}%`);
-        if (i === 3) { at(730, y0 + 220, 1, () => pill(`SALES: ${sales}`, 0, 0, 30, sales ? GREEN : '#9aa3b5', { border: sales ? GREEN : undefined })); if (t > 13.5) floaters(t, 20, (j, life) => label('+$9', 560 + (j % 3) * 70, y0 + 200 - life * 120, 26, GREEN), { every: 0.3, from: 13.5, life: 0.9 }); }
+        bar(500, y0 + 100, 400, k, i === 3 ? GREEN : col, i === 3 && pub ? 'PUBLISHED' : `PRODUCT ${Math.round(k * 100)}%`);
+        if (i === 3) { at(700, y0 + 190, 1, () => pill(`SALES: ${sales}`, 0, 0, 30, sales ? GREEN : '#9aa3b5', { border: sales ? GREEN : undefined })); if (t > 13.5) floaters(t, 20, (j, life) => label('+$9', 560 + (j % 3) * 70, y0 + 200 - life * 120, 26, GREEN), { every: 0.3, from: 13.5, life: 0.9 }); }
         // what they say
         if (i === 0) { says("LET'S GO!", 250, y0 + 70, t, 0.5, 2.6, '#ffd43b'); says("I'M TIRED.", 250, y0 + 70, t, 4.0, 6.5, '#ffd43b'); if (quit) alpha(prog(t, 8, 8.5), () => label('QUIT', 730, y0 + 220, 34, '#868e96', { spacing: 6 })); }
         if (i === 1) { says('WHAT IF IT FAILS?', 250, y0 + 70, t, 1.0, 5.5, '#74c0fc'); says('NEED MORE RESEARCH...', 260, y0 + 70, t, 6.0, 11.5, '#74c0fc'); says('WHAT IF NOBODY BUYS?', 260, y0 + 70, t, 12, 18, '#74c0fc'); }
@@ -26,7 +26,7 @@ module.exports = makeShort(CUT, (t) => {
       }, { dim: quit ? prog(t, 8, 9) * 0.6 : 0, border: i === 3 && t > 13.5 ? GREEN : undefined });
     });
   });
-  pill(`DAY ${Math.max(1, Math.round(prog(t, 0.5, DAYS) * 90))}`, W / 2, 1830, 34, '#ffffff');
+  pill(`DAY ${Math.max(1, Math.round(prog(t, 0.5, DAYS) * 90))}`, W / 2, 385, 30, '#ffffff');
   title('WHO MAKES THE FIRST SALE?', GOLD, 300, 62, GOLD);
   whichOne(t, END, [['MOTIVATION', '#ffd43b'], ['OVERTHINKING', '#74c0fc'], ['PERFECTIONISM', '#da77f2'], ['DISCIPLINE', GREEN]]);
 });
