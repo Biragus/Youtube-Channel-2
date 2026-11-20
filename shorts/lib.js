@@ -108,3 +108,21 @@ Object.assign(module.exports, { makeShort, title, halves, rain, sun, cloud });
 // a rounded tag sized to its text, so the words never spill out
 function pill(str, x, y, size, color = '#ffffff', o = {}) { const w = K.textWidth(str, size, false, o.spacing ?? 3) + (o.pad ?? 70); const h = size * 1.9; K.card(x - w / 2, y - h / 2, w, h, o.fill ?? '#0d1018', h / 2, o.border ?? 'rgba(255,255,255,0.5)', 3); label(str, x, y + 3, size, color, { spacing: o.spacing ?? 3 }); }
 module.exports.pill = pill;
+
+// ---- "which one are you?" stories: 4 stacked lanes ----------------------------------
+const LANE_TOP = 440; const LANE_H = 330;
+// lane(i, name, color, fn): draws lane i clipped to its box; fn(y0, floorY) paints it
+function lane(i, name, color, fn, o = {}) {
+  const y0 = LANE_TOP + i * LANE_H; const c = K.ctx();
+  c.save(); c.beginPath(); c.roundRect(20, y0 + 6, W - 40, LANE_H - 12, 22); c.clip();
+  K.card(20, y0 + 6, W - 40, LANE_H - 12, o.fill ?? '#0f121a', 22);
+  if (o.dim) K.alpha(o.dim, () => K.card(20, y0 + 6, W - 40, LANE_H - 12, '#000000', 22));
+  fn(y0, y0 + LANE_H - 34); c.restore();
+  c.strokeStyle = o.border ?? 'rgba(255,255,255,0.12)'; c.lineWidth = o.border ? 4 : 2; c.beginPath(); c.roundRect(20, y0 + 6, W - 40, LANE_H - 12, 22); c.stroke();
+  label(name, W - 56, y0 + 41, 28, color, { align: 'right', spacing: 4 }); K.circle(W - 56 - K.textWidth(name, 28, false, 4) - 16, y0 + 40, 9, color);
+}
+// a thought or speech tag above a small character
+const says = (str, x, y, t, a, b, color = '#ffffff') => K.alpha(K.prog(t, a, a + 0.15) * (1 - K.prog(t, b - 0.2, b)), () => pill(str, x, y, 24, color, { pad: 40 }));
+function bar(x, y, w, k, color, txt) { K.card(x, y, w, 24, '#1b1f2b', 12); K.card(x, y, Math.max(24, w * K.clamp(k)), 24, color, 12); if (txt) label(txt, x + w / 2, y - 22, 20, '#9aa3b5', { spacing: 2 }); }
+function whichOne(t, from, opts) { if (t < from) return; const k = K.pop(t, from); shade('#000000', 0.55 * K.prog(t, from, from + 0.4)); K.at(W / 2, 960, k, () => { label('WHICH ONE', 0, -60, 90, '#ffffff', { spacing: 6 }); label('ARE YOU?', 0, 50, 100, K.GREEN, { spacing: 6, glow: K.GREEN }); opts.forEach(([s, col], i) => pill(s, (i % 2 ? 1 : -1) * 190, 200 + Math.floor(i / 2) * 80, 30, col, { pad: 40 })); }); }
+Object.assign(module.exports, { LANE_TOP, LANE_H, lane, says, bar, whichOne });
