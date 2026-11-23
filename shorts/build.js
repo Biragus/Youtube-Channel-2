@@ -9,7 +9,7 @@ const K = require('../engine/kit');
 const file = path.resolve(process.argv[2]); const name = path.basename(file, '.js'); const short = require(file);
 const W = 1080; const H = 1920; const FPS = 30; const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const canvas = createCanvas(W, H); const ctx = canvas.getContext('2d'); K.use(ctx);
-const frame = (t) => { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0; K.setTime(t); ctx.save(); short.draw(t); ctx.restore(); };
+const frame = (t) => { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0; K.setTime(t); ctx.save(); short.draw(t); ctx.restore(); require('./lib').report(t); };
 
 const at = process.argv.indexOf('--still');
 if (at > 0) { // stills for checking: --still 2,6,10

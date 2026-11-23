@@ -37,10 +37,10 @@ module.exports = {
   draw: (t) => {
     if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, 15.1, 15.6)); return; }
     dark(960);
-    for (const [y0, creator] of [[0, false], [980, true]]) { const c = K.ctx(); c.save(); c.beginPath(); c.rect(0, y0 - 20, W, 960); c.clip(); camera({ x: 540 + Math.sin(t * 0.4 + y0) * 12, y: 960, z: lerp(1, 1.06, t / CUT), t }, () => half(y0, { creator, t })); c.restore(); }
-    line([[0, 960], [W, 960]], 'rgba(255,255,255,0.25)', 4);
+    for (const [y0, creator] of [[0, false], [980, true]]) { const c = K.ctx(); c.save(); c.beginPath(); require('./lib').panelEnter(y0); camera({ x: 540 + Math.sin(t * 0.4 + y0) * 12, y: y0 + 480, z: lerp(1, 1.04, t / CUT), t }, () => half(y0, { creator, t })); c.restore(); }
+    line([[60, 852], [W - 60, 852]], 'rgba(255,255,255,0.25)', 4);
     const night = prog(t, NIGHT, NIGHT + 0.6);
-    at(W / 2, 960, 1 + 0.25 * Math.sin(prog(t, NIGHT - 0.2, NIGHT + 0.8) * Math.PI), () => { K.ctx().rotate(prog(t, NIGHT - 0.2, NIGHT + 0.8) * Math.PI * 2); circle(0, 0, 56, '#0b0c12'); K.ctx().strokeStyle = 'rgba(255,255,255,0.5)'; K.ctx().lineWidth = 4; K.ctx().beginPath(); K.ctx().arc(0, 0, 56, 0, Math.PI * 2); K.ctx().stroke();
+    at(W / 2, 852, 1 + 0.25 * Math.sin(prog(t, NIGHT - 0.2, NIGHT + 0.8) * Math.PI), () => { K.ctx().rotate(prog(t, NIGHT - 0.2, NIGHT + 0.8) * Math.PI * 2); circle(0, 0, 56, '#0b0c12'); K.ctx().strokeStyle = 'rgba(255,255,255,0.5)'; K.ctx().lineWidth = 4; K.ctx().beginPath(); K.ctx().arc(0, 0, 56, 0, Math.PI * 2); K.ctx().stroke();
       alpha(1 - night, () => { circle(0, 0, 26, GOLD); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; line([[Math.cos(a) * 34, Math.sin(a) * 34], [Math.cos(a) * 44, Math.sin(a) * 44]], GOLD, 5); } });
       alpha(night, () => { circle(0, 0, 28, '#f6f1c9'); circle(12, -8, 24, '#0b0c12'); }); });
     watermark();

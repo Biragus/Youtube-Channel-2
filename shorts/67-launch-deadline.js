@@ -19,6 +19,6 @@ module.exports = makeShort(CUT, (t) => {
       if (done) label('LATE. UNFINISHED.', 650, fy - 380, 32, '#ff8787', { spacing: 3 }); }
     else { workstation(330, fy, 0.85, done ? 'kai2' : 'kai', t, { cheer: done ? prog(t, D1, D1 + 0.3) : 0, hop: done ? hop(t, D1 + 0.3, 40) : 0, expr: done ? 'happy' : 'determined', glowColor: 'rgba(57,255,20,0.25)' }); if (done) { label('LAUNCHED ON TIME.', 650, fy - 380, 32, GREEN, { spacing: 3 }); K.at(850, fy - 300, pop(t, D1 + 0.4), () => pill('+$9  +$9  +$9', 0, 0, 26, GREEN, { border: GREEN })); } }
   });
-  K.at(W / 2, 960, 1, () => { K.card(-200, -46, 400, 92, done ? '#123d1c' : '#0d1018', 46, left < 6 && !done ? RED : 'rgba(255,255,255,0.5)', 4); label(done ? 'LAUNCH DAY' : `${left} DAYS LEFT`, 0, 3, 40, '#ffffff', { spacing: 3 }); });
+  K.at(W / 2, 852, 1, () => { K.card(-200, -46, 400, 92, done ? '#123d1c' : '#0d1018', 46, left < 6 && !done ? RED : 'rgba(255,255,255,0.5)', 4); label(done ? 'LAUNCH DAY' : `${left} DAYS LEFT`, 0, 3, 40, '#ffffff', { spacing: 3 }); });
   whichOne(t, END, [['PROCRASTINATOR', '#ffa94d'], ['PLANNER', GREEN]]);
 });

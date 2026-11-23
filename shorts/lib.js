@@ -3,7 +3,7 @@ const K = require('../engine/kit');
 const W = 1080; const H = 1920;
 function dark(cy = 900) { const c = K.ctx(); const g = c.createRadialGradient(W / 2, cy, 0, W / 2, cy, 1300); g.addColorStop(0, '#1c202c'); g.addColorStop(1, '#040506'); c.fillStyle = g; c.fillRect(0, 0, W, H); }
 function spot(x, y, r, color = 'rgba(120,140,190,0.22)') { const c = K.ctx(); const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, color); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2); }
-const label = (str, x, y, size, color = '#ffffff', o = {}) => K.T(str, x, y, size, color, { spacing: o.spacing ?? 4, glow: o.glow, blur: o.blur ?? 30, align: o.align, weight: o.weight });
+const label = (str, x, y, size, color = '#ffffff', o = {}) => { if (typeof checking !== 'undefined' && checking) { const w = K.textWidth(str, size, false, o.spacing ?? 4); track(str, o.align === 'left' ? x + w / 2 : (o.align === 'right' ? x - w / 2 : x), y, w, size); } K.T(str, x, y, size, color, { spacing: o.spacing ?? 4, glow: o.glow, blur: o.blur ?? 30, align: o.align, weight: o.weight }); };
 function watermark() { K.T('FROM ZERO', W / 2, 1885, 26, 'rgba(255,255,255,0.28)', { spacing: 8, weight: 800 }); }
 function linkTag(k) { if (k <= 0) return; K.at(W / 2, 1765, k, () => { K.card(-190, -44, 380, 88, K.GREEN, 44); K.T('LINK IN BIO', 0, 3, 40, K.INK, { spacing: 3 }); }); }
 function shade(color, a, x = 0, y = 0, w = W, h = H) { K.alpha(a, () => { K.ctx().fillStyle = color; K.ctx().fillRect(x, y, w, h); }); }
@@ -100,11 +100,15 @@ function makeShort(CUT, body) {
 // a title, kept clear of the top edge
 const title = (str, color = '#ffffff', y = 300, size = 72, glow) => label(str, W / 2, y, size, color, { spacing: 4, glow });
 // a split-screen half with its own slow camera; draw(y0) paints it
-function halves(t, CUT, draw) { for (const y0 of [0, 980]) { const c = K.ctx(); c.save(); c.beginPath(); c.rect(0, y0 - 20, W, 960); c.clip(); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: 960, z: K.lerp(1, 1.07, t / CUT), t }, () => draw(y0)); c.restore(); } K.line([[0, 960], [W, 960]], 'rgba(255,255,255,0.25)', 4); }
+// split screens are drawn as two panels inside the safe band (y 250-1490), scaled down so nothing sits under the app's top bar, captions or buttons
+const PS = 0.8; const MID = 852;
+// each half keeps its useful rows (top: 110-860, bottom: 40-770) and is scaled into the safe band
+function panelEnter(y0) { const c = K.ctx(); const [from, to, top] = y0 ? [40, 770, 905] : [110, 860, 245]; c.translate(W / 2 - (W * PS) / 2, top - (y0 + from) * PS); c.scale(PS, PS); c.beginPath(); c.rect(0, y0 + from, W, to - from); c.clip(); c.translate(0, y0 + 480 - 960); } // the shift lets camera() zoom around the half's own centre
+function halves(t, CUT, draw) { for (const y0 of [0, 980]) { const c = K.ctx(); c.save(); panelEnter(y0); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: y0 + 480, z: K.lerp(1, 1.04, t / CUT), t }, () => draw(y0)); c.restore(); } K.line([[60, MID], [W - 60, MID]], 'rgba(255,255,255,0.25)', 4); }
 function rain(t, x0, y0, w, h, n = 40, color = 'rgba(160,190,255,0.45)') { for (let i = 0; i < n; i++) { const x = x0 + K.rnd(i) * w; const y = y0 + ((t * 900 + K.rnd(i + 9) * h) % h); K.line([[x, y], [x - 8, y + 30]], color, 3); } }
 function sun(x, y, r, t) { spot(x, y, r * 3, 'rgba(255,214,120,0.35)'); K.circle(x, y, r, '#ffd43b'); for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 + t; K.line([[x + Math.cos(a) * r * 1.3, y + Math.sin(a) * r * 1.3], [x + Math.cos(a) * r * 1.7, y + Math.sin(a) * r * 1.7]], '#ffd43b', 6); } }
 function cloud(x, y, s, col = '#4a5068') { K.at(x, y, s, () => { K.circle(-60, 10, 50, col); K.circle(0, -10, 65, col); K.circle(65, 10, 50, col); K.card(-110, 10, 220, 50, col, 25); }); }
-Object.assign(module.exports, { makeShort, title, halves, rain, sun, cloud });
+Object.assign(module.exports, { makeShort, title, halves, rain, sun, cloud, panelEnter, MID, PS });
 // a rounded tag sized to its text, so the words never spill out
 function pill(str, x, y, size, color = '#ffffff', o = {}) { const w = K.textWidth(str, size, false, o.spacing ?? 3) + (o.pad ?? 70); const h = size * 1.9; K.card(x - w / 2, y - h / 2, w, h, o.fill ?? '#0d1018', h / 2, o.border ?? 'rgba(255,255,255,0.5)', 3); label(str, x, y + 3, size, color, { spacing: o.spacing ?? 3 }); }
 module.exports.pill = pill;
@@ -126,3 +130,22 @@ const says = (str, x, y0p, t, a, b, color = '#ffffff') => { const y = y0p + 30; 
 function bar(x, y, w, k, color, txt) { K.card(x, y, w, 24, '#1b1f2b', 12); K.card(x, y, Math.max(24, w * K.clamp(k)), 24, color, 12); if (txt) label(txt, x + w / 2, y - 22, 20, '#9aa3b5', { spacing: 2 }); }
 function whichOne(t, from, opts) { if (t < from) return; const k = K.pop(t, from); shade('#000000', 0.55 * K.prog(t, from, from + 0.4)); K.at(W / 2, 960, k, () => { label('WHICH ONE', 0, -60, 90, '#ffffff', { spacing: 6 }); label('ARE YOU?', 0, 50, 100, K.GREEN, { spacing: 6, glow: K.GREEN }); opts.forEach(([s, col], i) => pill(s, (i % 2 ? 1 : -1) * 190, 200 + Math.floor(i / 2) * 80, 30, col, { pad: 40 })); }); }
 Object.assign(module.exports, { LANE_TOP, LANE_H, lane, says, bar, whichOne });
+
+// ---- layout safety -------------------------------------------------------------------------
+// Screen zones the apps cover: keep text out of y < 230, y > 1500 and the right-hand button column (x > 930 between y 900 and 1600).
+const SAFE = { top: 230, bottom: 1500, right: 930 };
+// A simple tracker: during a still render with SAFE_CHECK=1, every label/pill reports its screen box, and overlaps are printed.
+var boxes = []; var checking = !!process.env.SAFE_CHECK;
+function track(str, x, y, w, h) { if (!checking) return; const m = K.ctx().getTransform(); const X = m.a * x + m.e; const Y = m.d * y + m.f; const ww = w * Math.abs(m.a); const hh = h * Math.abs(m.d); if (ww < 30 || hh < 14) return; boxes.push({ str, x0: X - ww / 2, x1: X + ww / 2, y0: Y - hh / 2, y1: Y + hh / 2 }); }
+function report(t) { if (!checking) return; const out = []; boxes.forEach((b, i) => { if (b.y0 < SAFE.top - 40 || b.y1 > SAFE.bottom + 60) out.push(`edge: "${b.str}" y ${Math.round(b.y0)}-${Math.round(b.y1)}`); if (b.x1 > SAFE.right + 60 && b.y1 > 900 && b.y0 < 1600) out.push(`buttons: "${b.str}"`); for (let j = i + 1; j < boxes.length; j++) { const o = boxes[j]; if (b.x0 < o.x1 - 6 && o.x0 < b.x1 - 6 && b.y0 < o.y1 - 6 && o.y0 < b.y1 - 6) out.push(`overlap: "${b.str}" / "${o.str}"`); } }); boxes.length = 0; if (out.length) console.log(`t=${t}`, [...new Set(out)].join(' | ')); }
+Object.assign(module.exports, { SAFE, report });
+
+// ---- small props shared by the later shorts ---------------------------------------------------------
+const ground = (y, x0 = -600, x1 = 1700) => { K.card(x0, y, x1 - x0, 1400, '#141823', 0); K.line([[x0, y], [x1, y]], 'rgba(255,255,255,0.18)', 4); };
+const coin = (x, y, r = 26, spin = 0) => K.at(x, y, 1, () => { K.ctx().scale(0.35 + 0.65 * Math.abs(Math.cos(spin)), 1); K.circle(0, 0, r, K.GOLD); K.circle(0, 0, r * 0.8, '#e0a92e'); label('$', 0, 2, r * 1.1, '#5c3d00', { spacing: 0 }); });
+const rock = (x, y, r, txt, col = '#868e96') => { const c = K.ctx(); c.fillStyle = col; c.beginPath(); for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2; const rr = r * (0.85 + 0.15 * Math.sin(i * 2.7)); i ? c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr) : c.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); if (txt) label(txt, x, y + 4, Math.min(r * 0.45, 40), '#ffffff', { spacing: 2 }); };
+const sitPose = { lean: 0, tilt: 10, drop: 0, armL: [10, 8], armR: [10, 8], legL: [85, -85], legR: [85, -85] };
+const pushPose = (t, k = 1) => ({ lean: 26, tilt: 0, armL: [80, -10], armR: [80, -10], legL: [-14 + Math.sin(t * 7 * k) * 14, 0], legR: [24 - Math.sin(t * 7 * k) * 14, -20] });
+const npc = (col, hair = 'short') => ({ hair: { type: hair, color: '#2b2b33' }, top: { type: 'tee', color: col }, pants: '#3b4252', shoes: '#e5e5e5' });
+function confetti(t, from, x, y, w = 400) { K.floaters(t, 30, (i, life) => K.card(x - w / 2 + K.rnd(i) * w, y + life * 300, 10, 18, ['#51cf66', '#ffd43b', '#74c0fc'][i % 3], 3), { every: 0.04, from, life: 1.1 }); }
+Object.assign(module.exports, { ground, coin, rock, sitPose, pushPose, npc, confetti });

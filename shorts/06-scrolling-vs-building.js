@@ -24,10 +24,10 @@ module.exports = {
   cut: CUT, duration: CUT + 3,
   draw: (t) => {
     if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, CUT + 2.5, CUT + 3)); return; }
-    dark(960); for (const [y0, b] of [[0, false], [980, true]]) { const c = K.ctx(); c.save(); c.beginPath(); c.rect(0, y0 - 20, W, 960); c.clip(); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: 960, z: t < YEAR ? lerp(1, 1.08, t / YEAR) : lerp(1.12, 1.02, ease(prog(t, YEAR, YEAR + 1.5))), t }, () => half(y0, b, t)); c.restore(); } line([[0, 960], [W, 960]], 'rgba(255,255,255,0.25)', 4);
+    dark(960); for (const [y0, b] of [[0, false], [980, true]]) { const c = K.ctx(); c.save(); c.beginPath(); require('./lib').panelEnter(y0); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: y0 + 480, z: t < YEAR ? lerp(1, 1.04, t / YEAR) : lerp(1.05, 1.0, ease(prog(t, YEAR, YEAR + 1.5))), t }, () => half(y0, b, t)); c.restore(); } line([[60, 852], [W - 60, 852]], 'rgba(255,255,255,0.25)', 4);
     // the jump in time
     const j = prog(t, YEAR - 0.2, YEAR + 1.1);
-    if (j > 0 && j < 1) { shade('#000000', 0.6 * Math.sin(j * Math.PI)); at(W / 2, 960, pop(t, YEAR - 0.2), () => { K.card(-330, -70, 660, 140, '#ffffff', 70); label('1 YEAR LATER', 0, 4, 64, K.INK, { spacing: 6 }); }); }
+    if (j > 0 && j < 1) { shade('#000000', 0.6 * Math.sin(j * Math.PI)); at(W / 2, 852, pop(t, YEAR - 0.2), () => { K.card(-330, -70, 660, 140, '#ffffff', 70); label('1 YEAR LATER', 0, 4, 64, K.INK, { spacing: 6 }); }); }
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

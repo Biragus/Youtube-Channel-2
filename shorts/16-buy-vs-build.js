@@ -31,8 +31,8 @@ module.exports = {
   draw: (t) => {
     if (t >= CUT) { lifestyle(t - CUT); shade('#000000', prog(t, CUT + 2.5, CUT + 3)); return; }
     dark(960);
-    for (const [y0, b] of [[0, false], [980, true]]) { const c = K.ctx(); c.save(); c.beginPath(); c.rect(0, y0 - 20, W, 960); c.clip(); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: 960, z: lerp(1, 1.07, t / CUT), t }, () => half(y0, b, t)); c.restore(); }
-    line([[0, 960], [W, 960]], 'rgba(255,255,255,0.25)', 4);
+    for (const [y0, b] of [[0, false], [980, true]]) { const c = K.ctx(); c.save(); c.beginPath(); require('./lib').panelEnter(y0); camera({ x: 540 + Math.sin(t * 0.5 + y0) * 10, y: y0 + 480, z: lerp(1, 1.04, t / CUT), t }, () => half(y0, b, t)); c.restore(); }
+    line([[60, 852], [W - 60, 852]], 'rgba(255,255,255,0.25)', 4);
     watermark(); shade('#000000', 1 - prog(t, 0, 0.3));
   },
 };

@@ -24,5 +24,5 @@ module.exports = makeShort(CUT, (t) => {
       for (let i = 0; i < Math.min(n, 30); i++) fish(470 + (i % 7) * 76 + Math.sin(t * 3 + i) * 6, sea + 60 + Math.floor(i / 7) * 60, 0.6);
       counter('CAUGHT', String(n), 720, y0 + 330, GREEN, pop(t, 0.4) * (n ? pulse(t, 0.25, 0.05) : 1), { size: 60, rot: 0 }); }
   });
-  require('./lib').pill('BUILD THE NET.', W / 2, 960, 32);
+  require('./lib').pill('BUILD THE NET.', W / 2, 852, 32);
 });

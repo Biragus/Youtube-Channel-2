@@ -19,5 +19,5 @@ module.exports = makeShort(CUT, (t) => {
     workstation(330, floorY, 1.05, kai ? (done ? 'kai2' : 'kai') : other, t, { phase: kai ? 0 : 1.7, sigh: working ? 0 : 1, cheer: kai && done ? prog(t, 0.5 + WEATHER.length * DAY, 0.9 + WEATHER.length * DAY) : 0, expr: working ? (kai && done ? 'happy' : 'determined') : 'sad', glowColor: working ? 'rgba(57,255,20,0.25)' : 'rgba(0,0,0,0)' });
     counter('DAYS WORKED', String(worked(kai ? 'kai' : 'other')), 720, y0 + (kai ? 330 : 400), kai ? GREEN : '#ffa94d', pop(t, 0.4) * (kai ? pulse(t - 0.5, DAY, 0.06) : 1), { size: 70, rot: Math.sin(t * 2) * 0.02 });
   });
-  K.at(W / 2, 960, 1, () => { K.card(-110, -40, 220, 80, '#0d1018', 40, 'rgba(255,255,255,0.5)', 3); label(`DAY ${d + 1}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
+  K.at(W / 2, 852, 1, () => { K.card(-110, -40, 220, 80, '#0d1018', 40, 'rgba(255,255,255,0.5)', 3); label(`DAY ${d + 1}`, 0, 3, 40, '#ffffff', { spacing: 4 }); });
 });
