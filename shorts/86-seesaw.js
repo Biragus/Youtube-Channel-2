@@ -1,5 +1,5 @@
 // THE SEESAW. Kai sits alone on one end, outweighed by a pile of doubts. Each sale adds a coin to his side until it tips.
-const K = require('../engine/kit'); const { GREEN, GOLD, RED, lerp, prog, ease, pop, at, card, line, circle, who } = K;
+const K = require('../engine/kit'); const M = require('../engine/motion'); const { GREEN, GOLD, RED, lerp, prog, ease, pop, at, card, line, circle, who } = K;
 const { W, dark, label, makeShort, title, camera, impact, blend, hop, pill, ground, coin, sitPose, confetti } = require('./lib');
 const CUT = 6.8; const FY = 1400; const PX = 540; const TIP = 4.4; const L = 380;
 module.exports = makeShort(CUT, (t) => {
@@ -11,7 +11,7 @@ module.exports = makeShort(CUT, (t) => {
       ['DOUBT', 'FEAR', 'EXCUSES', '"LATER"'].forEach((s, i) => { card(L - 220 + (i % 2) * 110, -60 - Math.floor(i / 2) * 50, 100, 46, '#3b1f1f', 6, RED, 3); label(s, L - 170 + (i % 2) * 110, -36 - Math.floor(i / 2) * 50, 18, '#ffb3b3', { spacing: 1 }); });
       // left: Kai and the coins that land beside him
       for (let i = 0; i < coins; i++) coin(-L + 130 + (i % 4) * 44, -36 - Math.floor(i / 4) * 40, 20, 0);
-      who(t > TIP + 0.6 ? 'kai2' : 'kai', { x: -L + 40, y: -14, s: 0.6, pose: t > TIP + 0.6 ? 'cheer' : sitPose, expr: t > TIP + 0.6 ? 'happy' : 'determined', still: true });
+      if (t > TIP + 0.6) M.celebrate('kai2', -L + 50, -14, 0.6, t, TIP + 0.6, { height: 40 }); else M.sit('kai', -L + 40, -14 + 60, 0.6, t, { seat: -14 - 8, armL: [30, -60], armR: [30, -60], expr: 'determined' });
     }, a);
     if (t > TIP + 0.6) confetti(t, TIP + 0.6, PX - L, FY - 600);
   });

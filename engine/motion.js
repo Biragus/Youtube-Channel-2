@@ -97,3 +97,30 @@ module.exports = { twoBone, figure, gait, stand, jump, spring, keys, dust, smoot
 // put a gait (or any pose) onto uneven ground: f(x) gives the ground height at x
 function onGround(p, f) { const d = (q) => (q ? [q[0], q[1] - p.ground + f(q[0])] : q); const g0 = p.ground; const gh = f(p.hip[0]); return { ...p, hip: [p.hip[0], p.hip[1] - g0 + gh], footL: d(p.footL), footR: d(p.footR), ground: gh }; }
 module.exports.onGround = onGround;
+
+// ---- ready-made actions -----------------------------------------------------------------------------
+// walk/run to wherever x is now: the step phase follows the distance, so feet stay planted while x changes
+function walk(spec, x, ground, s, o = {}) { const p = gait(0, o.flip ? -x : x, ground, s, o.run ? 'run' : 'walk', { flip: o.flip, lean: o.lean, stride: o.stride }); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return p; }
+// standing still and breathing; arms by angle or hands by target
+function idle(spec, x, ground, s, t, o = {}) { const p = stand(x, ground, s, t, o); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop, squash: o.squash }); return p; }
+// a celebration starting at t0: crouch, hop with arms flying up, squash on landing, then bounce gently
+function celebrate(spec, x, ground, s, t, t0, o = {}) {
+  const k = t - t0; const dir = o.flip ? -1 : 1;
+  if (k < 0) return idle(spec, x, ground, s, t, o);
+  const crouch = k < 0.15 ? Math.sin((k / 0.15) * Math.PI / 2) * 30 : (k < 0.55 ? 0 : (k < 0.75 ? Math.sin(((k - 0.55) / 0.2) * Math.PI) * 25 : 0));
+  const air = k > 0.15 && k < 0.55 ? Math.sin(((k - 0.15) / 0.4) * Math.PI) * (o.height ?? 70) * s : 0;
+  const bounce = k > 0.75 ? Math.abs(Math.sin((k - 0.75) * 5)) * 10 * s * Math.exp(-(k - 0.75) * 0.6) : 0;
+  const arms = smoother(k / 0.3); const wave = Math.sin(k * 8) * 10;
+  const hipY = ground - 150 * s - air - bounce + crouch * s;
+  const tuck = air > 0 ? 0.3 : 0;
+  const p = { hip: [x, hipY], ground, s, flip: o.flip, footL: [x - 26 * s * dir, air || bounce ? hipY + (150 - tuck * 40) * s : ground], footR: [x + 26 * s * dir, air || bounce ? hipY + (150 - tuck * 30) * s : ground], lean: 0, tilt: -6,
+    armL: [lerp(10, 150, arms) + wave, lerp(6, 16, arms)], armR: [lerp(10, 150, arms) - wave, lerp(6, 16, arms)], squash: k > 0.55 && k < 0.75 ? Math.sin(((k - 0.55) / 0.2) * Math.PI) * 0.08 : 0 };
+  figure({ spec, ...p, expr: o.expr ?? 'happy', glow: o.glow }); return p;
+}
+// sitting on a bench or the floor (seatY = where the hips rest)
+function sit(spec, x, ground, s, t, o = {}) { const dir = o.flip ? -1 : 1; const seat = o.seat ?? ground - 60 * s; const br = Math.sin(t * 2) * 1.5 * s; const p = { hip: [x, seat + br], ground, s, flip: o.flip, footL: [x + dir * 60 * s, ground], footR: [x + dir * 85 * s, ground], lean: o.lean ?? 6, tilt: (o.tilt ?? 10) + Math.sin(t * 1.2) * 2, armL: o.armL ?? [24, -40], armR: o.armR ?? [24, -40] }; figure({ spec, ...p, expr: o.expr, look: o.look, handL: o.handL, handR: o.handR, elbow: o.elbow, prop: o.prop }); return p; }
+Object.assign(module.exports, { walk, idle, celebrate, sit });
+
+// stepping at a fixed x (walking toward or away from the camera, or on a treadmill); dist drives the step cycle
+function march(spec, x, ground, s, dist, o = {}) { const p = gait(0, dist, ground, s, o.run ? 'run' : 'walk', { lean: o.lean }); const dx = x - p.hip[0]; const q = { ...p, hip: [x, p.hip[1]], footL: [p.footL[0] + dx, p.footL[1]], footR: [p.footR[0] + dx, p.footR[1]] }; figure({ spec, ...q, flip: o.flip, expr: o.expr, look: o.look, glow: o.glow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return q; }
+module.exports.march = march;

@@ -1,5 +1,5 @@
 // THE 100TH KEY. Kai tries key after key in a locked door; the counter climbs; key 100 turns and the door swings open.
-const K = require('../engine/kit'); const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, card, line, circle, who, floaters } = K;
+const K = require('../engine/kit'); const M = require('../engine/motion'); const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, card, line, circle, who, floaters } = K;
 const { W, dark, label, makeShort, title, camera, impact, blend, hop, pill, ground, spot } = require('./lib');
 const CUT = 6.8; const FY = 1400; const OPEN = 4.8; const DX = 700;
 module.exports = makeShort(CUT, (t) => {
@@ -9,7 +9,7 @@ module.exports = makeShort(CUT, (t) => {
     if (o > 0) { spot(DX + 160, FY - 320, 600 * o, `rgba(255,214,120,${0.7 * o})`); card(DX, FY - 600, 320, 600, `rgba(255,236,170,${o})`, 6); }
     at(DX, FY - 600, 1, () => { K.ctx().scale(1 - o * 0.85, 1); card(0, 0, 320, 600, '#6b4a2f', 8, INK, 6); circle(40, 320, 18, GOLD); label('YOUR GOAL', 160, 120, 34, '#fff3bf', { spacing: 3 }); });
     // Kai at the lock, with a big ring of keys
-    who(t > OPEN + 0.6 ? 'kai2' : 'kai', { x: DX - 140 + o * 260, y: FY - hop(t, OPEN + 0.1, 40), s: 0.85, pose: t > OPEN ? blend({ lean: 0, tilt: 0, armL: [8, 4], armR: [86, -10], legL: [6, 0], legR: [6, 0] }, 'cheer', prog(t, OPEN, OPEN + 0.3)) : { lean: 4, tilt: 4, armL: [8, 4], armR: [86, -10 + Math.sin(t * 16) * 8], legL: [6, 0], legR: [6, 0] }, expr: t > OPEN ? 'happy' : 'determined' });
+    if (t < OPEN) M.idle('kai', DX - 130, FY, 0.85, t, { handR: [DX + 10 + Math.sin(t * 30) * 4, FY - 290], lean: 6, expr: 'determined' }); else if (t < OPEN + 0.9) M.celebrate('kai', DX - 130, FY, 0.85, t, OPEN); else M.walk('kai2', lerp(DX - 130, DX + 160, M.smooth(prog(t, OPEN + 0.9, OPEN + 2))), FY, 0.85, { expr: 'happy' });
     if (t < OPEN) { at(DX + 20, FY - 290, 1, () => { line([[-50, 0], [0, 0]], GOLD, 8); circle(-60, 0, 14, GOLD); }, Math.sin(t * 30) * 0.15); floaters(t, 30, (i, life) => at(DX - 60 - life * 80, FY - 280 + life * life * 260, 1, () => line([[-24, 0], [24, 0]], '#adb5bd', 6), life * 6), { every: 0.12, from: 0.5, life: 0.6 }); }
   });
   K.at(W / 2, 400, pop(t, 0.4), () => pill(`KEY ${n}`, 0, 0, 36, t > OPEN ? GREEN : '#ffffff', { border: t > OPEN ? GREEN : undefined }));

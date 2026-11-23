@@ -1,5 +1,5 @@
 // BREAK THE WALL. A wall labelled COMFORT ZONE blocks Kai. He swings a wrecking ball labelled FIRST STEP; the wall shatters.
-const K = require('../engine/kit'); const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, card, line, circle, who, rnd } = K;
+const K = require('../engine/kit'); const { GREEN, GOLD, INK, lerp, prog, ease, pop, at, card, line, circle, who, rnd } = K; const M = require('../engine/motion');
 const { W, dark, label, makeShort, title, camera, impact, blend, hop, ground, spot } = require('./lib');
 const CUT = 6.8; const FY = 1450; const HIT = 3.0; const WX = 700;
 module.exports = makeShort(CUT, (t) => {
@@ -10,7 +10,7 @@ module.exports = makeShort(CUT, (t) => {
     if (!hit) at(WX + 60, FY - 580, 1, () => { K.ctx().rotate(Math.PI / 2); label('COMFORT ZONE', 0, 0, 30, '#ffffff', { spacing: 4 }); });
     // the crane arm and the ball
     line([[200, 380], [WX - 100, 380]], '#495057', 14); at(WX - 100, 380, 1, () => { line([[0, 0], [0, 600]], '#adb5bd', 6); circle(0, 640, 80, '#343a40'); label('FIRST STEP', 0, 644, 22, '#ffffff', { spacing: 1 }); }, sw);
-    who(hit ? 'kai2' : 'kai', { x: 300, y: FY - hop(t, HIT + 0.3, 50), s: 0.85, pose: hit ? 'cheer' : blend('stand', { lean: -10, tilt: -4, armL: [100, -10], armR: [100, -10], legL: [-10, 0], legR: [20, -20] }, prog(t, 1.5, 2.4)), expr: hit ? 'happy' : 'determined' });
+    if (hit) M.celebrate('kai2', 300, FY, 0.85, t, HIT + 0.2); else { const k = M.smooth(prog(t, 1.5, 2.4)); M.idle('kai', 300, FY, 0.85, t, { lean: -12 * k, crouch: 30 * k, armL: [M.lerp(8, 100, k), -10 * k], armR: [M.lerp(8, 100, k), -10 * k], expr: 'determined' }); }
   });
   title(hit ? 'IT WAS ONLY BRICKS.' : 'THE WALL LOOKS HUGE.', hit ? GREEN : '#ffffff', 300, 74, hit ? GREEN : undefined);
 });

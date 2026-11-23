@@ -1,5 +1,5 @@
 // SETBACKS PULL YOU BACK. Each setback pulls Kai further back in a giant slingshot... then it launches him far beyond where he was.
-const K = require('../engine/kit'); const { GREEN, GOLD, RED, lerp, prog, ease, easeOut, pop, at, card, line, who } = K;
+const K = require('../engine/kit'); const { GREEN, GOLD, RED, lerp, prog, ease, easeOut, pop, at, card, line, who } = K; const M = require('../engine/motion');
 const { W, dark, label, makeShort, title, camera, impact, hop, pill, ground, confetti } = require('./lib');
 const CUT = 6.8; const FY = 1450; const AX = 640; const FIRE = 3.6; const SET = ['LOST JOB', 'NO SALES', 'BAD REVIEW'];
 module.exports = makeShort(CUT, (t) => {
@@ -9,8 +9,8 @@ module.exports = makeShort(CUT, (t) => {
     ground(FY, -600, 3400); card(AX - 20, FY - 300, 40, 300, '#6b4a2f', 8); card(AX + 140, FY - 300, 40, 300, '#6b4a2f', 8);
     if (t < FIRE) { line([[AX, FY - 290], [kx + 40, ky]], '#c9a43a', 8); line([[AX + 160, FY - 290], [kx + 40, ky]], '#c9a43a', 8); }
     SET.forEach((s, i) => { if (i < pull && t < FIRE) at(AX - 300 - i * 20, FY - 560 - i * 70, 1, () => pill(s, 0, 0, 24, '#ff8787', { pad: 30 })); });
-    label('YOUR GOAL', 2300, FY - 360, 50, GOLD, { spacing: 4, glow: GOLD }); line([[2300, FY], [2300, FY - 300]], GOLD, 6);
-    who(fly >= 1 ? 'kai2' : 'kai', { x: fly >= 1 ? 2200 : kx, y: fly >= 1 ? FY - hop(t, FIRE + 1.5, 40) : ky + 260 * (t < FIRE ? 1 : 0), s: 0.75, pose: fly >= 1 ? 'cheer' : (t < FIRE ? { lean: -20, tilt: 6, armL: [80, -20], armR: [80, -20], legL: [-20, 0], legR: [30, -20] } : { lean: 10, tilt: 0, armL: [160, 10], armR: [160, 10], legL: [40, -60], legR: [10, -20] }), expr: fly >= 1 ? 'happy' : (t < FIRE ? 'worried' : 'determined') });
+    if (fly > 0.5) label('YOUR GOAL', 2300, FY - 360, 50, GOLD, { spacing: 4, glow: GOLD }); line([[2300, FY], [2300, FY - 300]], GOLD, 6);
+    if (fly >= 1) M.celebrate('kai2', 2200, FY, 0.75, t, FIRE + 1.45); else if (t < FIRE) M.idle('kai', kx, FY, 0.75, t, { lean: -18, crouch: 20, handL: [kx + 40, ky + 4], handR: [kx + 44, ky + 14], elbow: -1, expr: 'worried' }); else M.figure({ spec: 'kai', hip: [kx, ky + 110], ground: ky + 260, s: 0.75, footL: [kx - 90, ky + 190], footR: [kx - 120, ky + 160], armL: [165, 8], armR: [160, 12], lean: 35, tilt: -6, expr: 'determined' });
     if (fly >= 1) confetti(t, FIRE + 1.4, 2200, FY - 600);
   });
   title(t > FIRE ? 'IT WAS LOADING YOU UP.' : 'PULLED BACK AGAIN?', t > FIRE ? GREEN : '#ffffff', 300, 68, t > FIRE ? GREEN : undefined);
