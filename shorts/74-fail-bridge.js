@@ -12,7 +12,7 @@ module.exports = makeShort(CUT, (t) => {
   else { p = M.gait(EDGE - R - 10, (t - CROSS) * 520, FY, S, 'run'); expr = 'happy'; }
   camera({ x: lerp(480, 1150, z), y: 1150, z: lerp(1.15, 0.48, z), shake: impact(t, PUSH + 0.55, 10), t }, () => {
     ground(FY, -1600, EDGE); ground(FY, 1800, 3400); K.alpha(1, () => {}); K.card(EDGE, FY, 1380, 1600, '#07080c', 0);
-    for (let i = 0; i < 70; i++) rock(470 + (i % 14) * 94 + (Math.floor(i / 14) % 2) * 40, FY + 60 + Math.floor(i / 14) * 85 - (i < 14 ? 15 : 0), 52, i % 3 ? 'FAIL' : '', i % 2 ? '#5c6070' : '#495057');
+    for (let i = 0; i < 70; i++) rock(470 + (i % 14) * 94 + (Math.floor(i / 14) % 2) * 40, FY + 60 + Math.floor(i / 14) * 85 - (i < 14 ? 15 : 0), 52, i % 3 && t > OUT + 1 ? 'FAIL' : '', i % 2 ? '#5c6070' : '#495057');
     K.alpha(1 - prog(t, OUT, OUT + 0.9), () => K.card(EDGE, FY - 10, 1380, 1600, '#07080c', 0)); label('SUCCESS', 1990, FY - 230, 90, GOLD, { spacing: 8, glow: GOLD });
     if (by < FY + 300) at(bx, by, 1, () => rock(0, 0, R, 'FAIL', '#868e96'), (bx - 260) / R);
     if (t > CROSS) spot(p.hip[0], p.hip[1], 220, 'rgba(57,255,20,0.15)');

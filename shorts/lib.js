@@ -23,12 +23,12 @@ function lifestyle(t) {
   for (let i = 0; i < 5; i++) { const x = ((i * 520 - t * 520) % 2600 + 2600) % 2600 - 400; c.save(); c.translate(x, 1250); K.line([[0, 0], [30, -330]], '#120822', 22); for (let k = 0; k < 6; k++) { const a = -Math.PI / 2 + (k - 2.5) * 0.55; K.line([[30, -330], [30 + Math.cos(a) * 170, -330 + Math.sin(a) * 120 + 60]], '#120822', 18); } c.restore(); }
   // road
   c.fillStyle = '#17121f'; c.fillRect(0, 1250, W, H - 1250); K.line([[0, 1250], [W, 1250]], '#ff7ab6', 6);
-  for (let i = 0; i < 8; i++) { const x = ((i * 260 - t * 1500) % 2080 + 2080) % 2080 - 300; K.card(x, 1560, 150, 16, '#ffd27a', 8); }
+  for (let i = 0; i < 8; i++) { const x = ((i * 260 - t * 1500) % 2080 + 2080) % 2080 - 300; K.card(x, 1455, 150, 16, '#ffd27a', 8); }
   // speed lines
   for (let i = 0; i < 10; i++) { const x = ((i * 300 - t * 2200) % 3000 + 3000) % 3000 - 600; K.line([[x, 1300 + (i % 5) * 40], [x + 180, 1300 + (i % 5) * 40]], 'rgba(255,255,255,0.18)', 4); }
   // the car, nose to the right, with Kai at the wheel
   const bob = Math.sin(t * 22) * 2.5;
-  K.at(540, 1520 + bob, 1.35, () => {
+  K.at(540, 1400 + bob, 1.35, () => {
     c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(0, 6, 340, 18, 0, 0, Math.PI * 2); c.fill();
     // a convertible: Kai sits in the open cabin, clipped at the door line so only his head and shoulders show
     c.save(); c.beginPath(); c.rect(-400, -400, 800, 340); c.clip(); K.who('kai2', { x: -40, y: 81, s: 0.68, expr: 'smug', still: true, pose: { lean: 0, tilt: -4, armL: [8, 4], armR: [60, -40], legL: [5, 0], legR: [5, 0] } }); c.restore();
@@ -138,7 +138,11 @@ const SAFE = { top: 230, bottom: 1500, right: 930 };
 var boxes = []; var checking = !!process.env.SAFE_CHECK;
 function track(str, x, y, w, h) { if (!checking) return; const m = K.ctx().getTransform(); const X = m.a * x + m.e; const Y = m.d * y + m.f; const ww = w * Math.abs(m.a); const hh = h * Math.abs(m.d); if (ww < 30 || hh < 14) return; boxes.push({ str, x0: X - ww / 2, x1: X + ww / 2, y0: Y - hh / 2, y1: Y + hh / 2 }); }
 function report(t) { if (!checking) return; const out = []; boxes.forEach((b, i) => { if (b.y0 < SAFE.top - 40 || b.y1 > SAFE.bottom + 60) out.push(`edge: "${b.str}" y ${Math.round(b.y0)}-${Math.round(b.y1)}`); if (b.x1 > SAFE.right + 60 && b.y1 > 900 && b.y0 < 1600) out.push(`buttons: "${b.str}"`); for (let j = i + 1; j < boxes.length; j++) { const o = boxes[j]; if (b.x0 < o.x1 - 6 && o.x0 < b.x1 - 6 && b.y0 < o.y1 - 6 && o.y0 < b.y1 - 6) out.push(`overlap: "${b.str}" / "${o.str}"`); } }); boxes.length = 0; if (out.length) console.log(`t=${t}`, [...new Set(out)].join(' | ')); }
-Object.assign(module.exports, { SAFE, report });
+// figures report boxes too: only the safe-zone edges matter for them (feet may touch the bottom band on purpose? no: keep them above it)
+function trackBox(kind, x, y, w, h) { if (!checking) return; const m = K.ctx().getTransform(); const X = m.a * x + m.e; const Y = m.d * y + m.f; const ww = w * Math.abs(m.a); const hh = h * Math.abs(m.d); if (ww < 20) return; const y0 = Y - hh / 2; const y1 = Y + hh / 2; const out = []; if (y0 < SAFE.top - 30 && y1 > 0) out.push(`${kind} top ${Math.round(y0)}`); if (y1 > SAFE.bottom + 40 && y0 < 1920) out.push(`${kind} bottom ${Math.round(y1)}`); if (X + ww / 2 > SAFE.right + 80 && Y > 900 && Y < 1600 && X - ww / 2 < 1080) out.push(`${kind} under buttons`); if (out.length) figIssues.push(...out); }
+var figIssues = [];
+const _report = report; function report2(t) { if (checking && figIssues.length) { console.log(`t=${t}`, [...new Set(figIssues)].join(' | ')); figIssues.length = 0; } _report(t); }
+Object.assign(module.exports, { SAFE, report: report2, trackBox });
 
 // ---- small props shared by the later shorts ---------------------------------------------------------
 const ground = (y, x0 = -600, x1 = 1700) => { K.card(x0, y, x1 - x0, 1400, '#141823', 0); K.line([[x0, y], [x1, y]], 'rgba(255,255,255,0.18)', 4); };

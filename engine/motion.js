@@ -47,6 +47,8 @@ function figure(o) {
     const base = [side * B.shoulderX, B.shoulderY]; const r = twoBone(base, [tx, ty], B.upArm, B.foreArm, o.elbow ?? 1);
     pose[key] = limb(base, r.joint, r.end, side);
   }
+  // report the figure's screen box to the layout checker (head top to lowest foot)
+  try { const L = require('../shorts/lib'); if (L.trackBox) { const top = o.hip[1] - (150 + 62 * 2 + 10) * s; const bot = Math.max(o.hip[1], (o.footL ?? [0, g])[1], (o.footR ?? [0, g])[1]); L.trackBox('figure', o.hip[0], (top + bot) / 2, 150 * s, bot - top); } } catch (e) { /* not in a short */ }
   const c = K.ctx(); c.save();
   if (o.squash) { c.translate(o.hip[0], g); c.scale(1 + o.squash * 0.6, 1 - o.squash); c.translate(-o.hip[0], -g); }
   if (o.glow) { c.shadowColor = o.glow; c.shadowBlur = 28 * s; }
