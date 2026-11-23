@@ -128,7 +128,7 @@ function lane(i, name, color, fn, o = {}) {
 // a thought or speech tag above a small character
 const says = (str, x, y0p, t, a, b, color = '#ffffff') => { const y = y0p + 30; return K.alpha(K.prog(t, a, a + 0.15) * (1 - K.prog(t, b - 0.2, b)), () => pill(str, x, y, 24, color, { pad: 40 })); };
 function bar(x, y, w, k, color, txt) { K.card(x, y, w, 24, '#1b1f2b', 12); K.card(x, y, Math.max(24, w * K.clamp(k)), 24, color, 12); if (txt) label(txt, x + w / 2, y - 22, 20, '#9aa3b5', { spacing: 2 }); }
-function whichOne(t, from, opts) { if (t < from) return; const k = K.pop(t, from); shade('#000000', 0.55 * K.prog(t, from, from + 0.4)); K.at(W / 2, 960, k, () => { label('WHICH ONE', 0, -60, 90, '#ffffff', { spacing: 6 }); label('ARE YOU?', 0, 50, 100, K.GREEN, { spacing: 6, glow: K.GREEN }); opts.forEach(([s, col], i) => pill(s, (i % 2 ? 1 : -1) * 190, 200 + Math.floor(i / 2) * 80, 30, col, { pad: 40 })); }); }
+function whichOne(t, from, opts) { if (t < from) return; const k = K.pop(t, from); shade('#000000', 0.85 * K.prog(t, from, from + 0.4)); K.at(W / 2, 960, k, () => { label('WHICH ONE', 0, -60, 90, '#ffffff', { spacing: 6 }); label('ARE YOU?', 0, 50, 100, K.GREEN, { spacing: 6, glow: K.GREEN }); opts.forEach(([s, col], i) => pill(s, (i % 2 ? 1 : -1) * 190, 200 + Math.floor(i / 2) * 80, 30, col, { pad: 40 })); }); }
 Object.assign(module.exports, { LANE_TOP, LANE_H, lane, says, bar, whichOne });
 
 // ---- layout safety -------------------------------------------------------------------------
