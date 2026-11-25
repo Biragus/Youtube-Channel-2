@@ -34,6 +34,7 @@ function figure(o) {
   // legs: knees bend forward
   const ends = {};
   for (const [side, key, ft] of [[-1, 'legL', o.footL], [1, 'legR', o.footR]]) {
+    if (o.profile) { const base = [side * 4, -hipH]; const target = toLocal(ft ?? [o.hip[0], g]); const r = twoBone(base, target, B.thigh, B.shin, -1); pose[key] = limb(base, r.joint, r.end, 1); ends[key] = r.end; continue; }
     const base = [side * B.hipX, -hipH]; const target = toLocal(ft ?? [o.hip[0] + side * 22 * s * dir, g]);
     const r = twoBone(base, target, B.thigh, B.shin, -1); pose[key] = limb(base, r.joint, r.end, side); ends[key] = r.end;
   }
@@ -52,7 +53,7 @@ function figure(o) {
   const c = K.ctx(); c.save();
   if (o.squash) { c.translate(o.hip[0], g); c.scale(1 + o.squash * 0.6, 1 - o.squash); c.translate(-o.hip[0], -g); }
   if (o.glow) { c.shadowColor = o.glow; c.shadowBlur = 28 * s; }
-  K.who(o.spec, { x: o.hip[0], y: g, s, flip: o.flip, pose, expr: o.expr, look: o.look, still: true, prop: o.prop });
+  K.who(o.spec, { x: o.hip[0], y: g, s, flip: o.flip, pose, expr: o.expr, look: o.look, still: true, prop: o.prop, profile: o.profile });
   c.restore();
 }
 
@@ -68,6 +69,9 @@ function gait(x0, dist, ground, s, kind = 'walk', o = {}) {
     return [plant + dir * smoother(k) * stride, ground - Math.sin(k * Math.PI) * (run ? 60 : 28) * s]; };
   const bob = run ? Math.abs(Math.sin(v * Math.PI * 2)) * 18 * s : (1 - Math.cos(v * Math.PI * 4)) * 4 * s;
   const sw = Math.sin(v * Math.PI * 2);
+  if (o.profile) { const hx = x0 + dir * dist; const cw = Math.cos(v * Math.PI * 2); const A = run ? 62 : 38; // the right arm is forward when the left foot is
+    return { hip: [hx, ground - hipBase - bob], ground, s, flip: o.flip, profile: true, footL: foot(0), footR: foot(0.5), lean: (run ? 14 : 4) + (o.lean ?? 0), tilt: run ? -4 : 0,
+      armL: [-cw * A, run ? 78 + Math.max(0, -cw) * 20 : 10 + Math.max(0, -cw) * 26], armR: [cw * A, run ? 78 + Math.max(0, cw) * 20 : 10 + Math.max(0, cw) * 26] }; }
   return { hip: [x0 + dir * dist, ground - hipBase - bob], ground, s, flip: o.flip, footL: foot(0), footR: foot(0.5),
     lean: (run ? 12 : 3) + (o.lean ?? 0), tilt: run ? -4 : 2, // arms stay at the sides (seen from the front they swing toward and away from the camera, so only the elbows pump, opposite to the legs)
     armL: run ? [16 + sw * 6, -62 - Math.max(0, sw) * 45] : [10 + sw * 3, -8 - Math.max(0, sw) * 34], armR: run ? [16 - sw * 6, -62 - Math.max(0, -sw) * 45] : [10 - sw * 3, -8 - Math.max(0, -sw) * 34] };
@@ -101,7 +105,7 @@ module.exports.onGround = onGround;
 
 // ---- ready-made actions -----------------------------------------------------------------------------
 // walk/run to wherever x is now: the step phase follows the distance, so feet stay planted while x changes
-function walk(spec, x, ground, s, o = {}) { const p = gait(0, o.flip ? -x : x, ground, s, o.run ? 'run' : 'walk', { flip: o.flip, lean: o.lean, stride: o.stride }); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return p; }
+function walk(spec, x, ground, s, o = {}) { const p = gait(0, o.flip ? -x : x, ground, s, o.run ? 'run' : 'walk', { flip: o.flip, lean: o.lean, stride: o.stride, profile: o.profile }); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return p; }
 // standing still and breathing; arms by angle or hands by target
 function idle(spec, x, ground, s, t, o = {}) { const p = stand(x, ground, s, t, o); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop, squash: o.squash }); return p; }
 // a celebration starting at t0: crouch, hop with arms flying up, squash on landing, then bounce gently
@@ -123,5 +127,5 @@ function sit(spec, x, ground, s, t, o = {}) { const dir = o.flip ? -1 : 1; const
 Object.assign(module.exports, { walk, idle, celebrate, sit });
 
 // stepping at a fixed x (walking toward or away from the camera, or on a treadmill); dist drives the step cycle
-function march(spec, x, ground, s, dist, o = {}) { const p = gait(0, dist, ground, s, o.run ? 'run' : 'walk', { lean: o.lean }); const dx = x - p.hip[0]; const q = { ...p, hip: [x, p.hip[1]], footL: [p.footL[0] + dx, p.footL[1]], footR: [p.footR[0] + dx, p.footR[1]] }; figure({ spec, ...q, flip: o.flip, expr: o.expr, look: o.look, glow: o.glow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return q; }
+function march(spec, x, ground, s, dist, o = {}) { const p = gait(0, dist, ground, s, o.run ? 'run' : 'walk', { lean: o.lean, profile: o.profile }); const dx = x - p.hip[0]; const q = { ...p, hip: [x, p.hip[1]], footL: [p.footL[0] + dx, p.footL[1]], footR: [p.footR[0] + dx, p.footR[1]] }; figure({ spec, ...q, flip: o.flip, expr: o.expr, look: o.look, glow: o.glow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return q; }
 module.exports.march = march;

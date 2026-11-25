@@ -243,7 +243,13 @@ function drawCharacter(ctx, c, opts = {}) {
 
   // legs
   const dress = c.top.type === 'dress';
+  // profile (opts.profile): seen from the side, facing +x. Limb angles are then plain: positive = forward.
+  // The far leg and arm are drawn first and a little darker, so the two sides read as one in front of the other.
+  const prof = !!opts.profile;
   for (const [side, limb] of [[-1, p.legL], [1, p.legR]]) {
+    if (prof) { const l = seg(side * 4, -hipH, 1, limb, B.thigh, B.shin); const far = side < 0;
+      stroke(ctx, [[side * 4, -hipH], [l.mx, l.my], [l.ex, l.ey - 8]], far ? shade(c.pants, -0.3) : c.pants, 30);
+      ctx.fillStyle = far ? shade(c.shoes ?? '#ffffff', -0.25) : (c.shoes ?? '#ffffff'); ctx.beginPath(); ctx.ellipse(l.ex + 12, l.ey - 4, 27, 14, 0, 0, Math.PI * 2); ctx.fill(); continue; }
     const l = seg(side * 22, -hipH, side, limb, B.thigh, B.shin);
     stroke(ctx, [[side * 22, -hipH], [l.mx, l.my], [l.ex, l.ey - 8]], dress ? SKIN : c.pants, dress ? 15 : 30);
     ctx.fillStyle = c.shoes ?? '#ffffff'; ctx.beginPath(); ctx.ellipse(l.ex + side * 10, l.ey - 4, 27, 14, 0, 0, Math.PI * 2); ctx.fill();
@@ -253,14 +259,20 @@ function drawCharacter(ctx, c, opts = {}) {
   ctx.translate(0, -hipH); ctx.rotate(rad(p.lean ?? 0));
   if (c.top.type === 'hoodie') { ctx.fillStyle = shade(c.top.color, -0.25); ctx.beginPath(); ctx.ellipse(0, -B.torso - 12, 56, 30, 0, 0, Math.PI * 2); ctx.fill(); }
   stroke(ctx, [[0, -B.torso + 6], [0, -B.torso - 30]], SKIN, 16); // neck
-  drawTorso(ctx, c);
-  drawArm(ctx, c, -1, p.armL);
-  const hand = drawArm(ctx, c, 1, p.armR);
+  let hand;
+  if (prof) {
+    const arm = (limb, far) => { const a = seg(0, B.shoulderY + 4, 1, limb, B.upArm, B.foreArm); stroke(ctx, [[0, B.shoulderY + 4], [a.mx, a.my], [a.ex, a.ey]], far ? shade(c.top.color, -0.3) : c.top.color, 30); ctx.fillStyle = far ? shade(SKIN, -0.3) : SKIN; ctx.beginPath(); ctx.arc(a.ex, a.ey, 15, 0, Math.PI * 2); ctx.fill(); return a; };
+    arm(p.armL, true); ctx.save(); ctx.scale(0.62, 1); drawTorso(ctx, c); ctx.restore(); hand = arm(p.armR, false);
+  } else {
+    drawTorso(ctx, c);
+    drawArm(ctx, c, -1, p.armL);
+    hand = drawArm(ctx, c, 1, p.armR);
+  }
   if (opts.prop === 'phone') { ctx.fillStyle = '#2b2f3a'; ctx.beginPath(); ctx.roundRect(hand.ex - 16, hand.ey - 40, 32, 54, 7); ctx.fill(); ctx.fillStyle = '#9fd8ff'; ctx.beginPath(); ctx.roundRect(hand.ex - 12, hand.ey - 35, 24, 42, 4); ctx.fill(); }
 
   // head tilts around the neck
   ctx.translate(0, -B.torso); ctx.rotate(rad(p.tilt ?? 0));
-  drawHead(ctx, c, 0, -70, opts.expr ?? 'neutral', opts.look ?? 0);
+  drawHead(ctx, c, prof ? 6 : 0, -70, opts.expr ?? 'neutral', prof ? 2.6 : (opts.look ?? 0));
   ctx.restore();
 }
 

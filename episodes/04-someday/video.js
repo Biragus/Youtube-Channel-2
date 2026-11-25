@@ -182,7 +182,7 @@ add(8, (lt) => {
     for (let i = 0; i < 12; i++) card(((i * 220 - lt * 900) % 2640 + 2640) % 2640 - 360, FLOOR + 40, 120, 8, 'rgba(255,255,255,0.12)', 4);
     dayTag(23, lt);
     demon(lerp(520, 140, sm(prog(lt, 1, 8))), FLOOR + 30, 0.8, lt, { handL: [-120, -320], handR: [320, -300 + Math.sin(lt * 5) * 20] });
-    M.march('kai', 1080, FLOOR, 1.05, lt * 720, { run: true, expr: 'determined', lean: 4 });
+    M.march('kai', 1080, FLOOR, 1.05, lt * 720, { run: true, expr: 'determined', lean: 4, profile: true });
     c().strokeStyle = 'rgba(170,190,255,0.35)'; c().lineWidth = 3; c().beginPath(); for (let i = 0; i < 160; i++) { const rx = ((rnd(i) * 2200 - lt * 300) % 2200 + 2200) % 2200 - 140; const ry = ((rnd(i + 40) * 1200 + lt * 1500) % 1200) - 100; c().moveTo(rx, ry); c().lineTo(rx - 12, ry + 44); } c().stroke();
     vignette();
   });
@@ -204,11 +204,11 @@ add(8, (lt) => cam(lt, 8, 1.0, 1.1, 1080, 520, () => {
 add(8, (lt) => {
   const step = (x) => FLOOR - Math.max(0, Math.min(7, Math.floor((x - 300) / 170))) * 70;
   const kx = lerp(240, 1450, sm(prog(lt, 0.3, 7.2)) * 0.5 + prog(lt, 0.3, 7.2) * 0.5); const camY = lerp(0, -330, sm(prog(lt, 0.5, 7.5)));
+  K.bg('#151a2a', '#04050a', 960, 540, 1400);
   cam(lt, 8, 1.0, 1.05, 960, 540, () => { c().save(); c().translate(0, -camY);
-    K.bg('#151a2a', '#04050a', 960, 540 + camY, 1400);
     for (let i = 0; i < 8; i++) { const x0 = 300 + i * 170; card(x0, FLOOR - i * 70, i === 7 ? 600 : 170, 1200, '#1d2232', 4, '#2b3248', 4); }
     const height = (FLOOR - step(kx)) / 490; demon(1700, FLOOR - 490 + 10, lerp(0.62, 0.3, height), lt, { handL: [-240, -260], handR: [240, -260] });
-    const p = M.gait(0, kx - 240, FLOOR, 1.0, 'walk', { lean: 8 }); const q = { ...p, hip: [p.hip[0] + 240, p.hip[1]], footL: [p.footL[0] + 240, p.footL[1]], footR: [p.footR[0] + 240, p.footR[1]] };
+    const p = M.gait(0, kx - 240, FLOOR, 1.0, 'walk', { lean: 8, profile: true }); const q = { ...p, hip: [p.hip[0] + 240, p.hip[1]], footL: [p.footL[0] + 240, p.footL[1]], footR: [p.footR[0] + 240, p.footR[1]] };
     M.figure({ spec: 'kai', ...M.onGround(q, step), expr: 'determined' });
     c().restore(); vignette();
   });
@@ -249,7 +249,7 @@ add(8, (lt) => cam(lt, 8, 1.0, 1.12, 1100, 640, () => {
   const kx = lerp(380, 1000, sm(prog(lt, 0.3, 4.0)));
   const fade = 1 - prog(lt, 4.8, 5.4); demon(1250, FLOOR + 4, 0.16, lt, { a: fade, handL: [-160, -300], handR: [200, -340] });
   whisper('...tomorrow?', 1250, 700, lt, 1.4, 4.8, 30);
-  if (lt < 4.0) M.walk('kai2', kx, FLOOR, 1.1, { expr: 'smug' }); else M.idle('kai2', 1000, FLOOR, 1.1, lt, { expr: lt > 5 ? 'smile' : 'smug', look: 0.7 });
+  if (lt < 4.0) M.walk('kai2', kx, FLOOR, 1.1, { expr: 'smug', profile: true }); else M.idle('kai2', 1000, FLOOR, 1.1, lt, { expr: lt > 5 ? 'smile' : 'smug', look: 0.7 });
   poofAt(1250, 820, lt, 4.8, 10, 80);
   vignette(0.4);
 }), [['rumble', 1.2, 0.35], ['poof', 4.8, 0.5]], { fadeOut: 0.5 });
