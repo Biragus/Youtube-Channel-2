@@ -1,5 +1,5 @@
 // Story short: THE PULL-UP BAR. Four on one bar. Motivation fades, ego burns out showing off, talent stops at good enough. Kai keeps going.
-const K = require('../engine/kit'); const { GREEN, GOLD, lerp, prog, ease, pop, at, card, line, who, P } = K;
+const K = require('../engine/kit'); const M = require('../engine/motion'); const { GREEN, GOLD, lerp, prog, ease, pop, at, card, line, who, P } = K;
 const { W, dark, label, makeShort, title, camera, hop, pill, whichOne, spot, ground } = require('./lib');
 const CUT = 17.5; const END = 14.0; const BAR = 900; const FY = 1450;
 const person = (col, hair) => ({ hair: { type: hair, color: '#2b2b33' }, top: { type: 'tee', color: col }, pants: '#343a40', shoes: '#e5e5e5' });
@@ -10,8 +10,8 @@ module.exports = makeShort(CUT, (t) => {
     ground(FY); line([[60, BAR], [1020, BAR]], '#adb5bd', 12); line([[60, BAR], [60, FY]], '#495057', 14); line([[1020, BAR], [1020, FY]], '#495057', 14);
     P4.forEach(([name, col, spec, quit, rate], i) => { const x = 180 + i * 240; const gone = t > quit; const reps = Math.floor(Math.min(t, quit) * rate); const up = gone ? 0 : (Math.sin(t * rate * Math.PI * 2) + 1) / 2;
       label(name, x, BAR - 250, 24, col, { spacing: 2 }); at(x, BAR - 190, 1, () => pill(i === 3 && t > 11 ? 'NONSTOP' : String(reps), 0, 0, 30, col, { pad: 40 }));
-      if (!gone) { if (i === 3) spot(x, BAR + 150, 180, 'rgba(57,255,20,0.2)'); who(i === 3 && t > 12 ? 'kai2' : spec, { x, y: BAR + 376 * 0.6 - 20 + lerp(120, -20, up), s: 0.6, pose: { lean: 0, tilt: 0, armL: [lerp(170, 140, up), lerp(-10, -60, up)], armR: [i === 1 ? lerp(10, 10, up) : lerp(170, 140, up), i === 1 ? 8 : lerp(-10, -60, up)], legL: [10, -20], legR: [10, -20] }, expr: i === 3 ? 'determined' : (quit - t < 1 ? 'tired' : 'smile'), still: true }); }
-      else who(spec, { x: x - Math.min(300, (t - quit) * 260), y: FY, s: 0.6, flip: true, pose: P.walk(t * 1.5), expr: 'sad' }); });
+      if (!gone) { if (i === 3) spot(x, BAR + 150, 180, 'rgba(57,255,20,0.2)'); { const hy = BAR + lerp(166, 96, up); const g2 = hy + 92; M.figure({ spec: i === 3 && t > 12 ? 'kai2' : spec, hip: [x, hy], ground: g2, s: 0.6, footL: [x - 10, g2 - 4], footR: [x + 12, g2 - 10], handL: [x - 34, BAR], handR: i === 1 ? undefined : [x + 34, BAR], armR: [8, 10], elbow: 1, lean: 0, expr: i === 3 ? 'determined' : (up > 0.5 ? 'determined' : 'tired') }); } }
+      else M.walk(spec, x - Math.min(300, (t - quit) * 260), FY, 0.6, { flip: true, expr: 'sad' }); });
   });
   if (msg) K.alpha(prog(t, msg[3], msg[3] + 0.3) * (1 - prog(t, msg[3] + 2.2, msg[3] + 2.5)), () => pill(msg[5], W / 2, 420, 30, msg[1]));
   if (t > 10.5) { title('MOTIVATION STARTS.', '#ffffff', 300, 56); if (t > 11.5) pill('DISCIPLINE KEEPS GOING.', W / 2, 420, 34, GREEN, { border: GREEN }); } else title('WHO LASTS LONGEST?', GOLD, 300, 66, GOLD);

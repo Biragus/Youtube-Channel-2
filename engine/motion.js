@@ -41,20 +41,25 @@ function figure(o) {
   // the rig places the hips from the lowest foot; drop corrects it so the hips sit exactly at o.hip
   pose.drop = Math.max(ends.legL[1], ends.legR[1]);
   // arms: solve in the torso's frame (after the lean), elbows bend back and down
+  // hands in world space (returned, so props like an axe or a ball can be drawn in them)
+  const toWorld = (q) => { const x = q[0] * Math.cos(lean) - q[1] * Math.sin(lean); const y = q[0] * Math.sin(lean) + q[1] * Math.cos(lean); return [o.hip[0] + x * s * dir, o.hip[1] + y * s]; };
+  const hands = {};
   for (const [side, key, hd] of [[-1, 'armL', o.handL], [1, 'armR', o.handR]]) {
-    if (!hd) { pose[key] = o[key] ?? [8, 4]; continue; }
+    const base = o.profile ? [0, B.shoulderY + 4] : [side * B.shoulderX, B.shoulderY]; const sd = o.profile ? 1 : side;
+    if (!hd) { pose[key] = o[key] ?? [8, 4]; const a1 = pose[key][0] / DEG * sd; const a2 = (pose[key][0] + pose[key][1]) / DEG * sd; hands[key] = toWorld([base[0] + Math.sin(a1) * B.upArm + Math.sin(a2) * B.foreArm, base[1] + Math.cos(a1) * B.upArm + Math.cos(a2) * B.foreArm]); continue; }
     const p = toLocal(hd); const x = p[0]; const y = p[1] + hipH;
     const tx = x * Math.cos(lean) + y * Math.sin(lean); const ty = -x * Math.sin(lean) + y * Math.cos(lean);
-    const base = [side * B.shoulderX, B.shoulderY]; const r = twoBone(base, [tx, ty], B.upArm, B.foreArm, o.elbow ?? 1);
-    pose[key] = limb(base, r.joint, r.end, side);
+    const r = twoBone(base, [tx, ty], B.upArm, B.foreArm, o.elbow ?? (o.profile ? -1 : 1));
+    pose[key] = limb(base, r.joint, r.end, sd); hands[key] = toWorld(r.end);
   }
   // report the figure's screen box to the layout checker (head top to lowest foot)
   try { const L = require('../shorts/lib'); if (L.trackBox) { const top = o.hip[1] - (150 + 62 * 2 + 10) * s; const bot = Math.max(o.hip[1], (o.footL ?? [0, g])[1], (o.footR ?? [0, g])[1]); L.trackBox('figure', o.hip[0], (top + bot) / 2, 150 * s, bot - top); } } catch (e) { /* not in a short */ }
   const c = K.ctx(); c.save();
   if (o.squash) { c.translate(o.hip[0], g); c.scale(1 + o.squash * 0.6, 1 - o.squash); c.translate(-o.hip[0], -g); }
   if (o.glow) { c.shadowColor = o.glow; c.shadowBlur = 28 * s; }
-  K.who(o.spec, { x: o.hip[0], y: g, s, flip: o.flip, pose, expr: o.expr, look: o.look, still: true, prop: o.prop, profile: o.profile });
+  if (!o.hidden) K.who(o.spec, { x: o.hip[0], y: g, s, flip: o.flip, pose, expr: o.expr, look: o.look, still: true, prop: o.prop, profile: o.profile });
   c.restore();
+  return { hip: o.hip, handL: hands.armL, handR: hands.armR };
 }
 
 // ---- gaits ---------------------------------------------------------------------------------------
@@ -105,7 +110,7 @@ module.exports.onGround = onGround;
 
 // ---- ready-made actions -----------------------------------------------------------------------------
 // walk/run to wherever x is now: the step phase follows the distance, so feet stay planted while x changes
-function walk(spec, x, ground, s, o = {}) { const p = gait(0, o.flip ? -x : x, ground, s, o.run ? 'run' : 'walk', { flip: o.flip, lean: o.lean, stride: o.stride, profile: o.profile }); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return p; }
+function walk(spec, x, ground, s, o = {}) { const p = gait(0, o.flip ? -x : x, ground, s, o.run ? 'run' : 'walk', { flip: o.flip, lean: o.lean, stride: o.stride, profile: o.profile ?? true }); /* side-on by default: walking across the screen */ figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop }); return p; }
 // standing still and breathing; arms by angle or hands by target
 function idle(spec, x, ground, s, t, o = {}) { const p = stand(x, ground, s, t, o); figure({ spec, ...p, expr: o.expr, look: o.look, glow: o.glow, handL: o.handL, handR: o.handR, elbow: o.elbow, armL: o.armL ?? p.armL, armR: o.armR ?? p.armR, prop: o.prop, squash: o.squash }); return p; }
 // a celebration starting at t0: crouch, hop with arms flying up, squash on landing, then bounce gently

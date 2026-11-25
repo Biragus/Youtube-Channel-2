@@ -11,7 +11,7 @@ module.exports = makeShort(CUT, (t) => {
     K.line([[A[0] - 200, A[1]], [A[0], A[1]]], 'rgba(255,255,255,0.2)', 4); K.line([[B[0], B[1]], [1200, B[1]]], GOLD, 6); label('THE TOP', 980, B[1] - 60, 34, GOLD, { spacing: 4 });
     label('DOWN', 360, 1440, 30, '#ff8787', { spacing: 6 }); for (let i = 0; i < 3; i++) at(470 + i * 40, 1440, 1, () => { line([[0, -14], [0, 14]], '#ff8787', 5); line([[-10, 4], [0, 14], [10, 4]], '#ff8787', 5); });
     const [ox, oy] = onSlope(ok); M.idle(npc('#868e96'), ox, oy, 0.6, t, { armR: [22, -132], tilt: 10, expr: 'neutral', prop: 'phone' });
-    const [kx, ky] = onSlope(kk); const sl = (B[1] - A[1]) / (B[0] - A[0]); if (done) M.celebrate('kai2', B[0] + 60, B[1], 0.6, t, DONE + 0.05); else { const p = M.gait(0, kx, ky, 0.6, 'walk', { lean: 6 }); M.figure({ spec: 'kai', ...M.onGround(p, (x) => ky + (x - kx) * sl), expr: 'determined' }); }
+    const [kx, ky] = onSlope(kk); const sl = (B[1] - A[1]) / (B[0] - A[0]); if (done) M.celebrate('kai2', B[0] + 60, B[1], 0.6, t, DONE + 0.05); else { const p = M.gait(0, kx, ky, 0.6, 'walk', { lean: 6, profile: true }); M.figure({ spec: 'kai', ...M.onGround(p, (x) => ky + (x - kx) * sl), expr: 'determined' }); }
     if (done) confetti(t, DONE, B[0] + 60, B[1] - 400, 300);
   });
   title('STANDING STILL', '#ffffff', 280, 72); title('IS GOING BACKWARD.', done ? GREEN : GOLD, 370, 64, done ? GREEN : GOLD);

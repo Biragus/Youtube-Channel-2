@@ -1,5 +1,5 @@
 // Story short: KEEP SWINGING. Four hammer at rocks. They quit at 12, 40, 99. Kai hits #100 and the rock splits open on gold.
-const K = require('../engine/kit'); const { GREEN, GOLD, lerp, prog, ease, at, line, circle, who, P, floaters } = K;
+const K = require('../engine/kit'); const { GREEN, GOLD, lerp, prog, ease, at, line, circle, who, P, floaters } = K; const A = require('../engine/actions'); const M = require('../engine/motion');
 const { W, dark, label, makeShort, title, hop, pill, lane, says, whichOne, spot, rock, coin } = require('./lib');
 const CUT = 18.5; const END = 15.0; const BREAK = 12.5;
 const person = (col, hair) => ({ hair: { type: hair, color: '#2b2b33' }, top: { type: 'tee', color: col }, pants: '#343a40', shoes: '#e5e5e5' });
@@ -11,7 +11,7 @@ module.exports = makeShort(CUT, (t) => {
   L.forEach(([name, col, spec, stop], i) => { const quit = h >= stop && i < 3; const won = i === 3 && t > BREAK;
     lane(i, name, col, (y0, fy) => { K.line([[40, fy], [W - 40, fy]], 'rgba(255,255,255,0.12)', 3);
       if (!won) rock(560, fy - 70, 80, '', '#5c6070'); else { for (let k = 0; k < 2; k++) rock(560 + (k ? 1 : -1) * (40 + (t - BREAK) * 120), fy - 50, 50, '', '#5c6070'); for (let k = 0; k < 5; k++) coin(520 + k * 22, fy - 40 - Math.abs(Math.sin(t * 4 + k)) * 20, 18, t * 4 + k); spot(560, fy - 60, 150, 'rgba(242,193,78,0.4)'); }
-      if (!quit) who(won ? 'kai2' : spec, { x: 420, y: fy - (won ? hop(t, BREAK + 0.2, 30) : 0), s: 0.42, pose: won ? 'cheer' : swing(t + i), expr: won ? 'happy' : 'determined' });
+      if (!quit) { if (won) M.celebrate('kai2', 420, fy, 0.42, t, BREAK + 0.2); else A.chop(spec, 432, fy, 0.42, t, { tool: 'sledge', period: 0.62, t0: i * 0.17, low: 48, len: 170, expr: 'determined' }); }
       else who(spec, { x: 420 - Math.min(400, (t - prog(stop / 100, 0, 1)) * 0), y: fy, s: 0.42, pose: { lean: 0, tilt: 14, armL: [10, 8], armR: [10, 8], legL: [85, -85], legR: [85, -85] }, expr: 'sad' });
       at(840, y0 + 150, 1, () => pill(`HITS: ${Math.min(h, stop)}`, 0, 0, 24, won ? GREEN : col, { pad: 30, border: won ? GREEN : undefined }));
       if (i === 2 && quit) says('1 HIT AWAY...', 820, y0 + 50, t, BREAK - 0.2, END, '#74c0fc');

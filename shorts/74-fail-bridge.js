@@ -7,9 +7,9 @@ module.exports = makeShort(CUT, (t) => {
   dark(800); const z = M.smooth(prog(t, OUT, OUT + 1.4)); const R = 70;
   const bx = t < PUSH ? lerp(260, EDGE + 10, M.smooth(prog(t, 0.2, PUSH))) : EDGE + 10 + (t - PUSH) * 60; const by = t < PUSH ? FY - R : FY - R + (t - PUSH) ** 2 * 1700;
   let p; let hands = null; let expr = 'determined';
-  if (t < PUSH) { p = M.gait(70, M.smooth(prog(t, 0.2, PUSH)) * (EDGE + 10 - 260), FY, S, 'walk', { stride: 90, lean: 22 }); p.hip[0] += 0; hands = [[bx - R + 4, by - 10], [bx - R + 10, by + 20]]; }
+  if (t < PUSH) { p = M.gait(70, M.smooth(prog(t, 0.2, PUSH)) * (EDGE + 10 - 260), FY, S, 'walk', { stride: 90, lean: 22, profile: true }); p.hip[0] += 0; hands = [[bx - R + 4, by - 10], [bx - R + 10, by + 20]]; }
   else if (t < CROSS) { p = M.stand(EDGE - R - 40 + 30, FY, S, t, { tilt: M.keys(t, [[PUSH, 0], [PUSH + 0.6, 26], [CROSS - 0.4, 26], [CROSS, 0]]), crouch: M.keys(t, [[PUSH, 0], [PUSH + 0.6, 14], [CROSS - 0.4, 14], [CROSS, 0]]) }); expr = t < OUT + 0.8 ? 'sad' : 'hopeful'; }
-  else { p = M.gait(EDGE - R - 10, (t - CROSS) * 520, FY, S, 'run'); expr = 'happy'; }
+  else { p = M.gait(EDGE - R - 10, (t - CROSS) * 520, FY, S, 'run', { profile: true }); expr = 'happy'; }
   camera({ x: lerp(480, 1150, z), y: 1150, z: lerp(1.15, 0.48, z), shake: impact(t, PUSH + 0.55, 10), t }, () => {
     ground(FY, -1600, EDGE); ground(FY, 1800, 3400); K.alpha(1, () => {}); K.card(EDGE, FY, 1380, 1600, '#07080c', 0);
     for (let i = 0; i < 70; i++) rock(470 + (i % 14) * 94 + (Math.floor(i / 14) % 2) * 40, FY + 60 + Math.floor(i / 14) * 85 - (i < 14 ? 15 : 0), 52, i % 3 && t > OUT + 1 ? 'FAIL' : '', i % 2 ? '#5c6070' : '#495057');
