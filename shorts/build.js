@@ -9,7 +9,9 @@ const K = require('../engine/kit');
 const file = path.resolve(process.argv[2]); const name = path.basename(file, '.js'); const short = require(file);
 const W = 1080; const H = 1920; const FPS = 30; const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 const canvas = createCanvas(W, H); const ctx = canvas.getContext('2d'); K.use(ctx);
-const frame = (t) => { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0; K.setTime(t); ctx.save(); short.draw(t); ctx.restore(); require('./lib').report(t); };
+// --no-cta: stop at the cut (before the car and LINK IN BIO), fading to black over the last 0.4 s
+const NOCTA = process.argv.includes('--no-cta') && short.cut; const DUR = NOCTA ? short.cut : short.duration;
+const frame = (t) => { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.shadowBlur = 0; K.setTime(t); ctx.save(); short.draw(t); ctx.restore(); if (NOCTA && t > DUR - 0.4) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = `rgba(0,0,0,${(t - (DUR - 0.4)) / 0.4})`; ctx.fillRect(0, 0, W, H); } require('./lib').report(t); };
 
 const at = process.argv.indexOf('--still');
 if (at > 0) { // stills for checking: --still 2,6,10
@@ -17,10 +19,10 @@ if (at > 0) { // stills for checking: --still 2,6,10
   console.log('stills written'); return;
 }
 (async () => {
-  const out = path.join(OUT, `${name}.mp4`);
+  const out = path.join(OUT, NOCTA ? `${name}-no-cta.mp4` : `${name}.mp4`);
   const ff = spawn('ffmpeg', ['-loglevel', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-r', String(FPS), '-i', '-',
     '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-shortest', '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', out], { stdio: ['pipe', 'inherit', 'inherit'] });
-  const n = Math.round(short.duration * FPS);
+  const n = Math.round(DUR * FPS);
   for (let i = 0; i < n; i++) { frame(i / FPS); if (!ff.stdin.write(canvas.data())) await new Promise((r) => ff.stdin.once('drain', r)); }
   ff.stdin.end(); await new Promise((r) => ff.on('close', r)); console.log('wrote', out);
 })();
