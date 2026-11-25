@@ -55,14 +55,9 @@ function buildAudio(file) {
   buildAudio(wav);
   execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', silent, '-i', wav, '-c:v', 'copy', '-af', 'loudnorm=I=-15:TP=-1.5:LRA=11', '-ar', '44100', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', final]);
   fs.unlinkSync(wav);
-  // cold open: 20 seconds from the ending (the transformation, the shadow vanishing, the sunrise money), a white flash and a record scratch, then the story from the start
-  const A = 116; const B = 136; const L = B - A; const story = path.join(OUT, 'story.mp4'); fs.renameSync(final, story);
-  const scratch = path.join(ASSETS, 'sfx', 'scratch.mp3');
-  // two separate reads of the story (the cut, then the whole), so nothing has to be held in memory
-  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-ss', String(A), '-t', String(L), '-i', story, '-i', story, '-i', scratch, '-filter_complex',
-    `[0:v]setpts=PTS-STARTPTS,fade=t=out:st=${L - 0.35}:d=0.35:color=white[v1];[1:v]setpts=PTS-STARTPTS[v2];[v1][v2]concat=n=2:v=1:a=0[v];` +
-    `[0:a]asetpts=PTS-STARTPTS,afade=t=out:st=${L - 0.5}:d=0.5[a1];[1:a]asetpts=PTS-STARTPTS[a2];[a1][a2]concat=n=2:v=0:a=1[ab];` +
-    `[2:a]volume=${0.25 * SFX_GAIN},adelay=${Math.round((L - 0.45) * 1000)}|${Math.round((L - 0.45) * 1000)}[sc];[ab][sc]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-15:TP=-1.5:LRA=11[a]`,
-    '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-ar', '44100', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', final]);
-  fs.unlinkSync(story); console.log('wrote', final, (V.duration + L).toFixed(1) + 's');
+  // a separate 20-second clip from the ending (the transformation, the shadow vanishing, the sunrise money)
+  const A = 116; const L = 20; const clip = path.join(OUT, 'clip-20s.mp4');
+  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-ss', String(A), '-t', String(L), '-i', final, '-af', `afade=t=in:d=0.3,afade=t=out:st=${L - 1}:d=1`, '-vf', `fade=t=in:d=0.3,fade=t=out:st=${L - 0.6}:d=0.6`,
+    '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', clip]);
+  console.log('wrote', final, V.duration.toFixed(1) + 's', 'and', clip);
 })();
