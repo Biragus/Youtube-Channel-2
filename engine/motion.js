@@ -69,7 +69,8 @@ function gait(x0, dist, ground, s, kind = 'walk', o = {}) {
   const bob = run ? Math.abs(Math.sin(v * Math.PI * 2)) * 18 * s : (1 - Math.cos(v * Math.PI * 4)) * 4 * s;
   const sw = Math.sin(v * Math.PI * 2);
   return { hip: [x0 + dir * dist, ground - hipBase - bob], ground, s, flip: o.flip, footL: foot(0), footR: foot(0.5),
-    lean: (run ? 12 : 3) + (o.lean ?? 0), tilt: run ? -4 : 2, armL: [sw * (run ? 45 : 22), run ? -80 : -15], armR: [sw * (run ? 45 : 22), run ? -80 : -15] };
+    lean: (run ? 12 : 3) + (o.lean ?? 0), tilt: run ? -4 : 2, // arms stay at the sides (seen from the front they swing toward and away from the camera, so only the elbows pump, opposite to the legs)
+    armL: run ? [16 + sw * 6, -62 - Math.max(0, sw) * 45] : [10 + sw * 3, -8 - Math.max(0, sw) * 34], armR: run ? [16 - sw * 6, -62 - Math.max(0, -sw) * 45] : [10 - sw * 3, -8 - Math.max(0, -sw) * 34] };
 }
 // Standing with breathing; feet planted shoulder width apart.
 function stand(x, ground, s, t, o = {}) { const br = Math.sin(t * 2.2) * 2 * s; const dir = o.flip ? -1 : 1;

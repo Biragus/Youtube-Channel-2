@@ -43,13 +43,13 @@ function demon(x, y, s, lt, o = {}) {
   }));
 }
 // lying in bed: blanket over the body, head on the pillow, one arm that can reach out
-function bed(lt, o = {}) {
-  card(380, 690, 980, 70, '#3a2a22', 10); card(380, 760, 40, 140, '#2a1e18', 6); card(1320, 760, 40, 140, '#2a1e18', 6); card(360, 560, 50, 340, '#2a1e18', 10);
-  card(410, 640, 220, 70, '#cfd4dc', 30);
-  if (o.empty) { card(560, 650, 780, 70, '#3b4a6b', 30); return; }
-  at(540, 620, 0.95, () => K.head('kai', 0, 0, 1, o.expr ?? 'tired', 0), -1.35 + Math.sin(lt * 1.1) * 0.03);
-  card(600, 640 - Math.sin(lt * 1.6) * 4, 740, 80, '#3b4a6b', 34);
-  if (o.hand) { const [hx, hy] = o.hand; c().lineCap = 'round'; line([[1260, 660], [lerp(1260, hx, 0.5), Math.min(hy, 660) - 30], [hx, hy]], '#8a8f99', 28); circle(hx, hy, 17, '#111114'); }
+function bed(lt, o = {}) { // headboard on the right, beside the nightstand
+  card(400, 690, 980, 70, '#3a2a22', 10); card(400, 760, 40, 140, '#2a1e18', 6); card(1340, 760, 40, 140, '#2a1e18', 6); card(1330, 560, 50, 340, '#2a1e18', 10);
+  card(1110, 640, 220, 70, '#cfd4dc', 30);
+  if (o.empty) { card(420, 650, 700, 70, '#3b4a6b', 30); return; }
+  at(1200, 622, 0.95, () => K.head('kai', 0, 0, 1, o.expr ?? 'tired', 0), 1.35 + Math.sin(lt * 1.1) * 0.03);
+  card(420, 640 - Math.sin(lt * 1.6) * 4, 720, 80, '#3b4a6b', 34);
+  if (o.hand) { const [hx, hy] = o.hand; const sh = [1110, 668]; const el = [lerp(sh[0], hx, 0.5) - 10, Math.min(sh[1], hy) - 60]; c().lineCap = 'round'; c().lineJoin = 'round'; line([sh, el, [hx, hy]], '#8a8f99', 28); circle(hx, hy, 17, '#111114'); }
 }
 function nightstand(x, time, lt, o = {}) {
   card(x - 110, 720, 220, 180, '#2a1e18', 10); card(x - 90, 650, 180, 70, '#111114', 12, '#2b2f3a', 4);
@@ -72,11 +72,11 @@ const add = (d, draw, sfx = [], o = {}) => S.push({ d, draw, sfx, ...o });
 add(5, (lt) => { K.bg('#0b0c10', '#000000'); caption('Every morning was the same.', 540, lt, 0.6, 4.6, '#ffffff', 60, { weight: 700 }); }, [['heartbeat', 0.4, 0.6], ['heartbeat', 2.4, 0.5]], { quietCut: true });
 
 add(8, (lt) => cam(lt, 8, 1.0, 1.12, 1250, 650, () => {
-  room({ wx: 1500 }); bed(lt, { hand: lt > 1.2 ? [lerp(1260, 1440, sm(prog(lt, 1.2, 2.0))), lerp(660, 640, sm(prog(lt, 1.2, 2.0)))] : null });
+  room({ wx: 1500 }); bed(lt, { hand: lt > 1.2 ? [lerp(1130, 1450, sm(prog(lt, 1.2, 2.0))), lerp(660, 640, sm(prog(lt, 1.2, 2.0))) - Math.sin(sm(prog(lt, 1.2, 2.0)) * Math.PI) * 60] : null });
   const snooze = lt > 2.05; const mins = snooze ? Math.floor(lerp(0, 227, ease(prog(lt, 3.2, 6.2)))) : 0; const hh = 6 + Math.floor(mins / 60); const mm = mins % 60;
   nightstand(1460, `${hh}:${String(mm).padStart(2, '0')}`, lt, { ring: !snooze });
-  alpha(prog(lt, 2.4, 2.8) * (1 - prog(lt, 6.6, 7.2)), () => T('5 more minutes...', 860, 400, 40, '#9aa3b5', { weight: 700, spacing: 2 }));
-  for (let i = 0; i < 3; i++) { const k = ((lt * 0.5 + i / 3) % 1); if (lt > 2.4) alpha(Math.sin(k * Math.PI) * 0.8, () => T('z', 600 + k * 70 + i * 12, 540 - k * 110, 30 + k * 20, '#9aa3b5')); }
+  alpha(prog(lt, 2.4, 2.8) * (1 - prog(lt, 6.6, 7.2)), () => T('5 more minutes...', 1000, 420, 40, '#9aa3b5', { weight: 700, spacing: 2 }));
+  for (let i = 0; i < 3; i++) { const k = ((lt * 0.5 + i / 3) % 1); if (lt > 2.4) alpha(Math.sin(k * Math.PI) * 0.8, () => T('z', 1180 + k * 50 + i * 12, 540 - k * 110, 30 + k * 20, '#9aa3b5')); }
   vignette();
 }), [['alarm', 0.3, 1, 1.8], ['slam', 2.0, 0.35], ['clock', 3.2, 1, 3.0]]);
 
@@ -106,9 +106,10 @@ add(8, (lt) => cam(lt, 8, 1.06, 1.16, 900, 600, () => {
 add(8, (lt) => cam(lt, 8, 1.0, 1.1, 960, 560, () => {
   room({ wx: 1560 }); dayTag(90, lt);
   demon(1340, FLOOR + 20, 0.95, lt, { handL: [-280, -330], handR: [140, -260] });
-  for (let i = 0; i < 6; i++) { const t0 = 0.3 + i * 0.35; const k = easeOut(prog(lt, t0, t0 + 0.7)); if (k > 0) at(300 + i * 230 + Math.sin(i) * 40, lerp(-120, 860 - (i % 2) * 20, k), 1, () => { card(-70, -46, 140, 92, '#f4efe6', 6); T('OVERDUE', 0, -12, 18, '#e03131', { spacing: 1 }); card(-46, 14, 92, 8, '#ced4da', 3); }, (rnd(i) - 0.5) * 0.6 + (1 - k) * 2); }
+  for (let i = 0; i < 6; i++) { const t0 = 0.3 + i * 0.35; const k = easeOut(prog(lt, t0, t0 + 0.7)); if (k > 0) at(520 + i * 70 + Math.sin(i) * 30, lerp(-120, 880 - (i % 3) * 14, k), 1, () => { card(-70, -46, 140, 92, '#f4efe6', 6); T('OVERDUE', 0, -12, 18, '#e03131', { spacing: 1 }); card(-46, 14, 92, 8, '#ced4da', 3); }, (rnd(i) - 0.5) * 0.6 + (1 - k) * 2); }
   M.idle('kai', 760, FLOOR, 1.1, lt, { armL: [10, 6], handR: [830, 610], elbow: -1, crouch: 10, lean: 6, expr: 'worried', look: 0.3, prop: 'phone' });
-  K.phone(560, 470, 0.42, prog(lt, 1.6, 2.2), () => { c().fillStyle = '#0f1420'; c().fillRect(0, 0, 400, 720); T('BALANCE', 200, 250, 34, '#9aa3b5', { spacing: 4 }); T('$4.12', 200, 340, 92, '#ff4a4a', { glow: '#ff0000', blur: 16 }); });
+  alpha(prog(lt, 1.6, 2.0), () => { c().setLineDash([10, 10]); line([[836, 600], [660, 470]], 'rgba(255,255,255,0.35)', 3); c().setLineDash([]); c().strokeStyle = 'rgba(255,255,255,0.5)'; c().lineWidth = 3; c().beginPath(); c().arc(836, 606, 34, 0, Math.PI * 2); c().stroke(); });
+  K.phone(500, 430, 0.42, prog(lt, 1.6, 2.2), () => { c().fillStyle = '#0f1420'; c().fillRect(0, 0, 400, 720); T('BALANCE', 200, 250, 34, '#9aa3b5', { spacing: 4 }); T('$4.12', 200, 340, 92, '#ff4a4a', { glow: '#ff0000', blur: 16 }); });
   whisper("People like you don't get lucky.", 1180, 170, lt, 3.6, 7.6, 46);
   vignette();
 }), [['paper', 0.3], ['buzz', 1.6, 0.33], ['rumble', 3.0, 0.8]]);
@@ -136,8 +137,8 @@ add(8, (lt) => cam(lt, 8, 1.0, 1.22, 960, 700, () => {
 add(7, (lt) => {
   const hit = 1.6; const up = 3.0; cam(lt, 7, 1.12, 1.0, 1250, 650, () => {
     room({ wx: 1500 });
-    if (lt < up) { const k = sm(prog(lt, 0.9, hit)); bed(lt, { hand: [lerp(1260, 1460, k), lerp(600, 655, k) - Math.sin(k * Math.PI) * 120], expr: lt > hit ? 'determined' : 'tired' }); }
-    else { bed(lt, { empty: true }); if (lt < up + 0.9) M.figure({ spec: 'kai', ...M.jump(lt, up, 0.9, 1180, FLOOR, 1080, FLOOR, 1.1, 90), expr: 'determined', glow: 'rgba(57,255,20,0.6)' }); else M.idle('kai', 1080, FLOOR, 1.1, lt, { expr: 'determined', armL: [14, -30], armR: [14, -30] }); }
+    if (lt < up) { const k = sm(prog(lt, 0.9, hit)); bed(lt, { hand: [lerp(1130, 1455, k), lerp(640, 655, k) - Math.sin(k * Math.PI) * 120], expr: lt > hit ? 'determined' : 'tired' }); }
+    else { bed(lt, { empty: true }); if (lt < up + 0.9) M.figure({ spec: 'kai', ...M.jump(lt, up, 0.9, 1180, FLOOR, 1000, FLOOR, 1.1, 90), expr: 'determined', glow: 'rgba(57,255,20,0.6)' }); else M.idle('kai', 1000, FLOOR, 1.1, lt, { expr: 'determined', armL: [14, -30], armR: [14, -30] }); }
     nightstand(1460, '6:00', lt, { ring: lt < hit });
     vignette();
   }, lt > hit && lt < hit + 0.35 ? 14 : 0);
@@ -147,13 +148,12 @@ add(7, (lt) => {
 add(8, (lt) => cam(lt, 8, 1.02, 1.12, 960, 540, () => {
   room({ wx: 180 });
   demon(1640, FLOOR + 20, 0.9, lt, { handL: [-230, -300], handR: [200, -260] });
-  chair(720); desk(1000);
-  at(1040, 640, 1, () => { card(-210, -40, 420, 90, '#f4efe6', 8); }, -0.04);
-  at(1130, 360, 1, () => { card(-260, -190, 520, 380, '#f4efe6', 10); T('WHAT I LEARNED', 0, -140, 34, '#16161a', { spacing: 3 }); card(-200, -112, 400, 4, '#16161a', 2);
-    ['wake up at 6. no snooze.', 'no phone until 8.', 'one small task first.', 'write it down.'].forEach((s2, i) => { const k = prog(lt, 1.2 + i * 1.3, 2.2 + i * 1.3); c().save(); c().beginPath(); c().rect(-220, -80 + i * 62, 440 * k, 60); c().clip(); T(s2, -210, -50 + i * 62, 30, '#2b2f3a', { align: 'left', weight: 700 }); c().restore(); });
-  }, 0.02);
-  const k = (lt - 1.2) % 1.3; const row = Math.min(3, Math.floor((lt - 1.2) / 1.3));
-  M.sit('kai', 730, FLOOR, 1.05, lt, { seat: 745, lean: 16, handL: [930, 668], handR: lt > 1.2 && lt < 6.4 ? [950 + Math.min(1, k / 1.0) * 380, 310 + row * 62 + Math.sin(lt * 30) * 3] : [960, 662], elbow: -1, expr: 'determined', look: 0.6 });
+  card(820, 170, 640, 440, '#2b2f3a', 14); card(836, 186, 608, 408, '#f4efe6', 8); card(900, 606, 480, 14, '#2b2f3a', 6); card(1100, 600, 80, 10, '#1c7ed6', 4);
+  T('WHAT I LEARNED', 1140, 240, 38, '#16161a', { spacing: 3 }); card(900, 270, 480, 5, '#16161a', 2);
+  const rows = ['wake up at 6. no snooze.', 'no phone until 8.', 'one small task first.', 'write it down.'];
+  rows.forEach((s2, i) => { const k = prog(lt, 1.2 + i * 1.3, 2.2 + i * 1.3); c().save(); c().beginPath(); c().rect(880, 300 + i * 70, 520 * k, 66); c().clip(); T(s2, 890, 334 + i * 70, 34, '#2b2f3a', { align: 'left', weight: 700 }); c().restore(); });
+  const k = Math.min(1, ((lt - 1.2) % 1.3) / 1.0); const row = Math.min(3, Math.max(0, Math.floor((lt - 1.2) / 1.3))); const writing = lt > 1.2 && lt < 6.4;
+  M.idle('kai', 760, FLOOR, 1.15, lt, { lean: 4, handR: writing ? [lerp(900, 1280, k), 334 + row * 70 + Math.sin(lt * 30) * 3] : [900, 520], armL: [10, 6], elbow: -1, expr: 'determined', look: 0.8 });
   whisper('Who would pay for that?', 1560, 140, lt, 3.4, 7.4, 44);
   vignette();
 }), [['pen', 1.2, 0.6, 5.0], ['rumble', 3.0, 0.6]]);
@@ -207,7 +207,7 @@ add(8, (lt) => {
   cam(lt, 8, 1.0, 1.05, 960, 540, () => { c().save(); c().translate(0, -camY);
     K.bg('#151a2a', '#04050a', 960, 540 + camY, 1400);
     for (let i = 0; i < 8; i++) { const x0 = 300 + i * 170; card(x0, FLOOR - i * 70, i === 7 ? 600 : 170, 1200, '#1d2232', 4, '#2b3248', 4); }
-    const height = (FLOOR - step(kx)) / 490; demon(1720, FLOOR - 490 + 10, lerp(1.0, 0.45, height), lt, { handL: [-240, -260], handR: [240, -260] });
+    const height = (FLOOR - step(kx)) / 490; demon(1700, FLOOR - 490 + 10, lerp(0.62, 0.3, height), lt, { handL: [-240, -260], handR: [240, -260] });
     const p = M.gait(0, kx - 240, FLOOR, 1.0, 'walk', { lean: 8 }); const q = { ...p, hip: [p.hip[0] + 240, p.hip[1]], footL: [p.footL[0] + 240, p.footL[1]], footR: [p.footR[0] + 240, p.footR[1]] };
     M.figure({ spec: 'kai', ...M.onGround(q, step), expr: 'determined' });
     c().restore(); vignette();
@@ -219,7 +219,7 @@ add(8, (lt) => cam(lt, 8, 1.0, 1.1, 960, 520, () => {
   room({ wx: 1560, sky: '#13204a' }); dayTag(64, lt);
   const flick = lt > 2.6 ? 0.5 + 0.5 * Math.sin(lt * 40) : 1; demon(1560, FLOOR + 20, lerp(0.85, 0.6, sm(prog(lt, 2.6, 4))), lt, { a: flick * (1 - prog(lt, 4.5, 5.5)) });
   chair(700); desk(960);
-  const buzz = lt > 1.2 && lt < 2.2 ? Math.sin(lt * 90) * 4 : 0; card(1090 + buzz, 660, 60, 100, '#111114', 10); card(1096 + buzz, 668, 48, 84, lt > 1.2 ? '#69db7c' : '#1b1e27', 6);
+  const buzz = lt > 1.2 && lt < 2.2 ? Math.sin(lt * 90) * 4 : 0; card(1060 + buzz, 674, 110, 18, '#111114', 6); card(1066 + buzz, 676, 98, 6, lt > 1.2 ? '#69db7c' : '#1b1e27', 3); if (lt > 1.2) glow(1115, 670, 90, 'rgba(105,219,124,0.35)');
   if (lt < 2.6) M.sit('kai', 710, FLOOR, 1.05, lt, { seat: 745, lean: 6, handL: [880, 668], handR: [920, 668], elbow: -1, expr: lt > 1.3 ? 'shock' : 'neutral', look: 0.7 });
   else M.celebrate('kai', 820, FLOOR, 1.1, lt, 2.6, { height: 110 });
   at(960, 250, pop(lt, 1.4), () => { card(-330, -80, 660, 160, '#ffffff', 30); circle(-250, 0, 44, '#2f9e44'); T('$', -250, 4, 50, '#ffffff'); T('New sale!', -40, -26, 40, '#16161a', { align: 'left' }); T('The 6AM Reset  +$9.00', -40, 26, 30, '#2f9e44', { align: 'left', weight: 800 }); });
@@ -229,15 +229,15 @@ add(8, (lt) => cam(lt, 8, 1.0, 1.1, 960, 520, () => {
 add(12, (lt) => {
   const day = Math.round(lerp(64, 300, ease(prog(lt, 0.4, 8.6)))); const sales = Math.round(lerp(1, 2050, prog(lt, 0.4, 8.6) ** 1.6));
   cam(lt, 12, 1.0, 1.06, 960, 540, () => {
-    room({ wx: 1560, sky: lt > 9 ? '#2b4a8a' : '#13204a' });
-    demon(1640, FLOOR + 20, lerp(0.7, 0.12, sm(prog(lt, 0.5, 8.5))), lt, { a: 1 - prog(lt, 8.6, 9.0) });
+    room({ wx: 140, sky: lt > 9 ? '#2b4a8a' : '#13204a' });
+    demon(1760, FLOOR + 20, lerp(0.7, 0.12, sm(prog(lt, 0.5, 8.5))), lt, { a: 1 - prog(lt, 8.6, 9.0) });
     const suit = lt > 9.1;
     if (!suit) { chair(560); desk(820); laptopAt(880, 680, 0.42, () => { screen('#0f1420'); for (let i = 0; i < 6; i++) card(40, 40 + i * 50, 380 - (i % 3) * 90 + Math.sin(lt * 3 + i) * 30, 18, '#3a5a9a', 6); });
       M.sit('kai', 570, FLOOR, 1.05, lt, { seat: 745, lean: 8, handL: [760, 668 + Math.sin(lt * 18) * 4], handR: [800, 668 + Math.cos(lt * 16) * 4], elbow: -1, expr: 'determined', look: 0.4 }); }
     else M.celebrate('kai2', 700, FLOOR, 1.15, lt, 9.3, { height: 90 });
-    card(1060, 220, 640, 400, 'rgba(13,16,24,0.92)', 24, 'rgba(57,255,20,0.6)', 4);
+    desk(1380); card(1350, 600, 60, 90, '#2b2f3a', 4); card(1260, 680, 240, 14, '#2b2f3a', 6); card(1060, 220, 640, 400, '#2b2f3a', 18); card(1076, 236, 608, 368, '#0d1018', 10);
     T('SALES', 1120, 270, 30, '#9aa3b5', { align: 'left', spacing: 6 }); T(sales.toLocaleString('en-US'), 1640, 270, 44, GREEN, { align: 'right', glow: GREEN, blur: 14 });
-    const pts = []; const kk = prog(lt, 0.4, 8.6); for (let i = 0; i <= 40; i++) { const u = i / 40; if (u > kk) break; pts.push([1100 + u * 560, 580 - (u ** 1.8) * 250 - Math.sin(u * 20) * 6]); } if (pts.length > 1) line(pts, GREEN, 8);
+    const pts = []; const kk = prog(lt, 0.4, 8.6); for (let i = 0; i <= 40; i++) { const u = i / 40; if (u > kk) break; pts.push([1100 + u * 560, 570 - (u ** 1.8) * 240 - Math.sin(u * 20) * 6]); } if (pts.length > 1) line(pts, GREEN, 8);
     poofAt(700, 680, lt, 9.0);
     vignette();
   });
